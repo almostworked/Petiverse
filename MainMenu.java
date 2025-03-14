@@ -1,5 +1,5 @@
 // Main access point to the game, sets up GUI
-// Handles entry into the game. Communicates with NewGame, LoadGame, Settings and Player
+// Handles entry into the game. Communicates with NewGame, SaveGame, Settings and Player
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,7 +32,7 @@ public class MainMenu extends JFrame {
         JButton parentButton = new JButton("  Parental Controls  ");
         JButton exitButton = new JButton("  Exit  ");
 
-        // Add action listeners for each button
+        // Add action listeners for each button and call their respective methods
         startButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Start button clicked");
@@ -58,9 +58,15 @@ public class MainMenu extends JFrame {
         exitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Exit button clicked");
-                System.exit(0);
+                exit();
             }
         });
+        startButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        loadButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        instructionsButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        parentButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        exitButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
 
         try {
             Font font = Font.createFont(Font.TRUETYPE_FONT, new File("fonts/Jersey25-Regular.ttf"));
@@ -142,7 +148,7 @@ public class MainMenu extends JFrame {
             e.printStackTrace();
         }
 
-        setSize(700, 600);
+        setSize(700, 600); // Set the size of the frame
         setLocationRelativeTo(null); // Centres the frame on screen
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Close window when X button pressed
        
@@ -174,8 +180,11 @@ public class MainMenu extends JFrame {
         };
         instructions.setLayout(new BoxLayout(instructions, BoxLayout.Y_AXIS));
         JLabel title = new JLabel("Instructions/Tutorial");
+
         try {
             Font font = Font.createFont(Font.TRUETYPE_FONT, new File("fonts/Jersey25-Regular.ttf"));
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            ge.registerFont(font);
             font = font.deriveFont(Font.PLAIN, 70); // Title text size
 
             title.setFont(font);
@@ -184,9 +193,7 @@ public class MainMenu extends JFrame {
 
             font = font.deriveFont(Font.PLAIN, 25);
 
-            instructions.add(Box.createVerticalStrut(80));
-            instructions.add(title);
-
+            // Create a back button so the user can navigate back to the main menu
             JButton back = new JButton("< Main Menu");
             back.setFont(font);
             back.setContentAreaFilled(false);
@@ -198,51 +205,56 @@ public class MainMenu extends JFrame {
             back.setAlignmentX(LEFT_ALIGNMENT);
             back.setAlignmentY(TOP_ALIGNMENT);
 
+            // Move the Main Menu button to a fixed upper left space
             JPanel topPanel = new JPanel(new BorderLayout());
             topPanel.setOpaque(false);
             topPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 0)); // Padding
             topPanel.add(back, BorderLayout.WEST);
             instructions.add(topPanel, BorderLayout.NORTH);
 
+            instructions.add(title);
+            // Add an action listener for the back button
             back.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     System.out.println("Back to main menu button clicked");
-                    menu.setContentPane(mainMenuPanel);
+                    menu.setContentPane(mainMenuPanel); // Go back to main menu panel
                     menu.revalidate();
                     menu.repaint();
                 }
             });
 
+            // Create a text pane to hold instructions; allows colour changes + ability to add icons/images using HTML 
             JTextPane instructionsTextPane = new JTextPane();
             instructionsTextPane.setEditable(false);
             instructionsTextPane.setOpaque(false);
-            instructionsTextPane.setContentType("text/html"); // Set HTML content to format text easily
+            instructionsTextPane.setContentType("text/html");
+            instructionsTextPane.setFont(font);
 
             StyledDocument doc = instructionsTextPane.getStyledDocument();
 
-            SimpleAttributeSet vitalsStyle = new SimpleAttributeSet();
-            StyleConstants.setBold(vitalsStyle, true);
-            StyleConstants.setForeground(vitalsStyle, Color.WHITE);
+            // Align instructions down the centre
+            SimpleAttributeSet center = new SimpleAttributeSet();
+            StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
+            doc.setParagraphAttributes(0, doc.getLength(), center, false);
 
-            SimpleAttributeSet commandsStyle = new SimpleAttributeSet();
-            StyleConstants.setBold(commandsStyle, true);
-            StyleConstants.setForeground(commandsStyle, Color.WHITE);
+            // Style for instructions headings
+            SimpleAttributeSet instructionTitle = new SimpleAttributeSet();
+            StyleConstants.setBold(instructionTitle, true);
+            StyleConstants.setForeground(instructionTitle, Color.WHITE);
+            StyleConstants.setFontFamily(instructionTitle, font.getFontName());
 
-            SimpleAttributeSet healthStyle = new SimpleAttributeSet();
-            StyleConstants.setBold(healthStyle, true);
-            StyleConstants.setForeground(healthStyle, Color.WHITE);
-
+            // Style for normal instructions text
             SimpleAttributeSet normalStyle = new SimpleAttributeSet();
-            StyleConstants.setFontSize(normalStyle, 16);
+            StyleConstants.setFontSize(normalStyle, 20);
             StyleConstants.setForeground(normalStyle, Color.WHITE);
-            StyleConstants.setFontFamily(normalStyle, getName());
+            StyleConstants.setFontFamily(normalStyle, font.getFontName());
 
         try {
-            doc.insertString(doc.getLength(), "===== VITALS =====\n", vitalsStyle);
-            doc.insertString(doc.getLength(), "• Your pet's vitals show how full, rested, and happy they are.\n", normalStyle);
-            doc.insertString(doc.getLength(), "• Vital bars go down over time. Taking care of your pet will keep them full.\n\n", normalStyle);
+            doc.insertString(doc.getLength(), "- VITALS -\n", instructionTitle);
+            doc.insertString(doc.getLength(), "Your pet's vitals show how full, rested, and happy they are.\n", normalStyle);
+            doc.insertString(doc.getLength(), "Vital bars go down over time. Taking care of your pet will keep them full.\n\n", normalStyle);
 
-            doc.insertString(doc.getLength(), "===== COMMANDS =====\n", commandsStyle);
+            doc.insertString(doc.getLength(), "- COMMANDS -\n", instructionTitle);
             doc.insertString(doc.getLength(), "• Feed - Give your pet food.\n", normalStyle);
             doc.insertString(doc.getLength(), "• Go to bed - Rest your pet to restore energy.\n", normalStyle);
             doc.insertString(doc.getLength(), "• Give gift - Make your pet happy with a gift.\n", normalStyle);
@@ -250,16 +262,17 @@ public class MainMenu extends JFrame {
             doc.insertString(doc.getLength(), "• Play - Interact with your pet for joy.\n", normalStyle);
             doc.insertString(doc.getLength(), "• Exercise - Keep your pet fit and active.\n\n", normalStyle);
 
-            doc.insertString(doc.getLength(), "===== HEALTH =====\n", healthStyle);
-            doc.insertString(doc.getLength(), "• The health bar shows your pet's overall wellbeing.\n", normalStyle);
-            doc.insertString(doc.getLength(), "• When a vital is at zero, health will start to go down.\n", normalStyle);
-            doc.insertString(doc.getLength(), "• Replenish vitals and visit the vet to recover health.\n", normalStyle);
-            doc.insertString(doc.getLength(), "• When health is at zero, you can no longer care for your pet.\n", normalStyle);
+            doc.insertString(doc.getLength(), "- HEALTH -\n", instructionTitle);
+            doc.insertString(doc.getLength(), "The health bar shows your pet's overall wellbeing. When a vital is at zero, health will start to go down.\nYou must replenish vitals and take your pet to the vet to fill its health up again.\nWhen health is at zero, you can no longer take care of your pet.\n\n", normalStyle);
 
-            doc.insertString(doc.getLength(), "==== LEVEL ====\n", normalStyle);
-            doc.insertString(doc.getLength(), "==== PET STATE ====\n", normalStyle);
-            doc.insertString(doc.getLength(), "==== INVENTORY ====\n", normalStyle);
+            doc.insertString(doc.getLength(), "- LEVEL -\n", instructionTitle);
+            doc.insertString(doc.getLength(), "As you take care of your pet, you will earn points.\nWith enough points you can level up. As you level up, you will earn food and gifts. At each level milestone, you will earn new pet options.\n\n", normalStyle);
 
+            doc.insertString(doc.getLength(), "- PET STATE -\n", instructionTitle);
+            doc.insertString(doc.getLength(), "Your pet can be in one of four possible states:\n> Normal <\nall commands available\n> Hungry <\nall commands available\n> Sleeping <\nno commands available\n> Dead <\nno commands available\n\n", normalStyle);
+
+            doc.insertString(doc.getLength(), "- INVENTORY -\n", instructionTitle);
+            doc.insertString(doc.getLength(), "Your inventory contains the food and gifts you currently have for your pet. Try not to overfeed your pet.\nYou can earn items by completing tasks on the inventory page.\n\n", normalStyle);
 
         } catch (BadLocationException e) {
             e.printStackTrace();
@@ -294,7 +307,15 @@ public class MainMenu extends JFrame {
     }
 
     public void playNewGame() { // Start a new game
-        JPanel newGamePanel = new JPanel();
+        JPanel newGamePanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                ImageIcon background = new ImageIcon("temp_assets/Background2.jpg");
+                g.drawImage(background.getImage(), 0, 0, getWidth(), getHeight(), this);
+            }
+        };
+        JLabel title = new JLabel("Start New Game");
         newGamePanel.setLayout(new BoxLayout(newGamePanel, BoxLayout.Y_AXIS));
         newGamePanel.setOpaque(false);
 
@@ -308,7 +329,80 @@ public class MainMenu extends JFrame {
         JLabel petNameLabel = new JLabel("Name your pet:");
         JTextField petNameField = new JTextField(15);
 
+        JButton back = new JButton("< Main Menu");
+
         JButton confirm = new JButton("Start Game");
+
+        back.setForeground(Color.WHITE);
+            back.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    System.out.println("Back to main menu button clicked");
+                    menu.setContentPane(mainMenuPanel); // Go back to main menu panel
+                    menu.revalidate();
+                    menu.repaint();
+                }
+            });
+        back.setContentAreaFilled(false);
+        back.setBorderPainted(false);
+        back.setFocusPainted(false);
+        back.setOpaque(false);
+        back.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        back.setForeground(Color.decode("#FFFFFF"));
+        back.setAlignmentX(LEFT_ALIGNMENT);
+        back.setAlignmentY(TOP_ALIGNMENT);
+
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.setOpaque(false);
+        topPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 0)); // Padding
+        topPanel.add(back, BorderLayout.WEST);
+
+        try {
+            Font font = Font.createFont(Font.TRUETYPE_FONT, new File("fonts/Jersey25-Regular.ttf"));
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            ge.registerFont(font);
+            font = font.deriveFont(Font.PLAIN, 70); // Title text size
+
+            title.setFont(font);
+            title.setForeground(Color.decode("#FFFFFF"));
+            title.setAlignmentX(Component.CENTER_ALIGNMENT);
+            title.setAlignmentY(TOP_ALIGNMENT);
+
+            font = font.deriveFont(Font.PLAIN, 25);
+            // Create a back button so the user can navigate back to the main menu
+            back.setFont(font);
+            
+            userLabel.setFont(font);
+            userLabel.setForeground(Color.WHITE);
+            userLabel.setAlignmentX(CENTER_ALIGNMENT);
+
+            userName.setFont(font);
+            userName.setForeground(Color.WHITE);
+            userName.setOpaque(false);
+
+            petLabel.setFont(font);
+            petLabel.setForeground(Color.WHITE);
+            petLabel.setAlignmentX(CENTER_ALIGNMENT);
+
+            petNameLabel.setFont(font);
+            petNameLabel.setForeground(Color.WHITE);
+            petNameLabel.setAlignmentX(CENTER_ALIGNMENT);
+
+            petNameField.setFont(font);
+            petNameField.setForeground(Color.WHITE);
+            petNameField.setOpaque(false);
+
+            confirm.setFont(font);
+            confirm.setAlignmentX(CENTER_ALIGNMENT);
+            confirm.setOpaque(false);
+            confirm.setBorderPainted(true);
+
+
+        } catch (FontFormatException | IOException e) {
+            e.printStackTrace();
+        }
+        confirm.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        // Confirm user wants to start a new game, send info to NewGame class
         confirm.addActionListener(e -> {
             String username = userName.getText().trim();
             String petType = (String) petDropdown.getSelectedItem();
@@ -328,6 +422,10 @@ public class MainMenu extends JFrame {
 
             this.setVisible(false); // Hide menu and launch the game
         });
+
+        // Add buttons and labels to New Game panel
+        newGamePanel.add(topPanel, BorderLayout.NORTH);
+        newGamePanel.add(title);
         newGamePanel.add(Box.createVerticalStrut(30));
         newGamePanel.add(userLabel);
         newGamePanel.add(userName);
@@ -347,6 +445,24 @@ public class MainMenu extends JFrame {
     }
 
     public void loadGame(String filename) {
+        JPanel loadGamePanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                ImageIcon background = new ImageIcon("temp_assets/Background2.jpg");
+                g.drawImage(background.getImage(), 0, 0, getWidth(), getHeight(), this);
+            }
+        };
+        JLabel title = new JLabel("Load Saved Game");
+        loadGamePanel.setLayout(new BoxLayout(loadGamePanel, BoxLayout.Y_AXIS));
+        loadGamePanel.setOpaque(false);
+
+        JButton back = new JButton("< Main Menu");
+
+        setContentPane(loadGamePanel);
+        revalidate();
+        repaint();
+
 
     }
 
@@ -355,6 +471,8 @@ public class MainMenu extends JFrame {
     }
 
     public void exit() {
+        System.exit(0); // Exit the game gracefully
+
 
     }
     class RoundedPanel extends JPanel {
@@ -364,7 +482,7 @@ public class MainMenu extends JFrame {
         public RoundedPanel(Color bgColor, int radius) {
             this.backgroundColor = bgColor;
             this.cornerRadius = radius;
-            setOpaque(false); // Important for transparency!
+            setOpaque(false);
         }
     
         @Override
