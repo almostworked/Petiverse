@@ -33,11 +33,16 @@ public class MainMenu extends JFrame {
         JButton parentButton = new JButton("  Parental Controls  ");
         JButton exitButton = new JButton("  Exit  ");
 
-        // Add action listeners for each button and call their respective methods
+        // Add action listeners for each button
         startButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Start button clicked");
-                playNewGame();
+
+                Pet pet1 = new Pet("Foxy");
+                Pet pet2 = new Pet("Roscoe");
+                Pet pet3 = new Pet("Sterling");
+
+                new NewGameGUI(pet1, pet2, pet3);
             }
         });
         loadButton.addActionListener(new ActionListener() {
