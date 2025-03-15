@@ -1,3 +1,4 @@
+package src;
 public class Foxy extends Pet {
 
     private int weight;

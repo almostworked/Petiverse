@@ -1,3 +1,4 @@
+package src;
 public class Roscoe extends Pet {
 
     private int weight;

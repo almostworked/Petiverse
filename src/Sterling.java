@@ -1,3 +1,4 @@
+package src;
 public class Sterling extends Pet {
 
     private int weight;
