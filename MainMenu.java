@@ -7,6 +7,7 @@ import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
 import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 //import javax.swing.event.*;
 //import javax.swing.Timer;
 import javax.swing.text.BadLocationException;
@@ -42,6 +43,7 @@ public class MainMenu extends JFrame {
         loadButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Load button clicked");
+                loadGame();
             }
         });
         instructionsButton.addActionListener(new ActionListener() {
@@ -444,7 +446,7 @@ public class MainMenu extends JFrame {
         repaint();
     }
 
-    public void loadGame(String filename) {
+    public void loadGame() {
         JPanel loadGamePanel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
@@ -454,11 +456,95 @@ public class MainMenu extends JFrame {
             }
         };
         JLabel title = new JLabel("Load Saved Game");
+        title.setAlignmentX(CENTER_ALIGNMENT);
         loadGamePanel.setLayout(new BoxLayout(loadGamePanel, BoxLayout.Y_AXIS));
         loadGamePanel.setOpaque(false);
 
         JButton back = new JButton("< Main Menu");
+        back.setForeground(Color.WHITE);
+            back.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    System.out.println("Back to main menu button clicked");
+                    menu.setContentPane(mainMenuPanel); // Go back to main menu panel
+                    menu.revalidate();
+                    menu.repaint();
+                }
+            });
+        back.setContentAreaFilled(false);
+        back.setBorderPainted(false);
+        back.setFocusPainted(false);
+        back.setOpaque(false);
+        back.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        back.setForeground(Color.decode("#FFFFFF"));
+        back.setAlignmentX(LEFT_ALIGNMENT);
+        back.setAlignmentY(TOP_ALIGNMENT);
 
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.setOpaque(false);
+        topPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 0));
+
+        try {
+
+            Font font = Font.createFont(Font.TRUETYPE_FONT, new File("fonts/Jersey25-Regular.ttf"));
+            font = font.deriveFont(Font.PLAIN, 70);
+            title.setFont(font);
+            title.setForeground(Color.WHITE);
+            font = font.deriveFont(Font.PLAIN, 25);
+            back.setFont(font);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        topPanel.add(back, BorderLayout.WEST);
+        loadGamePanel.add(topPanel, BorderLayout.NORTH);
+        loadGamePanel.add(title);
+        loadGamePanel.add(Box.createVerticalStrut(30));
+        JPanel savedGames = new JPanel();
+        savedGames.setLayout(new BoxLayout(savedGames, BoxLayout.Y_AXIS));
+        savedGames.setOpaque(false);
+
+        // Call to SaveGame class to retrieve a list of user's saved games
+       //  List<SavedGame> savedGames = SaveGame.getSavedGames();
+
+      /*  for (SavedGame sg : savedGames) {
+        JPanel card = new JPanel();
+        card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
+        card.setBackground(new Color(255, 255, 255, 80)); // semi-transparent
+        card.setBorder(BorderFactory.createLineBorder(Color.decode("#6C5297"), 2));
+        card.setMaximumSize(new Dimension(500, 100));
+        card.setAlignmentX(Component.CENTER_ALIGNMENT);
+        card.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+        JLabel petName = new JLabel("Pet: " + sg.getPetName());
+        JLabel date = new JLabel("Created: " + sg.getDateCreated().toString());
+
+        petName.setForeground(Color.BLACK);
+        date.setForeground(Color.DARK_GRAY);
+
+        card.add(petName);
+        card.add(date);
+
+        // Optional: Add a button to load this specific save
+        JButton loadBtn = new JButton("Load");
+        loadBtn.addActionListener(e -> {
+            // TODO: Load the selected saved game here
+            System.out.println("Loading: " + sg.getPetName());
+            // maybe: Game.startFromSave(sg);
+        });
+        card.add(Box.createVerticalStrut(5));
+        card.add(loadBtn);
+
+        savedGames.add(Box.createVerticalStrut(10));
+        savedGames.add(card);
+    } */
+
+        JScrollPane scrollPane = new JScrollPane(savedGames);
+        scrollPane.setOpaque(false);
+        scrollPane.setAlignmentX(Component.CENTER_ALIGNMENT);
+        scrollPane.setPreferredSize(new Dimension(300, 600));
+
+        loadGamePanel.add(scrollPane);
         setContentPane(loadGamePanel);
         revalidate();
         repaint();
