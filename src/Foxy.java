@@ -16,10 +16,11 @@ public class Foxy extends Pet {
      * @param sleep     The current sleep level of the pet.
      * @param happiness The current happiness level of the pet.
      * @param hunger    The current hunger level of the pet.
+     * @param alive     The status of alive or dead
      * @param weight    The weight of the Foxy pet.
      */
-    public Foxy(String name, int health, int sleep, int happiness, int hunger, int weight) {
-        super(name, health, sleep, happiness, hunger);
+    public Foxy(String name, int health, int sleep, int happiness, int hunger, int weight, boolean alive) {
+        super(name, health, sleep, happiness, hunger, alive);
         this.weight = weight;
     }
 
