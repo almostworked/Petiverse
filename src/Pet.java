@@ -8,14 +8,16 @@ public class Pet {
 	private int happiness;
 	private int hunger;
 	private boolean alive;
+    private int fullness;
 	    
-	public Pet(String name, int health, int sleep, int happiness, int hunger, boolean alive) {
+	public Pet(String name, int health, int sleep, int happiness, int hunger, boolean alive, int fullness) {
         this.name = name;
         this.health = health;
         this.sleep = sleep;
         this.happiness = happiness;
         this.hunger = hunger;
         this.alive = alive;
+        this.fullness = fullness;
     }
 	
     public String getName() {
@@ -60,5 +62,13 @@ public class Pet {
     
     public boolean isAlive() {
 		return alive;
+    }
+
+    public int getFullness(){
+        return fullness;
+    }
+
+    public void setFullness(int fullness){
+        this.fullness = fullness;
     }
 }
