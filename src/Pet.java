@@ -1,5 +1,4 @@
-package group30;/*
- TEMPORARY PLACEHOLDER CLASS
+ /*TEMPORARY PLACEHOLDER CLASS
  */
 
 public class Pet {

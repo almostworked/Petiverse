@@ -137,17 +137,17 @@ public class MainMenu extends JFrame {
             // Add titles + buttons to the frame with space in between
             background.add(Box.createVerticalStrut(140));
             background.add(title);
-            background.add(Box.createVerticalStrut(20));
+            background.add(Box.createVerticalStrut(20)); 
             background.add(startButton);
-            background.add(Box.createVerticalStrut(20));
+            background.add(Box.createVerticalStrut(20)); 
             background.add(loadButton);
-            background.add(Box.createVerticalStrut(20));
+            background.add(Box.createVerticalStrut(20)); 
             background.add(instructionsButton);
-            background.add(Box.createVerticalStrut(20));
+            background.add(Box.createVerticalStrut(20)); 
             background.add(parentButton);
-            background.add(Box.createVerticalStrut(20));
+            background.add(Box.createVerticalStrut(20)); 
             background.add(exitButton);
-
+    
             // Set the background panel as the content pane
             mainMenuPanel = background;
             setContentPane(mainMenuPanel);
