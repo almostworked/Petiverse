@@ -1,11 +1,11 @@
 
-public class SpriteClass extends PetClass{
+public class Sprite extends Pet{
 
 	private String spriteImage;
 	private String spriteAnimation;
 	private String spriteSound;
 	
-	public SpriteClass(String name, int health, int sleep, int happiness, int hunger, boolean alive, String spriteImage, String spriteAnimation, String spriteSound) {
+	public Sprite(String name, int health, int sleep, int happiness, int hunger, boolean alive, String spriteImage, String spriteAnimation, String spriteSound) {
 		super(name, health, sleep, happiness, hunger, alive);
 		
 		this.spriteAnimation = spriteAnimation;
