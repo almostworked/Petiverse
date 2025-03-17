@@ -9,7 +9,7 @@ public class Pet {
 	private int hunger;
 	private boolean alive;
 	    
-	public PetClass(String name, int health, int sleep, int happiness, int hunger, boolean alive) {
+	public Pet(String name, int health, int sleep, int happiness, int hunger, boolean alive) {
         this.name = name;
         this.health = health;
         this.sleep = sleep;
