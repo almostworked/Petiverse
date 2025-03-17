@@ -3,35 +3,62 @@
 
 public class Pet {
     private String name;
-    private int happiness;
-    private int hunger;
-    private int sleep;
-    private int health;
-
-    public Pet(String name) {
+	private int health;
+	private int sleep;
+	private int happiness;
+	private int hunger;
+	private boolean alive;
+	    
+	public PetClass(String name, int health, int sleep, int happiness, int hunger, boolean alive) {
         this.name = name;
+        this.health = health;
+        this.sleep = sleep;
+        this.happiness = happiness;
+        this.hunger = hunger;
+        this.alive = alive;
     }
-
+	
     public String getName() {
         return name;
     }
-
+    
+    public void setName(String name) {
+    	this.name = name;
+    }
+    
+    public int getHealth() {
+        return health;
+    }
+    
+    public void setHealth(int health) {
+    	this.health = health;
+    }
+    
+    public int getSleep() {
+        return sleep;
+    }
+    
+    public void setSleep(int sleep) {
+    	this.sleep = sleep;
+    }
+    
     public int getHappiness() {
         return happiness;
     }
-
+    
     public void setHappiness(int happiness) {
-        this.happiness = happiness;
+    	this.happiness = happiness;
     }
-
-    public void setHunger(int i) {
-        this.hunger = i;
+    
+    public int getHunger() {
+        return hunger;
     }
-
-    public void setSleep(int i) {
-        this.sleep = i;
+    
+    public void setHunger(int hunger) {
+    	this.hunger = hunger;
     }
-
-    public void setHealth(int i) { this.health = i;
+    
+    public boolean isAlive() {
+		return alive;
     }
 }
