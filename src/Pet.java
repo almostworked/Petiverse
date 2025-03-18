@@ -191,17 +191,42 @@ public class Pet {
     }
 
     /**
-     * Updates the pet's state by setting new values for health, sleep, happiness, and fullness.
-     * @param health    The pet's health level. If 0, the pet is considered dead.
-     * @param sleep     The pet's sleep level. If 0, the pet is sleeping and cannot perform actions.
-     * @param happiness The pet's happiness level. If 0, the pet is angry and has limited interactions.
-     * @param fullness  The pet's fullness level. If 0, the pet is hungry but can still perform actions.
+     * Updates the pet's state based on the provided state name.
+     * 
+     * @param state A string representing the desired state (e.g,"SLEEPING").
      */
-    public void setState(int health, int sleep, int happiness, int fullness){
-        this.health = health;
-        this.sleep = sleep;
-        this.happiness = happiness;
-        this.fullness = fullness;
+    public void setState(String state) {
+        switch (state.toUpperCase()) {
+            case "DEAD":
+                this.health = 0;
+                break;
+            case "SLEEPING":
+                this.sleep = 0;
+                break;
+            case "ANGRY":
+                this.happiness = 0;
+                break;
+            case "HUNGRY":
+                this.fullness = 0;
+                break;
+            case "NORMAL":
+                setDefaultValues();
+                break;
+            default:
+                System.out.println("Wrong state provided.");
+                return;
+        }
+        System.out.println(name + " is now " + state + ".");
+    }
+
+    /**
+     * Resets pet's attributes to a default "NORMAL" state.
+     */
+    private void setDefaultValues() {
+        this.health = 100;
+        this.sleep = 100;
+        this.happiness = 100;
+        this.fullness = 100;
     }
 
     /**
