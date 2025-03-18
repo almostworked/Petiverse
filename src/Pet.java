@@ -70,6 +70,10 @@ public class Pet {
         this.fullness = fullness;
     }
 
+     public boolean isAlive() {
+		return alive;
+    } 
+
     public String getState(){
         if (health == 0){
             return "DEAD";
