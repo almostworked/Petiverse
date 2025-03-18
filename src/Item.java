@@ -6,70 +6,45 @@ package src;
  */
 public class Item {
 
-    /** The name of the item. */
-    private String itemName;
+    public enum ItemType {FOOD, GIFT}
+    private String name;
+    private ItemType type;
+    private int effectValue;
 
-    /** The type/category of the item (e.g., food, toy, etc.). */
-    private String type;
-
-    /** The current quantity of this item. */
-    private int quantity;
-
-    /**
-     * Constructs a new Item with a specified name, type, and quantity.
-     *
-     * @param itemName The name of the item.
-     * @param type The category or classification of the item.
-     * @param quantity The initial quantity of the item.
-     */
-    public Item(String itemName, String type, int quantity) {
-        this.itemName = itemName;
+    public Item(String name, ItemType type, int effectValue) {
+        this.name = name;
         this.type = type;
-        this.quantity = quantity;
+        this.effectValue = effectValue;
     }
 
-    /**
-     * Retrieves the name of this item.
-     *
-     * @return The name of the item.
-     */
-    public String getItem() {
-        return this.itemName;
+    // Predefined items 
+    public static final Item APPLE = new Item("Apple", ItemType.FOOD, 20);
+    public static final Item FISH = new Item("Fish", ItemType.FOOD, 30);
+    public static final Item STEAK = new Item("Steak", ItemType.FOOD, 50);
+    public static final Item BALL = new Item("Ball", ItemType.GIFT, 25);
+    public static final Item COLLAR = new Item("Collar", ItemType.GIFT, 40);
+    public static final Item TOY_MOUSE = new Item("Toy Mouse", ItemType.GIFT, 35);
+
+
+    public String getName() {
+        return name;
     }
 
-    /**
-     * Removes a specified quantity of this item.
-     *
-     * @param itemName The name of the item to remove (currently not used internally).
-     * @param quantity The amount to remove from this item's quantity.
-     *                 If removal exceeds current quantity, the quantity is set to zero.
-     */
-    public void removeItem(String itemName, int quantity) {
-        this.quantity -= quantity;
-        if (this.quantity < 0) {
-            this.quantity = 0;
+    public ItemType getType() {
+        return type;
+    }
+
+    public int getEffectValue() {
+        return effectValue;
+    }
+
+    public static Item getItem(String name, ItemType type) {
+        for (Item item : new Item[]{APPLE, FISH, STEAK, BALL, COLLAR, TOY_MOUSE}) {
+            if (item.getName().equals(name) && item.getType().equals(type)) {
+                return item;
+            }
         }
+        throw new IllegalArgumentException("Invalid item: " + name);
     }
-
-    /**
-     * Retrieves the quantity of the specified item.
-     *
-     * @param itemName The name of the item to get quantity for (currently not used internally).
-     * @return The current quantity of this item.
-     */
-    public int getQuantity(String itemName) {
-        return this.quantity;
-    }
-}
-
-
-
-
-
-
-
-
-
-
 
 }
