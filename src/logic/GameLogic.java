@@ -77,7 +77,7 @@ public class GameLogic {
         }
 
         pet.setHealth(100);
-        socre.setScore(score.getScore() - 10); // Change later
+        score.setScore(score.getScore() - 10); // Change later
 
     }
 
