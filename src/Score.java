@@ -4,22 +4,22 @@ public class Score {
     private int score;
 
     public Score() {
-        this.score = 0; // Initialize score to 0
+        this.score = 0;
     }
 
     public int getScore() {
         return score;
     }
 
-    public void setScore(int newScore) {
-        this.score = newScore;
+    public void setScore(int score) {
+        this.score = score;
     }
 
-    public void increaseScore(int points) {
-        this.score += points; // Increase score by the given points
+    public void increaseScore(int increment) {
+        this.score += increment;
     }
 
     public void displayScore() {
-        System.out.println("Current Score: " + score); // Display the current score
+        System.out.println("Current Score: " + this.score);
     }
 }
