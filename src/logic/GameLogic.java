@@ -4,9 +4,9 @@ import src.Player;
 import src.Pet;
 import src.Inventory;
 import src.Item;
-import src.StateManager;
+import src.logic.StateManager;
 import src.Score;
-import src.GameLoop;
+import src.logic.GameLoop;
 import src.ParentalControls;
 
 public class GameLogic {
@@ -24,7 +24,7 @@ public class GameLogic {
         this.pet = pet;
         this.player = player;
         this.stateManager = new StateManager();
-        this.scoreManager = new ScoreManager();
+        this.score = new Score();
         this.parentalControls = new ParentalControls();
     }
 

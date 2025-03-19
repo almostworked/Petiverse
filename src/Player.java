@@ -67,8 +67,8 @@ public class Player implements PlayGame {
         inventory.displayInventory();
     }
 
-    public int getScore() {
-        return score.getScore();
+    public Score getScore() {
+        return this.score;
     }
 
     public void viewSettings() {
@@ -302,6 +302,10 @@ public class Player implements PlayGame {
 
         // Otherwise => NORMAL
         this.activePet.setState("NORMAL");
+    }
+
+    public Inventory getInventory() {
+        return this.inventory;
     }
 }
 
