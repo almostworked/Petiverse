@@ -7,25 +7,20 @@ import src.Item;
 import src.logic.StateManager;
 import src.Score;
 import src.logic.GameLoop;
-import src.ParentalControls;
+import src.logic.ParentalControls;
 
 public class GameLogic {
-    
     private Pet pet;
     private Player player;
     private Inventory inventory;
     private Item item;
-    private StateManager stateManager;
-    private Score score;
-    private GameLoop gameLoop;
-    private ParentalControls parentalControls;
+    private Score score;  // This should reference player's score, not a new instance
 
-    public GameLogic(Pet pet, Player player) {
+    public GameLogic(Pet pet, Player player, Inventory inventory) {
         this.pet = pet;
         this.player = player;
-        this.stateManager = new StateManager();
-        this.score = new Score();
-        this.parentalControls = new ParentalControls();
+        this.inventory = inventory;
+        this.score = player.getScore();  // FIX: Use the player's score
     }
 
     public void goToBed() {
@@ -48,7 +43,7 @@ public class GameLogic {
 
         inventory.setQuantity(food, inventory.getQuantity(food) - 1);
         pet.setFullness(pet.getFullness() + item.getEffectValue());
-        score.setScore(score.getScore() + 10) // Change later
+        score.setScore(score.getScore() + 10); // Change later
 
          if (pet.getFullness() >= 0) {
             pet.setState("NORMAL");
