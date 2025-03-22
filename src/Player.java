@@ -88,7 +88,7 @@ public class Player implements PlayGame {
     }
 
     // 2. Feed the pet
-    public void feed(String food) {
+    public void feed(Item food) {
         if (!canExecuteCommand("feed")) {
             return;
         }
@@ -117,7 +117,7 @@ public class Player implements PlayGame {
     }
 
     // 3. Give a gift
-    public void giveGift(String gift) {
+    public void giveGift(Item gift) {
         if (!canExecuteCommand("giveGift")) {
             return;
         }

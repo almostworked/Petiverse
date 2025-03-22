@@ -47,6 +47,11 @@ public class StateManager {
         });
     }
 
+    public void setPetState(String newState) {
+        pet.setState( newState);
+        notifyStateChange(newState);
+    }
+
     private void decayStats() {
         pet.setSleep(Math.max(pet.getSleep() - decayRates[0], 0));
         pet.setFullness(Math.max(pet.getFullness() - decayRates[1], 0));
