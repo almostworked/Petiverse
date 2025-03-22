@@ -1,105 +1,128 @@
 package src.logic;
 
-import src.Player;
-import src.Pet;
 import src.Inventory;
 import src.Item;
-import src.logic.StateManager;
+import src.Pet;
+import src.Player;
 import src.Score;
-import src.logic.GameLoop;
-import src.logic.ParentalControls;
 
 public class GameLogic {
     private Pet pet;
     private Player player;
     private Inventory inventory;
-    private Item item;
-    private Score score;  // This should reference player's score, not a new instance
+    private Score score;  // We'll link directly to the Player's score
 
+    // ----------------------
+    // Constructor
+    // ----------------------
     public GameLogic(Pet pet, Player player, Inventory inventory) {
         this.pet = pet;
         this.player = player;
         this.inventory = inventory;
-        this.score = player.getScore();  // FIX: Use the player's score
+        this.score = player.getScore();  // Use the player's score reference
     }
 
+    // ----------------------
+    // Actions
+    // ----------------------
     public void goToBed() {
-
         if (pet.getState().equals("DEAD") || pet.getState().equals("SLEEPING")) {
             System.out.println("Cannot change sleep state; pet is " + pet.getState() + ".");
             return;
         }
-        
         pet.setState("SLEEPING");
         System.out.println("Pet is now sleeping.");
-
     }
 
-    public void feedPet(String food) {
-        if (pet.getState().equals("DEAD") || pet.getState().equals("SLEEPING") || pet.getState().equals("ANGRY")) {
+    public void feedPet(Item food) {
+        if (pet.getState().equals("DEAD") 
+            || pet.getState().equals("SLEEPING") 
+            || pet.getState().equals("ANGRY")) 
+        {
             System.out.println("Cannot feed pet; pet is " + pet.getState() + ".");
             return;
         }
 
-        inventory.setQuantity(food, inventory.getQuantity(food) - 1);
-        pet.setFullness(pet.getFullness() + item.getEffectValue());
-        score.setScore(score.getScore() + 10); // Change later
+        // Reduce item quantity in Inventory
+        int currentQty = inventory.getQuantity(food);
+        if (currentQty <= 0) {
+            System.out.println("No " + food.getName() + " left in the inventory.");
+            return;
+        }
+        inventory.setQuantity(food, currentQty - 1);
 
-         if (pet.getFullness() >= 0) {
+        // Increase pet fullness
+        pet.setFullness(pet.getFullness() + food.getEffectValue());
+
+        // Increase the Player's score
+        score.setScore(score.getScore() + 10); // Adjust to your desired logic
+
+        // If the pet's fullness is positive, ensure it isn't stuck in "HUNGRY" or "ANGRY"
+        if (pet.getFullness() > 0) {
             pet.setState("NORMAL");
-         }
-
+        }
     }
 
-    public void giveGift(String gift) {
-
+    public void giveGift(Item gift) {
         if (pet.getState().equals("DEAD") || pet.getState().equals("SLEEPING")) {
             System.out.println("Cannot give gift to pet; pet is " + pet.getState() + ".");
             return;
         }
 
-        inventory.setQuantity(gift, inventory.getQuantity(gift) - 1);
-        pet.setHappiness(pet.getHappiness() + item.getEffectValue());
-        score.setScore(score.getScore() + 10); // Change later
+        // Reduce item quantity in Inventory
+        int currentQty = inventory.getQuantity(gift);
+        if (currentQty <= 0) {
+            System.out.println("No " + gift.getName() + " left in the inventory.");
+            return;
+        }
+        inventory.setQuantity(gift, currentQty - 1);
 
+        // Increase happiness
+        pet.setHappiness(pet.getHappiness() + gift.getEffectValue());
+
+        // Increase score
+        score.setScore(score.getScore() + 10); // Adjust to your desired logic
     }
 
     public void takePetToVet() {
-
-        if (pet.getState().equals("DEAD") || pet.getState().equals("SLEEPING") || pet.getState().equals("ANGRY")) {
-            System.out.println("Cannot take pet to vet; pet is " + pet.getState() + ".");
+        if (pet.getState().equals("DEAD") 
+            || pet.getState().equals("SLEEPING") 
+            || pet.getState().equals("ANGRY")) 
+        {
+            System.out.println("Cannot take pet to the vet; pet is " + pet.getState() + ".");
             return;
         }
 
         pet.setHealth(100);
-        score.setScore(score.getScore() - 10); // Change later
-
+        score.setScore(score.getScore() - 10); // Adjust to your desired logic
     }
 
     public void playWithPet() {
-
         if (pet.getState().equals("DEAD") || pet.getState().equals("SLEEPING")) {
-            System.out.println("Cannot give gift to pet; pet is " + pet.getState() + ".");
+            System.out.println("Cannot play with pet; pet is " + pet.getState() + ".");
             return;
         }
 
-        pet.setHappiness(pet.getHappiness() + 40);  // Change later
-        score.setScore(score.getScore() + 10);
-
+        // Increase happiness
+        pet.setHappiness(pet.getHappiness() + 40); // Example increment
+        score.setScore(score.getScore() + 10);     // Adjust to your desired logic
     }
 
     public void exercisePet() {
-
-        if (pet.getState().equals("DEAD") || pet.getState().equals("SLEEPING") || pet.getState().equals("ANGRY")) {
-            System.out.println("Cannot take pet to vet; pet is " + pet.getState() + ".");
+        if (pet.getState().equals("DEAD") 
+            || pet.getState().equals("SLEEPING") 
+            || pet.getState().equals("ANGRY")) 
+        {
+            System.out.println("Cannot exercise pet; pet is " + pet.getState() + ".");
             return;
         }
 
-        pet.setSleep(pet.getSleep() - 30); // Change later
-        pet.setFullness(pet.getFullness() + item.getEffectValue());
-        pet.setHealth(pet.getHealth() + item.getEffectValue());
-        score.setScore(score.getScore() + 15);
-
+        // Example logic: exercise uses up sleep and fullness but helps health
+        pet.setSleep(Math.max(pet.getSleep() - 30, 0));
+        pet.setFullness(Math.max(pet.getFullness() - 10, 0));
+        pet.setHealth(Math.min(pet.getHealth() + 10, 100));
+        
+        score.setScore(score.getScore() + 15); // Adjust as needed
     }
-
 }
+
