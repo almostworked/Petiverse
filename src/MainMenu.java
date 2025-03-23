@@ -39,9 +39,9 @@ public class MainMenu extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Start button clicked");
 
-                Pet pet1 = new Pet("Foxy");
-                Pet pet2 = new Pet("Roscoe");
-                Pet pet3 = new Pet("Sterling");
+                Pet pet1 = new Pet("Foxy", 100, 100, 100, 100, true, 100, "Normal");
+                Pet pet2 = new Pet("Roscoe", 100, 100, 100, 100, true, 100, "Normal");
+                Pet pet3 = new Pet("Sterling", 100, 100, 100, 100, true, 100, "Normal");
 
                 new NewGameGUI(pet1, pet2, pet3);
             }
@@ -61,6 +61,7 @@ public class MainMenu extends JFrame {
         parentButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Parental controls button clicked");
+                parentalControls();
             }
         });
         exitButton.addActionListener(new ActionListener() {
@@ -310,9 +311,31 @@ public class MainMenu extends JFrame {
 
     }
 
-    public void parentalControls() { // Initialize parental controls
-
+    public void parentalControls() {
+        JFrame parentalFrame = new JFrame("Parental Controls");
+        parentalFrame.setSize(400, 300);
+        parentalFrame.setLocationRelativeTo(null);
+        parentalFrame.setLayout(new BorderLayout());
+    
+        JLabel header = new JLabel("Parental Controls", SwingConstants.CENTER);
+        header.setFont(new Font("Arial", Font.BOLD, 24));
+        parentalFrame.add(header, BorderLayout.NORTH);
+    
+        JTextArea info = new JTextArea("Here you can set limits, view activity logs, or restrict features.");
+        info.setEditable(false);
+        info.setWrapStyleWord(true);
+        info.setLineWrap(true);
+        info.setMargin(new Insets(10, 10, 10, 10));
+        parentalFrame.add(info, BorderLayout.CENTER);
+    
+        JButton closeBtn = new JButton("Close");
+        closeBtn.addActionListener(e -> parentalFrame.dispose());
+        parentalFrame.add(closeBtn, BorderLayout.SOUTH);
+    
+        parentalFrame.setVisible(true);
     }
+    
+    
 
     public void playNewGame() { // Start a new game
         JPanel newGamePanel = new JPanel() {
@@ -561,6 +584,7 @@ public class MainMenu extends JFrame {
         revalidate();
         repaint();
     }
+
 
     public void displaySettings() {
 
