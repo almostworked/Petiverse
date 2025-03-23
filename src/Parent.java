@@ -1,3 +1,7 @@
+/**
+ * Parent class
+ * @author Daniella
+ */
 public class Parent extends Player {
     private String password;
     private float time;
