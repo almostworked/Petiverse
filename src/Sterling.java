@@ -17,8 +17,10 @@ public class Sterling extends Pet {
      * @param hunger    The current hunger level of the pet.
      * @param alive     The status of alive or dead
      * @param weight    The weight of the Sterling pet.
+     * @param fullness  The fullness level of the pet
+     * @param state     The state of the pet
      */
-    public Sterling(String name, int health, int sleep, int happiness, int hunger, boolean alive, int fullness, String state) {
+    public Sterling(String name, int health, int sleep, int happiness, int hunger, int weight, boolean alive, int fullness, String state) {
         super(name, health, sleep, happiness, hunger, alive, fullness, state);
         this.weight = weight;
     }
