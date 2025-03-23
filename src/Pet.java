@@ -21,6 +21,7 @@ public class Pet {
         this.fullness = fullness;
         this.state = state;
     }
+  
 	
     public String getName() {
         return name;

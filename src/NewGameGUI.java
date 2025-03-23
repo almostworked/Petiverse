@@ -126,9 +126,9 @@ public class NewGameGUI extends JFrame {
     }
 
     public static void main(String[] args) {
-        Pet pet1 = new Pet("Foxy");
-        Pet pet2 = new Pet("Roscoe");
-        Pet pet3 = new Pet("Sterling");
+        Pet pet1 = new Pet("Foxy", 100, 100, 100, 100, true, 100, "Normal" );
+        Pet pet2 = new Pet("Roscoe", 100, 100, 100, 100, true, 100, "Normal" );
+        Pet pet3 = new Pet("Sterling", 100, 100, 100, 100, true, 100, "Normal" );
 
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {

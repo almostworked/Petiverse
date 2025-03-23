@@ -1,4 +1,3 @@
-package src;
 
 /**
  * Represents a player in the game, who can interact with pets and manage inventory.

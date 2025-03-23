@@ -1,4 +1,3 @@
-package src;
 
 /**
  * Represents the pet Foxy, an extension of the Pet class with an additional weight attribute.
@@ -19,9 +18,9 @@ public class Foxy extends Pet {
      * @param alive     The status of alive or dead
      * @param weight    The weight of the Foxy pet.
      */
-    public Foxy(String name, int health, int sleep, int happiness, int hunger, int weight, boolean alive) {
-        super(name, health, sleep, happiness, hunger, alive);
-        this.weight = weight;
+    public Foxy(String name, int health, int sleep, int happiness, int hunger, boolean alive, int fullness, String state) {
+        super(name, health, sleep, happiness, hunger, alive, fullness, state);
+       //  this.weight = weight; // Not currently in use
     }
 
     /**

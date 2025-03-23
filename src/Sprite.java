@@ -6,7 +6,7 @@ public class Sprite extends Pet{
 	private String spriteSound;
 	
 	public Sprite(String name, int health, int sleep, int happiness, int hunger, boolean alive, String spriteImage, String spriteAnimation, String spriteSound) {
-		super(name, health, sleep, happiness, hunger, alive);
+		super(name, health, sleep, happiness, hunger, alive, hunger, spriteSound); // fix
 		
 		this.spriteAnimation = spriteAnimation;
 		this.spriteImage = spriteImage;

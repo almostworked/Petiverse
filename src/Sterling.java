@@ -1,4 +1,3 @@
-package src;
 
 /**
  * Represents the pet Sterling, extending the Pet class with a weight attribute.
@@ -19,8 +18,8 @@ public class Sterling extends Pet {
      * @param alive     The status of alive or dead
      * @param weight    The weight of the Sterling pet.
      */
-    public Sterling(String name, int health, int sleep, int happiness, int hunger, int weight, boolean alive) {
-        super(name, health, sleep, happiness, hunger, alive);
+    public Sterling(String name, int health, int sleep, int happiness, int hunger, boolean alive, int fullness, String state) {
+        super(name, health, sleep, happiness, hunger, alive, fullness, state);
         this.weight = weight;
     }
 
