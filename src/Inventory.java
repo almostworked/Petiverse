@@ -2,39 +2,40 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Inventory {
-	private List<Item> item; //Made a list to store the items
+	private List<Item> items; //Made a list to store the items
 	private boolean hasGifts;
-	
-	//2 constructors
-	//empty constructor
-	public Inventory() {
-        this.items = new ArrayList<>();
-        this.hasGifts = false;
-    }
-	
-	//Constructor with existing items
-	public Inventory(List<Item> items, boolean hasGifts) {
-        this.items = new ArrayList<>(items);
-        this.hasGifts = hasGifts;
-    }
-	
-	public int getQuantity(String itemName) {
-		for (Item item : items) {
-			if (item.getName().equalsIgnoreCase(itemName)) {
-				return item.getQuantity();
-			}
+		private String itemName;
+		
+		//2 constructors
+		//empty constructor
+		public Inventory() {
+			this.items = new ArrayList<>();
+			this.hasGifts = false;
 		}
-		return 0; //This returns 0 if item is not found
-	}
-	
-	//Display inventory contents
-	public Inventory displayInventory() {
-		System.out.println("Inventory:");
-		if (items.isEmpty()) {
-			System.out.println("No items in inventory.");
-		} else {
-			for (Item item: items) {
-				System.out.println(item.getName() + " - Quantity: " + item.getQuantity());
+		
+		//Constructor with existing items
+		public Inventory(List<Item> items, boolean hasGifts) {
+			this.items = new ArrayList<>(items);
+			this.hasGifts = hasGifts;
+		}
+		
+		public int getQuantity(String itemName) {
+			for (Item item : items) {
+				if (item.getItem().equalsIgnoreCase(itemName)) {
+					return item.getQuantity(itemName);
+				}
+			}
+			return 0; //This returns 0 if item is not found
+		}
+		
+		//Display inventory contents
+		public Inventory displayInventory() {
+			System.out.println("Inventory:");
+			if (items.isEmpty()) {
+				System.out.println("No items in inventory.");
+			} else {
+				for (Item item: items) {
+					System.out.println(item.getItem() + " - Quantity: " + item.getQuantity(itemName));
 			}
 		}
 		return this;
@@ -49,20 +50,20 @@ public class Inventory {
 	
 	public void updateInventory (String itemName, int quantity) {
 		for (Item item : items) {
-            if (item.getName().equalsIgnoreCase(itemName)) {
-                item.setQuantity(item.getQuantity() + quantity);
+            if (item.getItem().equalsIgnoreCase(itemName)) {
+                item.setQuantity(item.getQuantity(itemName) + quantity);
                 return;
             }
         }
         // If item does not exist, add it
-        items.add(new Item(itemName, quantity));
+        items.add(new Item(itemName, itemName, quantity));
 	}
 	
 	public void removeItem(String itemName, int quantity) {
 		for (int i = 0; i < items.size(); i++) {
             Item item = items.get(i);
-            if (item.getName().equalsIgnoreCase(itemName)) {
-                int newQuantity = item.getQuantity() - quantity;
+            if (item.getItem().equalsIgnoreCase(itemName)) {
+                int newQuantity = item.getQuantity(itemName) - quantity;
                 if (newQuantity <= 0) {
                     items.remove(i); // Remove item if quantity is zero or negative
                 } else {

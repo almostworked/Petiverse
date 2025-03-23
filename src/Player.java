@@ -258,4 +258,7 @@ public class Player implements PlayGame {
                 + ". Health is now " + this.activePet.getHealth());
         return this.activePet.getHealth();
     }
+    public Pet getActivePet() {
+        return activePet;
+    }
 }

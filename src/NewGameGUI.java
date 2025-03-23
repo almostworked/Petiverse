@@ -93,6 +93,8 @@ public class NewGameGUI extends JFrame {
                 }
 
                 saveGame(playerName, saveSlot, petName);
+                openPlayGameInterface(playerName, selectedPet);
+
 
                 JOptionPane.showMessageDialog(null, "New game created with " + petName);
                 dispose();
@@ -101,6 +103,18 @@ public class NewGameGUI extends JFrame {
         setLocationRelativeTo(null);
         setVisible(true);
     }
+    private void openPlayGameInterface(String playerName, Pet selectedPet) {
+        // You can pass the player and pet into the PlayGame interface here.
+        // Assuming you have a class that implements PlayGame (like your Player class)
+        
+        Inventory inventory = new Inventory();  // Initialize inventory for the player
+        Player player = new Player(inventory, false, selectedPet); // Assuming false means not a parent
+    
+        // Assuming PlayGameGUI is your game window that needs the Player object
+        PlayGameGUI playGameGUI = new PlayGameGUI(player); 
+        playGameGUI.setVisible(true); // Make the play game window visible
+    }
+    
 
     private void saveGame(String playerName, int saveSlot, String petName) {
         try (FileWriter writer = new FileWriter("game_save.csv", true)) {
