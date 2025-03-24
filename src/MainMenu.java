@@ -565,7 +565,8 @@ public class MainMenu extends JFrame {
                 // Load the selected saved game here
                 System.out.println("Loading: " + petInfo);
                 int slotNumber = Integer.parseInt(gameData[0].replace("Slot", "").trim()) - 1;
-                loadGame.loadGame(slotNumber);
+                LoadGame loadGame2 = new LoadGame();
+                loadGame2.loadGame(slotNumber);
             });
             card.add(Box.createVerticalStrut(5));
             card.add(loadBtn);

@@ -31,7 +31,7 @@ public class Pet {
      * 
      * This is the constructor of the Pet
      */
-	public Pet(String name, int health, int sleep, int happiness, int hunger, boolean alive, int fullness, String state) {
+	public Pet(String name, int health, int sleep, int happiness, int hunger, boolean alive, int fullness, String state ) {
         this.name = name;
         this.health = health;
         this.sleep = sleep;
@@ -160,6 +160,9 @@ public class Pet {
      public boolean isAlive() {
 		return alive;
     } 
+    public void setAlive(boolean alive) {
+        this.alive = alive;
+    }
 
     /**
      * @return A {@code String} representing the pet's current state
@@ -251,7 +254,10 @@ public class Pet {
             System.out.println(name + " is dead. They cannot sleep.");
         } else {
             sleep = 0;
+            setState("SLEEPING");
+            PlayGameGUI.updatePetState(getState());
             System.out.println(name + " is now sleeping.");
+
         }
     }
 

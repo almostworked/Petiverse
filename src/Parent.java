@@ -8,8 +8,8 @@ public class Parent extends Player {
     float maxTime;
     private boolean restrictions;
 
-    public Parent(Inventory inventory, Boolean isParent, Pet activePet) {
-        super(inventory, isParent, activePet);
+    public Parent(String name, Inventory inventory, Boolean isParent, Pet activePet) {
+        super(name, inventory, isParent, activePet);
     }
     public String getPassword(){
         return password;

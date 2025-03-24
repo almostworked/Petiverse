@@ -1,4 +1,4 @@
-package src.logic;
+package logic;
 
 import src.Pet;
 import java.util.ArrayList;
