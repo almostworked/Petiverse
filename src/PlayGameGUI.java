@@ -27,6 +27,7 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 
+
 public class PlayGameGUI extends JFrame {
     private static PlayGameGUI instance;
     private Player player;
@@ -40,6 +41,9 @@ public class PlayGameGUI extends JFrame {
     
     
     public PlayGameGUI(Player player, int saveSlot, String playerName) {
+        int[] decay = {1,2,3};
+        StateManager stateManager = new StateManager(player.getActivePet(), decay);
+        
         instance = this;
         this.saveSlot = saveSlot;
         this.playerName = playerName;
@@ -234,6 +238,7 @@ public class PlayGameGUI extends JFrame {
     
             bedButton.addActionListener(e -> {
                 player.goToBed();
+                player.getActivePet().setState("SLEEPING");
                 updateVitalBars();
 
             });
@@ -394,6 +399,8 @@ public class PlayGameGUI extends JFrame {
         hungerBar.setValue(activePet.getHunger());
 
     }
+
+    // Run for testing with a predefined pet
     public static void main(String[] args) {
         // Example usage
         Pet pet = new Pet("Foxy", 100, 100, 100, 100, true, 100, "Normal");

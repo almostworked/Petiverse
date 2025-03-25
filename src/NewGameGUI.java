@@ -103,7 +103,7 @@ public class NewGameGUI extends JFrame {
         setLocationRelativeTo(null);
         setVisible(true);
     }
-    private void openPlayGameInterface(String playerName, Pet selectedPet, int saveSlot) {
+    public void openPlayGameInterface(String playerName, Pet selectedPet, int saveSlot) {
         // You can pass the player and pet into the PlayGame interface here.
         // Assuming you have a class that implements PlayGame (like your Player class)
         

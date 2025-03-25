@@ -1,11 +1,3 @@
-package logic;
-import Inventory;
-import src.Item;
-import src.Pet;
-import src.Player;
-import src.Score;
-
-
 public class GameLogic {
     private Pet pet;
     private Player player;

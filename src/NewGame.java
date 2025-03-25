@@ -24,27 +24,23 @@ public class NewGame {
         this.selectedPet.setAlive(true);
         this.selectedPet.setState("NORMAL");
 
-        // Allow the player to name their pet
         choosePetName();
 
         // Save the game
         saveGame();
     }
 
-    // Method to allow the player to name their pet
     private void choosePetName() {
-        Scanner scanner = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in); // Not in use yet
         System.out.println("Enter a name for your new pet (" + selectedPet.getName() + "): ");
         this.petName = scanner.nextLine().trim();
 
-        // Use the default pet name if no name is provided
         if (this.petName.isEmpty()) {
             this.petName = selectedPet.getName();
         }
         selectedPet.setName(this.petName);
     }
 
-    // Method to save the game to a file
     public void saveGame() {
         int health = this.selectedPet.getHealth();
         int sleep = this.selectedPet.getSleep();

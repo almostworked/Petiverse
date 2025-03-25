@@ -19,18 +19,25 @@ public class LoadGame {
 
         return savedGames;
     }
-    public Object[] loadGame(int slotNumber) {
+    public void loadGame(int slotNumber) {
         Pet loadedPet = null;
         Player loadedPlayer = null;
         Inventory loadedInventory = new Inventory();
-        boolean isParent = false;
+        boolean isParent = false; // Assuming player is not a parent
+        System.out.println("Unloaded info initialized");
 
         try (BufferedReader reader = new BufferedReader(new FileReader(SAVE_FILE))) {
             String line;
-            int slotCounter = 1;
+            int slotCounter = 0;
+            System.out.println("String line and slot count initialized");
             while ((line = reader.readLine()) != null) {
-                String[] data = line.split(",");
-                if (data.length >= 10 && slotCounter == slotNumber) {
+                System.out.println("Line confirmed not null");
+                String[] data = line.split(","); // Put individual fields into an array
+                System.out.println("Data length: " + data.length);
+                System.out.println("Slot counter: " + slotCounter);
+                System.out.println("Slot number: " + slotNumber);
+                if (data.length == 9 && slotCounter == slotNumber) { // Find the correct slot number
+                    System.out.println("Data length confirm = 9 and slotcounter = slot number");
                     String playerName = data[1]; // Assuming this is the username
                     String petName = data[2];
                     int health = Integer.parseInt(data[3]);
@@ -41,8 +48,11 @@ public class LoadGame {
                     String state = data[8];
                     
                     loadedPet = new Pet(petName, health, sleep, hunger, happiness, alive, hunger, state);
-                    loadedPlayer = new Player(playerName, loadedInventory,isParent, loadedPet);
-                    //loadedInventory = loadInventory(slotNumber);
+                    loadedPlayer = new Player(playerName, loadedInventory, isParent, loadedPet);
+                    //loadedInventory = loadInventory(slotNumber); TO DO when inventory is configured
+                    System.out.println("PET LOADED");
+                    PlayGameGUI playGameGUI = new PlayGameGUI(loadedPlayer, slotNumber, playerName); 
+                    playGameGUI.setVisible(true);
                     
                     break;
                 }
@@ -52,7 +62,6 @@ public class LoadGame {
         } catch (IOException e) {
                 System.out.println("Error occurred when trying to load game");
         }
-        return new Object[] { loadedPlayer, loadedPet };
 
     }
 }

@@ -135,4 +135,9 @@ public class Inventory {
             this.quantity = quantity;
         }
     }
+
+    public CharSequence getItems() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getItems'");
+    }
 }

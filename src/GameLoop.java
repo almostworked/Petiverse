@@ -1,10 +1,4 @@
-package logic;
-
 import javax.swing.Timer;
-import src.Pet;
-import src.Player;
-import src.SaveGame;
-import src.Inventory;
 
 
 public class GameLoop {
