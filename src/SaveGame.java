@@ -1,9 +1,3 @@
-package src;
-
-import src.Inventory;
-import src.Pet;
-import src.logic.ParentalControls;
-
 import java.io.IOException;
 import java.io.FileWriter;
 import java.io.PrintWriter;
@@ -45,7 +39,6 @@ public class SaveGame {
      *
      * @param pet is the current pet (pet state) in this session
      */
-    // Save pet details into the save file
     public void savePet(Pet pet) {
         String filename = "game_save.csv"; // Match LoadGame's file
         try (PrintWriter writer = new PrintWriter(new FileWriter(filename, true))) {
@@ -59,14 +52,10 @@ public class SaveGame {
         }
     }
 
-<<<<<<< HEAD
     /**
      * Appends the inventory contents to a csv file
      * @param inventory holds the game's inventory contents
      */
-=======
-    // Save inventory details (if necessary)
->>>>>>> 01bf411f0e541dac96a75ce41ceb2dd4ea0dee43
     private void saveInventory(Inventory inventory) {
         String filename = "inventory.csv";
         try (PrintWriter writer = new PrintWriter(new FileWriter(filename, true))) {
@@ -76,16 +65,12 @@ public class SaveGame {
         }
     }
 
-<<<<<<< HEAD
     // FIXME
     /**
      * Appends the parental controls & restrictions to a csv file
      *
      * @param parentalControls contains the parental settings for this game
      */
-=======
-    // Save parental control data (if applicable)
->>>>>>> 01bf411f0e541dac96a75ce41ceb2dd4ea0dee43
     private void saveParentalControls(ParentalControls parentalControls) {
         if (!isParent) return; // Skip if not in parental mode
 
@@ -97,13 +82,9 @@ public class SaveGame {
         }
     }
 
-<<<<<<< HEAD
     /**
      * Appends the save slot, along with the savedName, to a csv file
      */
-=======
-    // Save the player's name with their save slot (if necessary)
->>>>>>> 01bf411f0e541dac96a75ce41ceb2dd4ea0dee43
     private void saveSaveSlot() {
         String filename = "save_slots.csv";
         try (PrintWriter writer = new PrintWriter(new FileWriter(filename, true))) {
@@ -113,7 +94,6 @@ public class SaveGame {
         }
     }
 
-<<<<<<< HEAD
     /**
      * This method saves game states and information, calling upon the appropriate helper methods
      * If all information is saved as expected, a success message is output to the terminal
@@ -122,9 +102,6 @@ public class SaveGame {
      * @param inventory is the Inventory data to be saved
      * @param parentalControls are the ParentalControls to be saved
      */
-=======
-    // Main method to save all game data
->>>>>>> 01bf411f0e541dac96a75ce41ceb2dd4ea0dee43
     public void save(Pet pet, Inventory inventory, ParentalControls parentalControls) {
         savePet(pet); // Save pet data
         saveInventory(inventory); // Save inventory data
