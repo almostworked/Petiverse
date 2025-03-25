@@ -12,9 +12,6 @@ public class GameLogic {
     private Inventory inventory;
     private Score score;  // We'll link directly to the Player's score
 
-    // ----------------------
-    // Constructor
-    // ----------------------
     public GameLogic(Pet pet, Player player, Inventory inventory) {
         this.pet = pet;
         this.player = player;
@@ -22,9 +19,6 @@ public class GameLogic {
         this.score = player.getScore();  // Use the player's score reference
     }
 
-    // ----------------------
-    // Actions
-    // ----------------------
     public void goToBed() {
         if (pet.getState().equals("DEAD") || pet.getState().equals("SLEEPING")) {
             System.out.println("Cannot change sleep state; pet is " + pet.getState() + ".");
