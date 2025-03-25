@@ -6,6 +6,10 @@ import src.Pet;
 import src.Player;
 import src.Score;
 
+/**
+ * Centralized game logic class. Holds references to a Pet, Player, and Inventory,
+ * and provides methods to perform actions such as feeding, sleeping, giving gifts, etc.
+ */
 public class GameLogic {
     private Pet pet;
     private Player player;
@@ -19,51 +23,52 @@ public class GameLogic {
         this.score = player.getScore();  // Use the player's score reference
     }
 
-    public void goToBed() {
-        if (pet.getState().equals("DEAD") || pet.getState().equals("SLEEPING")) {
-            System.out.println("Cannot change sleep state; pet is " + pet.getState() + ".");
+    /**
+     * Puts the pet to bed, as long as it isn't DEAD or already SLEEPING.
+     */
+    public void sleep() {
+        if (!canExecuteCommand("goToBed")) {
             return;
         }
+        // For consistency, let's set the pet to state SLEEPING, or call pet.setSleep(0) if needed
         pet.setState("SLEEPING");
         System.out.println("Pet is now sleeping.");
     }
 
-    public void feedPet(Item food) {
-        if (pet.getState().equals("DEAD") 
-            || pet.getState().equals("SLEEPING") 
-            || pet.getState().equals("ANGRY")) 
-        {
-            System.out.println("Cannot feed pet; pet is " + pet.getState() + ".");
+    /**
+     * Feeds the pet if it isn't dead, sleeping, or angry, and updates inventory/score.
+     * @param food The item (food) the user has chosen to feed the pet with
+     */
+    public void feed(Item food) {
+        if (!canExecuteCommand("feed")) {
             return;
         }
 
-        // Reduce item quantity in Inventory
         int currentQty = inventory.getQuantity(food);
         if (currentQty <= 0) {
-            System.out.println("No " + food.getName() + " left in the inventory.");
+            System.out.println("No " + food.getName() + " left in inventory.");
             return;
         }
         inventory.setQuantity(food, currentQty - 1);
 
-        // Increase pet fullness
         pet.setFullness(pet.getFullness() + food.getEffectValue());
+        score.setScore(score.getScore() + 10); // example logic
+        System.out.println("Fed " + food.getName() + ". Pet fullness is now: " + pet.getFullness());
 
-        // Increase the Player's score
-        score.setScore(score.getScore() + 10); // Adjust to your desired logic
-
-        // If the pet's fullness is positive, ensure it isn't stuck in "HUNGRY" or "ANGRY"
-        if (pet.getFullness() > 0) {
+        // If the pet's fullness is positive, ensure it is not stuck in "HUNGRY" or "ANGRY"
+        if (pet.getFullness() > 0 && !pet.getState().equals("DEAD")) {
             pet.setState("NORMAL");
         }
     }
 
+    /**
+     * Gives a gift to the pet if it isn't dead or sleeping, updates happiness and inventory.
+     */
     public void giveGift(Item gift) {
-        if (pet.getState().equals("DEAD") || pet.getState().equals("SLEEPING")) {
-            System.out.println("Cannot give gift to pet; pet is " + pet.getState() + ".");
+        if (!canExecuteCommand("giveGift")) {
             return;
         }
 
-        // Reduce item quantity in Inventory
         int currentQty = inventory.getQuantity(gift);
         if (currentQty <= 0) {
             System.out.println("No " + gift.getName() + " left in the inventory.");
@@ -71,52 +76,89 @@ public class GameLogic {
         }
         inventory.setQuantity(gift, currentQty - 1);
 
-        // Increase happiness
         pet.setHappiness(pet.getHappiness() + gift.getEffectValue());
-
-        // Increase score
-        score.setScore(score.getScore() + 10); // Adjust to your desired logic
+        score.setScore(score.getScore() + 10); // example logic
+        System.out.println("Gave " + gift.getName() + ". Pet happiness is now: " + pet.getHappiness());
     }
 
+    /**
+     * Takes the pet to the vet if not dead, sleeping, or angry. Restores pet's health to 100,
+     * but penalizes the player's score.
+     */
     public void takePetToVet() {
-        if (pet.getState().equals("DEAD") 
-            || pet.getState().equals("SLEEPING") 
-            || pet.getState().equals("ANGRY")) 
-        {
-            System.out.println("Cannot take pet to the vet; pet is " + pet.getState() + ".");
+        if (!canExecuteCommand("visitVet")) {
             return;
         }
-
         pet.setHealth(100);
-        score.setScore(score.getScore() - 10); // Adjust to your desired logic
+        score.setScore(score.getScore() - 10);
+        System.out.println("Pet's health is restored to 100. Score is now " + score.getScore());
     }
 
+    /**
+     * Plays with the pet if it isn't dead or sleeping. Increases happiness significantly,
+     * and awards some score.
+     */
     public void playWithPet() {
-        if (pet.getState().equals("DEAD") || pet.getState().equals("SLEEPING")) {
-            System.out.println("Cannot play with pet; pet is " + pet.getState() + ".");
+        if (!canExecuteCommand("play")) {
             return;
         }
-
-        // Increase happiness
-        pet.setHappiness(pet.getHappiness() + 40); // Example increment
-        score.setScore(score.getScore() + 10);     // Adjust to your desired logic
+        pet.setHappiness(pet.getHappiness() + 40);
+        score.setScore(score.getScore() + 10);
+        System.out.println("Played with pet! Happiness: " + pet.getHappiness());
     }
 
+    /**
+     * Exercises the pet if it isn't dead, sleeping, or angry. Helps health, but uses up fullness/sleep.
+     */
     public void exercisePet() {
-        if (pet.getState().equals("DEAD") 
-            || pet.getState().equals("SLEEPING") 
-            || pet.getState().equals("ANGRY")) 
-        {
-            System.out.println("Cannot exercise pet; pet is " + pet.getState() + ".");
+        if (!canExecuteCommand("exercise")) {
             return;
         }
-
-        // Example logic: exercise uses up sleep and fullness but helps health
         pet.setSleep(Math.max(pet.getSleep() - 30, 0));
         pet.setFullness(Math.max(pet.getFullness() - 10, 0));
         pet.setHealth(Math.min(pet.getHealth() + 10, 100));
-        
-        score.setScore(score.getScore() + 15); // Adjust as needed
+        score.setScore(score.getScore() + 15);
+
+        System.out.println("Exercised pet -> Health: " + pet.getHealth()
+                           + ", Sleep: " + pet.getSleep()
+                           + ", Fullness: " + pet.getFullness());
+    }
+
+    /**
+     * Checks whether a command can be executed based on the pet's current state and other logic.
+     * 
+     * @param command The action user is attempting ("feed", "giveGift", "goToBed", "exercise", etc.)
+     * @return True if the command is allowed; false otherwise.
+     */
+    private boolean canExecuteCommand(String command) {
+        if (pet == null) {
+            System.out.println("No pet available to interact with.");
+            return false;
+        }
+
+        String petState = pet.getState();
+
+        // Hard-coded checks based on your existing logic
+        if (petState.equals("DEAD")) {
+            System.out.println("Pet is dead. No commands allowed.");
+            return false;
+        }
+        if (petState.equals("SLEEPING")) {
+            System.out.println("Pet is sleeping. No commands allowed right now.");
+            return false;
+        }
+        if (petState.equals("ANGRY")) {
+            // If the pet is angry, only "giveGift" or "play" is allowed
+            if (command.equalsIgnoreCase("giveGift") ||
+                command.equalsIgnoreCase("play")) {
+                return true;
+            } else {
+                System.out.println("Pet is angry. Only 'Give Gift' or 'Play' is allowed.");
+                return false;
+            }
+        }
+        // If normal or hungry, all commands are allowed
+        return true;
     }
 }
 
