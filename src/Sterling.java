@@ -1,4 +1,3 @@
-package src;
 
 /**
  * Represents the pet Sterling, extending the Pet class with a weight attribute.

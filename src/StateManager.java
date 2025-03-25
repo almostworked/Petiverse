@@ -1,6 +1,3 @@
-package src.logic;
-
-import src.Pet;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.Timer;

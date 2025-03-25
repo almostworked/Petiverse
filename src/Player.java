@@ -1,4 +1,3 @@
-package src;
 
 /**
  * Represents a player in the game, who can interact with pets and manage inventory.
@@ -8,18 +7,22 @@ package src;
  */
 public class Player implements PlayGame {
 
+    private String name;
     private Inventory inventory;
     private Boolean isParent;
     private Pet activePet;
     private Score score;
 
-    public Player(Inventory inventory, Boolean isParent, Pet activePet) {
+    public Player(String name, Inventory inventory, Boolean isParent, Pet activePet) {
+        this.name = name;
         this.inventory = inventory;
         this.isParent = isParent;
         this.activePet = activePet;
         this.score = new Score();
     }
-
+    public String getName() {
+        return this.name;
+    }
     @Override
     public void displayPetState() {
         if (this.activePet == null) {
@@ -84,6 +87,7 @@ public class Player implements PlayGame {
         this.activePet.setSleep(0);
         this.activePet.setState("SLEEPING");
         System.out.println(this.activePet.getName() + " is now going to bed...");
+        PlayGameGUI.updatePetState(this.activePet.getState());
         return this.activePet.getSleep();
     }
 
@@ -225,7 +229,7 @@ public class Player implements PlayGame {
         return true;
     }
 
-    private void updatePetState() {
+    public void updatePetState() {
         if (!activePet.isAlive()) {
             activePet.setState("DEAD");
             return;
@@ -241,5 +245,8 @@ public class Player implements PlayGame {
         } else {
             activePet.setState("NORMAL");
         }
+    }
+    public Pet getActivePet() {
+        return activePet;
     }
 }

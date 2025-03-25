@@ -1,4 +1,3 @@
-package src;
 
 /**
  * Represents the pet Foxy, an extension of the Pet class with an additional weight attribute.

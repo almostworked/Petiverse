@@ -1,4 +1,3 @@
-package src;
 
 /**
  * Represents the pet Roscoe, an extension of the Pet class with an additional weight attribute.

@@ -1,4 +1,3 @@
-package src;
 
 /**
  * Represents an item that can be stored and managed within an inventory system.
@@ -45,5 +44,12 @@ public class Item {
         }
         throw new IllegalArgumentException("Invalid item: " + name + " of type " + type);
     }
+
+    public void setQuantity(int i) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setQuantity'");
+    }
 }
+
+
 

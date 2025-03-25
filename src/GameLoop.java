@@ -1,10 +1,5 @@
-package src.logic;
-
 import javax.swing.Timer;
-import src.Pet;
-import src.Player;
-import src.SaveGame;
-import src.Inventory;
+
 
 public class GameLoop {
     private final Timer gameTimer;

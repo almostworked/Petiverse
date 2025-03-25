@@ -7,6 +7,7 @@ import src.logic.ParentalControls;
 import java.io.IOException;
 import java.io.FileWriter;
 import java.io.PrintWriter;
+import java.time.LocalDateTime;
 
 /**
  * The purpose of this class is to save the data of a game in progress
@@ -44,57 +45,75 @@ public class SaveGame {
      *
      * @param pet is the current pet (pet state) in this session
      */
-    private void savePet(Pet pet) {
-        String filename = "pets.csv";
+    // Save pet details into the save file
+    public void savePet(Pet pet) {
+        String filename = "game_save.csv"; // Match LoadGame's file
         try (PrintWriter writer = new PrintWriter(new FileWriter(filename, true))) {
-            writer.println(saveSlot + "," + pet.getName() + "," + pet.getHappiness() + "," + pet.getHunger() + "," + pet.getHealth());
+            // Format: saveSlot, playerName, petName, health, sleep, happiness, hunger, alive, state, creationDate
+            String creationDate = LocalDateTime.now().toString(); // Add creation date
+            writer.println(String.format("%d,%s,%s,%d,%d,%d,%d,%b,%s,%s",
+                    saveSlot, savedName, pet.getName(), pet.getHealth(), pet.getSleep(),
+                    pet.getHappiness(), pet.getHunger(), pet.isAlive(), pet.getState(), creationDate));
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Error saving pet data: " + e.getMessage());
         }
     }
 
+<<<<<<< HEAD
     /**
      * Appends the inventory contents to a csv file
      * @param inventory holds the game's inventory contents
      */
+=======
+    // Save inventory details (if necessary)
+>>>>>>> 01bf411f0e541dac96a75ce41ceb2dd4ea0dee43
     private void saveInventory(Inventory inventory) {
         String filename = "inventory.csv";
         try (PrintWriter writer = new PrintWriter(new FileWriter(filename, true))) {
             writer.println(saveSlot + "," + String.join(";", inventory.getItems()));
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Error saving inventory data: " + e.getMessage());
         }
     }
 
+<<<<<<< HEAD
     // FIXME
     /**
      * Appends the parental controls & restrictions to a csv file
      *
      * @param parentalControls contains the parental settings for this game
      */
+=======
+    // Save parental control data (if applicable)
+>>>>>>> 01bf411f0e541dac96a75ce41ceb2dd4ea0dee43
     private void saveParentalControls(ParentalControls parentalControls) {
-        if (!isParent) return;
+        if (!isParent) return; // Skip if not in parental mode
 
         String filename = "parental.csv";
-//        try (PrintWriter writer = new PrintWriter(new FileWriter(filename, true))) {
-//            writer.println(saveSlot + "," + parentalControls.isEnabled() + "," + parentalControls.getRestrictions());
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        try (PrintWriter writer = new PrintWriter(new FileWriter(filename, true))) {
+            writer.println(saveSlot + "," + parentalControls.isEnabled() + "," + parentalControls.getRestrictions());
+        } catch (IOException e) {
+            System.out.println("Error saving parental controls: " + e.getMessage());
+        }
     }
 
+<<<<<<< HEAD
     /**
      * Appends the save slot, along with the savedName, to a csv file
      */
+=======
+    // Save the player's name with their save slot (if necessary)
+>>>>>>> 01bf411f0e541dac96a75ce41ceb2dd4ea0dee43
     private void saveSaveSlot() {
         String filename = "save_slots.csv";
         try (PrintWriter writer = new PrintWriter(new FileWriter(filename, true))) {
             writer.println(saveSlot + "," + savedName);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Error saving save slot data: " + e.getMessage());
         }
     }
 
+<<<<<<< HEAD
     /**
      * This method saves game states and information, calling upon the appropriate helper methods
      * If all information is saved as expected, a success message is output to the terminal
@@ -103,12 +122,15 @@ public class SaveGame {
      * @param inventory is the Inventory data to be saved
      * @param parentalControls are the ParentalControls to be saved
      */
+=======
+    // Main method to save all game data
+>>>>>>> 01bf411f0e541dac96a75ce41ceb2dd4ea0dee43
     public void save(Pet pet, Inventory inventory, ParentalControls parentalControls) {
-        savePet(pet);
-        saveInventory(inventory);
-        saveParentalControls(parentalControls);
-        saveSaveSlot();
+        savePet(pet); // Save pet data
+        saveInventory(inventory); // Save inventory data
+        saveParentalControls(parentalControls); // Save parental controls if applicable
+        saveSaveSlot(); // Save the player's name with their save slot
 
-        System.out.println("Game saved successfully");
+        System.out.println("Game saved successfully in slot " + saveSlot);
     }
 }

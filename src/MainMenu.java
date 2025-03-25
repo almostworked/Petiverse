@@ -538,6 +538,7 @@ public class MainMenu extends JFrame {
         List<String> savedGamesList = loadGame.loadSavedGames();
 
         for (String game : savedGamesList) {
+            // Create a card for each save file
             JPanel card = new JPanel();
             card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
             card.setBackground(new Color(255, 255, 255, 80)); // semi-transparent
@@ -564,8 +565,11 @@ public class MainMenu extends JFrame {
             loadBtn.addActionListener(e -> {
                 // Load the selected saved game here
                 System.out.println("Loading: " + petInfo);
-                int slotNumber = Integer.parseInt(gameData[0].replace("Slot", "").trim()) - 1;
-                loadGame.loadGame(slotNumber);
+                //System.out.println(gameData[0]);
+                int slotNumber = Integer.parseInt(gameData[0].replace("Slot", "").trim());
+                System.out.println(slotNumber); // Ensure slot number is correct
+                LoadGame loadGame2 = new LoadGame();
+                loadGame2.loadGame(slotNumber); // Load the game from the selected slot
             });
             card.add(Box.createVerticalStrut(5));
             card.add(loadBtn);

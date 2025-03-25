@@ -93,7 +93,7 @@ public class NewGameGUI extends JFrame {
                 }
 
                 saveGame(playerName, saveSlot, petName);
-                openPlayGameInterface(playerName, selectedPet);
+                openPlayGameInterface(playerName, selectedPet, saveSlot);
 
 
                 JOptionPane.showMessageDialog(null, "New game created with " + petName);
@@ -103,27 +103,43 @@ public class NewGameGUI extends JFrame {
         setLocationRelativeTo(null);
         setVisible(true);
     }
-    private void openPlayGameInterface(String playerName, Pet selectedPet) {
+    public void openPlayGameInterface(String playerName, Pet selectedPet, int saveSlot) { // Added saveSLot argument - Daniella
         // You can pass the player and pet into the PlayGame interface here.
         // Assuming you have a class that implements PlayGame (like your Player class)
         
         Inventory inventory = new Inventory();  // Initialize inventory for the player
-        Player player = new Player(inventory, false, selectedPet); // Assuming false means not a parent
+        Player player = new Player(playerName, inventory, false, selectedPet); // Assuming false means not a parent
     
         // Assuming PlayGameGUI is your game window that needs the Player object
-        PlayGameGUI playGameGUI = new PlayGameGUI(player); 
+        PlayGameGUI playGameGUI = new PlayGameGUI(player, saveSlot, playerName); // Added arguments for playgame gui - Daniella
         playGameGUI.setVisible(true); // Make the play game window visible
     }
     
 
     private void saveGame(String playerName, int saveSlot, String petName) {
         try (FileWriter writer = new FileWriter("game_save.csv", true)) {
-            // Save game info to a csv file
-            writer.write(saveSlot + "," + playerName + "," + petName + ",100,100,100\n");
+            // Get the selected pet object based on its name
+            Pet selectedPet = null;
+            for (Pet pet : availablePets) {
+                if (pet.getName().equals(petName)) {
+                    selectedPet = pet;
+                    break;
+                }
+            }
+    
+            // If the pet is found, write all fields into the CSV
+            if (selectedPet != null) {
+                writer.write(saveSlot + "," + playerName + "," + petName + ","
+                        + selectedPet.getHealth() + ","
+                        + selectedPet.getSleep() + ","
+                        + selectedPet.getHunger() + ","
+                        + selectedPet.getHappiness() + "," + selectedPet.isAlive() + "," + selectedPet.getState() + "\n");
+            }
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
     }
+    
 
     public static void main(String[] args) {
         Pet pet1 = new Pet("Foxy", 100, 100, 100, 100, true, 100, "Normal" );

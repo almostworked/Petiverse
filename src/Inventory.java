@@ -1,4 +1,3 @@
-package src;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -135,5 +134,10 @@ public class Inventory {
             this.item = item;
             this.quantity = quantity;
         }
+    }
+
+    public CharSequence getItems() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getItems'");
     }
 }
