@@ -34,7 +34,6 @@ public class NewGameGUI extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 dispose();
-                new MainMenu();  // Return to the Main Menu
             }
         });
 
