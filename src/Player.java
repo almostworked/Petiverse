@@ -25,8 +25,7 @@ public class Player implements PlayGame {
         this.isParent = isParent;
         this.activePet = activePet;
         this.score = new Score();
-        // You’ll initialize GameLogic from somewhere else in your code, passing this player, etc.
-        // gameLogic = new GameLogic(activePet, this, inventory);
+        
     }
     public String getName() {
         return this.name;

@@ -69,9 +69,8 @@ public class GameLoop {
         }
     }
 
-    // Award a point per second for keeping the pet alive
     private void updatePersistentScore() {
-        player.getScore().increaseScore(1); // Use the player's score object
+        player.getScore().increaseScore(1); 
     }
 
     private void handleAutoSave() {
