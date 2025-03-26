@@ -10,9 +10,9 @@ import java.time.LocalDateTime;
  */
 public class SaveGame {
     /** attributes */
-    private int saveSlot;
+    private static int saveSlot;
     private boolean isParent;
-    private String savedName;
+    private static String savedName;
 
     /**
      * Assigns the parameters to the class attributes
@@ -39,7 +39,7 @@ public class SaveGame {
      *
      * @param pet is the current pet (pet state) in this session
      */
-    public void savePet(Pet pet) {
+    public static void savePet(Pet pet) {
         String filename = "game_save.csv"; // Match LoadGame's file
         try (PrintWriter writer = new PrintWriter(new FileWriter(filename, true))) {
             // Format: saveSlot, playerName, petName, health, sleep, happiness, hunger, alive, state, creationDate
@@ -57,14 +57,14 @@ public class SaveGame {
      * @param inventory holds the game's inventory contents
      */
     // Save inventory details (if necessary)
-    private void saveInventory(Inventory inventory) {
+    /*private void saveInventory(Inventory inventory) {
         String filename = "inventory.csv";
         try (PrintWriter writer = new PrintWriter(new FileWriter(filename, true))) {
             writer.println(saveSlot + "," + String.join(";", inventory.getItems()));
         } catch (IOException e) {
             System.out.println("Error saving inventory data: " + e.getMessage());
         }
-    }
+    }*/
 
     // FIXME
     /**
@@ -107,7 +107,7 @@ public class SaveGame {
      */
     public void save(Pet pet, Inventory inventory, ParentalControls parentalControls) {
         savePet(pet); // Save pet data
-        saveInventory(inventory); // Save inventory data
+       // saveInventory(inventory); // Save inventory data
         saveParentalControls(parentalControls); // Save parental controls if applicable
         saveSaveSlot(); // Save the player's name with their save slot
 

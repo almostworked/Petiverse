@@ -267,6 +267,7 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
     
             // Add action listeners
             feedButton.addActionListener(e -> {
+
                 player.getActivePet().feed(null); // Replace with actual selection logic
                 updateVitalBars();
 
@@ -305,6 +306,9 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
             });
             back.addActionListener(e -> {
                 System.out.println("Back to main menu button clicked");
+                SaveGame saveFile = new SaveGame(saveSlot, player.isParent());
+                saveFile.savePet(player.getActivePet());
+
                // IMPLEMENT SAVE LOGIC BEFORE USER GOES BACK TO MAIN MENU
                // saveGame.save(player.getActivePet(), player.getInventory(), null);
                 dispose();

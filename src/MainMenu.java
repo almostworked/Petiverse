@@ -344,6 +344,12 @@ public class MainMenu extends JFrame {
         info.setLineWrap(true);
         info.setMargin(new Insets(10, 10, 10, 10));
         parentalFrame.add(info, BorderLayout.CENTER);
+
+        JLabel totalPlay = new JLabel("Total play time: ");
+        JLabel averagePlay = new JLabel("Average play time: ");
+        JLabel setTime = new JLabel("> Set play time limit <");
+
+        JButton timeLimit = new JButton("60");
     
         JButton closeBtn = new JButton("Close");
         closeBtn.addActionListener(e -> parentalFrame.dispose());
