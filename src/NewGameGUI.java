@@ -106,9 +106,6 @@ public class NewGameGUI extends JFrame {
         setVisible(true);
     }
     public void openPlayGameInterface(String playerName, Pet selectedPet, int saveSlot) { // Added saveSLot argument - Daniella
-        // You can pass the player and pet into the PlayGame interface here.
-        // Assuming you have a class that implements PlayGame (like your Player class)
-
         // Give the player some items in their inventory when starting a new game
         Item apple = new Item("Apple", Item.ItemType.FOOD, 10);
         Item fish = new Item("Fish", Item.ItemType.FOOD, 20);
@@ -123,15 +120,13 @@ public class NewGameGUI extends JFrame {
         list.add(item2);
         list.add(item3);
 
-        Inventory inventory = new Inventory(list, false);
+        Inventory inventory = new Inventory(list, false); // Create an inventory with the list of items, no gifts
         Player player = new Player(playerName, inventory, false, selectedPet); // Assuming false means not a parent
-    
-        // Assuming PlayGameGUI is your game window that needs the Player object
+        
         PlayGameGUI playGameGUI = new PlayGameGUI(player, saveSlot, playerName); // Added arguments for playgame gui - Daniella
-        playGameGUI.setVisible(true); // Make the play game window visible
+        playGameGUI.setVisible(true);
     }
     
-
     private void saveGame(String playerName, int saveSlot, String petName) {
         try (FileWriter writer = new FileWriter("game_save.csv", true)) {
             // Get the selected pet object based on its name
