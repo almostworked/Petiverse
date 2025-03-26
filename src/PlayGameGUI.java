@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map;
 import javax.swing.Timer;
+import javax.swing.UIManager;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -280,7 +281,7 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
     
             bedButton.addActionListener(e -> {
                 player.getActivePet().sleep();
-                player.getActivePet().setState("SLEEPING");
+                stateManager.setPetState("SLEEPING");                
                 updateVitalBars();
 
             });
@@ -494,6 +495,11 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
 
     // Run for testing with a predefined pet
     public static void main(String[] args) {
+        try {
+            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         // Example usage
         Pet pet = new Pet("Sterling", 100, 100, 100, 100, true, "Normal");
         Inventory inventory = new Inventory();
@@ -503,8 +509,10 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
     }
     @Override
     public void onStateChange(String newState) {
+        stateLabel.setText("Current State: " + newState);
         updateVitalBars();
     }
+
     @Override
     public void onStatWarning(String stat, boolean isWarning) {
         if (isWarning) {
