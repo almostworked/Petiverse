@@ -17,7 +17,7 @@ public class Inventory {
      * 
      * A flag to check if the inventory contains gifts is also provided.
      */
-    private Map<Item, Integer> itemMap;
+    public Map<Item, Integer> itemMap;
     private boolean hasGifts;
     
     /**
@@ -136,8 +136,11 @@ public class Inventory {
         }
     }
 
-    public CharSequence getItems() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getItems'");
+    public List<Entry> getItems() {
+        List<Entry> items = new ArrayList<>();
+        for (Map.Entry<Item, Integer> e : itemMap.entrySet()) {
+            items.add(new Entry(e.getKey(), e.getValue()));
+        }
+        return items;
     }
 }

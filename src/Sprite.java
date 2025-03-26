@@ -1,3 +1,7 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+
 /**
  * 
  * @author faniyi
@@ -15,6 +19,10 @@ public class Sprite extends Pet{
 	private String spriteImage;
 	private String spriteAnimation;
 	private String spriteSound;
+        private String currentState;
+        private String petName;
+        private List<String> spriteImages;
+        private int frameIndex;
         
         /**
          * 
@@ -33,12 +41,14 @@ public class Sprite extends Pet{
          * The constructor uses the super method because the class extends pet class
          */
 	
-	public Sprite(String name, int health, int sleep, int happiness, int hunger, boolean alive, String spriteImage, String spriteAnimation, String spriteSound) {
+	public Sprite(String name, int health, int sleep, int happiness, int hunger, boolean alive, List<String> spriteImages, String spriteSound) {
 		super(name, health, sleep, happiness, hunger, alive, hunger, spriteSound); // fix
 		
-		this.spriteAnimation = spriteAnimation;
-		this.spriteImage = spriteImage;
 		this.spriteSound = spriteSound;
+                this.petName = name;
+                this.currentState = "NORMAL";
+                this.frameIndex = 0;
+                this.spriteImages = spriteImages;
 	}
 	
         /**
@@ -99,4 +109,57 @@ public class Sprite extends Pet{
 	public String getName() {
 		return this.getName();	
 	}
+        public void setCurrentState(String state) {
+                this.currentState = state;
+                updateSprite();
+        }
+
+        public String getCurrentState() {
+                return currentState;
+        }
+
+        private void updateSprite() {
+                switch (currentState) {
+                        case "NORMAL":
+                                spriteImages = new ArrayList<>();
+                                spriteImages.add(petName + ".png");
+                                spriteImages.add(petName + "-Sprite1" + ".png");
+                                spriteImages.add(petName + "-Sprite2" + ".png");
+                                break;
+                        case "HUNGRY":
+                                spriteImages = new ArrayList<>();
+                                spriteImages.add(petName + ".png");
+                                spriteImages.add(petName + "-Sprite1" + ".png");
+                                spriteImages.add(petName + "-Sprite2" + ".png");
+                                break;
+                        case "ANGRY":
+                                spriteImages = new ArrayList<>();
+                                spriteImages.add(petName + "-Angry1" + ".png");
+                                spriteImages.add(petName + "-Angry2" + ".png");
+                                spriteImages.add(petName + "-Angry3" + ".png");
+                                break;
+                        case "SLEEPING":
+                                spriteImages = new ArrayList<>();
+                                spriteImages.add(petName + "-Sleeping1" + ".png");
+                                spriteImages.add(petName + "-Sleeping2" + ".png");
+                                spriteImages.add(petName + "-Sleeping3" + ".png");
+                                break;
+                        default:
+                                spriteImages = new ArrayList<>();
+                                spriteImages.add(petName + ".png");
+                                spriteImages.add(petName + "-Sprite1" + ".png");
+                                spriteImages.add(petName + "-Sprite2" + ".png");
+                                break;
+                }
+        }
+
+        public List<String> getSprites() {
+                return spriteImages;
+        }
+        public String getFrame() {
+                return spriteImages.get(frameIndex);
+        }
+        public void nextFrame() {
+                frameIndex = (frameIndex + 1) % spriteImages.size();
+        }
 }

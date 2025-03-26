@@ -1,5 +1,9 @@
-// Main access point to the game, sets up GUI
-// Handles entry into the game. Communicates with NewGame, SaveGame, Settings and Player
+/**
+ * MainMenu.java: The main entry point to the Petiverse game. Allows the user to start a new game, load a saved game, view instructions for the
+ * game, access parental controls or exit the game.
+ * 
+ * @author Daniella
+ */
 
 import javax.swing.*;
 import java.awt.*;

@@ -4,9 +4,6 @@ public class GameLogic {
     private Inventory inventory;
     private Score score;  // We'll link directly to the Player's score
 
-    // ----------------------
-    // Constructor
-    // ----------------------
     public GameLogic(Pet pet, Player player, Inventory inventory) {
         this.pet = pet;
         this.player = player;
@@ -14,10 +11,7 @@ public class GameLogic {
         this.score = player.getScore();  // Use the player's score reference
     }
 
-    // ----------------------
-    // Actions
-    // ----------------------
-    public void goToBed() {
+    public void sleep() {
         if (pet.getState().equals("DEAD") || pet.getState().equals("SLEEPING")) {
             System.out.println("Cannot change sleep state; pet is " + pet.getState() + ".");
             return;
@@ -26,7 +20,7 @@ public class GameLogic {
         System.out.println("Pet is now sleeping.");
     }
 
-    public void feedPet(Item food) {
+    public void feed(Item food) {
         if (pet.getState().equals("DEAD") 
             || pet.getState().equals("SLEEPING") 
             || pet.getState().equals("ANGRY")) 
@@ -76,7 +70,7 @@ public class GameLogic {
         score.setScore(score.getScore() + 10); // Adjust to your desired logic
     }
 
-    public void takePetToVet() {
+    public void vet() {
         if (pet.getState().equals("DEAD") 
             || pet.getState().equals("SLEEPING") 
             || pet.getState().equals("ANGRY")) 
@@ -89,7 +83,7 @@ public class GameLogic {
         score.setScore(score.getScore() - 10); // Adjust to your desired logic
     }
 
-    public void playWithPet() {
+    public void play() {
         if (pet.getState().equals("DEAD") || pet.getState().equals("SLEEPING")) {
             System.out.println("Cannot play with pet; pet is " + pet.getState() + ".");
             return;
@@ -100,7 +94,7 @@ public class GameLogic {
         score.setScore(score.getScore() + 10);     // Adjust to your desired logic
     }
 
-    public void exercisePet() {
+    public void exercise() {
         if (pet.getState().equals("DEAD") 
             || pet.getState().equals("SLEEPING") 
             || pet.getState().equals("ANGRY")) 

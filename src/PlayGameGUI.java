@@ -6,43 +6,56 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.FontFormatException;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.FontFormatException;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-
+import java.util.List;
+import java.util.Map;
+import java.util.Map;
+import javax.swing.Timer;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 
 
-public class PlayGameGUI extends JFrame {
+public class PlayGameGUI extends JFrame implements StateManager.StateChangeListener {
     private static PlayGameGUI instance;
     private Player player;
     private JLabel healthLabel, sleepLabel, fullnessLabel, happinessLabel, petImageLabel;
-    private JProgressBar healthBar, sleepBar, happinessBar, hungerBar;
+    private CustomProgressBar healthBar, sleepBar, happinessBar, hungerBar;
     private JLabel petNameLabel;
     private JLabel stateLabel;
     private SaveGame saveGame;
     private String playerName;
     private int saveSlot;
+    private Sprite petSprite;
+    private Timer timer;
     
     
     public PlayGameGUI(Player player, int saveSlot, String playerName) {
         int[] decay = {1,2,3};
         StateManager stateManager = new StateManager(player.getActivePet(), decay);
+        stateManager.start();
+        stateManager.addStateChangeListener(this); 
         
         instance = this;
         this.saveSlot = saveSlot;
@@ -52,6 +65,26 @@ public class PlayGameGUI extends JFrame {
         this.saveGame.setSavedName(playerName);
         JPanel mainContentPanel = new JPanel(new BorderLayout());
         mainContentPanel.setOpaque(false);
+
+        if (player.getActivePet() instanceof Sprite) {
+            this.petSprite = (Sprite) player.getActivePet();
+        } else {
+            this.petSprite = null;
+        }
+
+        if (petSprite != null) {
+            timer = new Timer(100, new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (petSprite != null) {
+                        petSprite.nextFrame();  // Update the animation frame
+                        repaint();  // Redraw the panel with the updated frame
+                    }
+                }
+                
+            });
+           timer.start();  // Start the timer
+        }
 
         stateLabel = new JLabel("Current State: NORMAL");
 
@@ -87,7 +120,6 @@ public class PlayGameGUI extends JFrame {
         }
         JButton back = new JButton("< Main Menu");
         back.setFont(font);
-
         back.setContentAreaFilled(false);
         back.setBorderPainted(false);
         back.setFocusPainted(false);
@@ -96,6 +128,16 @@ public class PlayGameGUI extends JFrame {
         back.setForeground(Color.WHITE);
         back.setAlignmentX(LEFT_ALIGNMENT);
         back.setAlignmentY(TOP_ALIGNMENT);
+
+        JButton inventory = new JButton("Inventory");
+        inventory.setFont(font);
+        inventory.setBorderPainted(false);
+        inventory.setContentAreaFilled(false);
+        inventory.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        inventory.setOpaque(false);
+        inventory.setForeground(Color.WHITE);
+        inventory.setAlignmentX(RIGHT_ALIGNMENT);
+        inventory.setAlignmentY(TOP_ALIGNMENT);
 
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
@@ -107,11 +149,11 @@ public class PlayGameGUI extends JFrame {
         navRow.setLayout(new BorderLayout());
         navRow.setOpaque(false);
         navRow.add(back, BorderLayout.WEST);
+        navRow.add(inventory, BorderLayout.EAST);
 
         petNameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         JPanel titleRow = new JPanel();
         titleRow.setLayout(new BoxLayout(titleRow, BoxLayout.X_AXIS));
-
         titleRow.setOpaque(false);
         titleRow.add(Box.createHorizontalGlue()); // push label center
         titleRow.add(petNameLabel);
@@ -268,7 +310,11 @@ public class PlayGameGUI extends JFrame {
                 dispose();
                 new MainMenu().setVisible(true);
             });
-            
+            inventory.addActionListener(e -> {
+                System.out.println("Inventory button clicked");
+                displayInventory(player.getInventory());
+
+            });
     
     
             updateVitalBars();
@@ -292,25 +338,21 @@ public class PlayGameGUI extends JFrame {
         }
     
         private void createVitalBars() {
-            healthBar = new JProgressBar(0, 100);
-            sleepBar = new JProgressBar(0, 100);
-            happinessBar = new JProgressBar(0, 100);
-            hungerBar = new JProgressBar(0, 100);
+
+            healthBar = new CustomProgressBar();
+            sleepBar = new CustomProgressBar();
+            happinessBar = new CustomProgressBar();
+            hungerBar = new CustomProgressBar();
     
             Dimension progressBarSize = new Dimension(100, 50);
             sleepBar.setPreferredSize(progressBarSize);
             happinessBar.setPreferredSize(progressBarSize);
             hungerBar.setPreferredSize(progressBarSize);
 
-            hungerBar.setStringPainted(true);
-            sleepBar.setStringPainted(true);
-            happinessBar.setStringPainted(true);
-            healthBar.setStringPainted(true);
-
-            hungerBar.setForeground(Color.ORANGE);
-            sleepBar.setForeground(Color.CYAN);
-            happinessBar.setForeground(Color.YELLOW);
-            healthBar.setForeground(Color.GREEN);
+            hungerBar.setForeground(Color.decode("#FF6B00"));
+            sleepBar.setForeground(Color.decode("#00C4E7"));
+            happinessBar.setForeground(Color.decode("#FFB008"));
+            healthBar.setForeground(Color.decode("#5DBC51"));
     
             updateVitalBars();
     
@@ -398,16 +440,101 @@ public class PlayGameGUI extends JFrame {
         happinessBar.setValue(activePet.getHappiness());
         hungerBar.setValue(activePet.getHunger());
 
+
     }
+    private void displayInventory(Inventory inventory) {
+        JDialog inventoryList = new JDialog((JFrame) SwingUtilities.getWindowAncestor(this), "Inventory", true);
+        inventoryList.setSize(350, 400);
+        inventoryList.setLocationRelativeTo(this);
+
+        JPanel inventoryPanel = new JPanel();
+        inventoryPanel.setLayout(new BoxLayout(inventoryPanel, BoxLayout.Y_AXIS));
+        inventoryPanel.setBackground(new Color(255,255,255,220));
+
+        List<Inventory.Entry> inventoryEntries = inventory.getItems();
+
+        for (Inventory.Entry entry : inventoryEntries) {
+
+            JPanel card = new JPanel();
+            card.setLayout(new BoxLayout(card, BoxLayout.PAGE_AXIS));
+            card.setBackground(new Color(255,255,255,80));
+            card.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+            card.setMaximumSize(new Dimension(300,300));
+            card.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+           JLabel itemName = new JLabel(entry.item.getName());
+           JLabel quantity = new JLabel("x" + entry.quantity);
+
+            itemName.setForeground(Color.BLACK);
+            // Add something that creates an icon for that particular item
+            card.add(itemName);
+            card.add(quantity);
+            inventoryPanel.add(card);
+
+        }
+        JScrollPane scrollPane = new JScrollPane(inventoryPanel);
+        
+        inventoryList.add(scrollPane);
+        inventoryList.setVisible(true);
+       // add(scrollPane);
+       // revalidate();
+        //repaint();
+
+    }
+
+    public void updatePetSprite() {
+        if (petSprite != null) {
+            String state = player.getActivePet().getState();
+            petSprite.setCurrentState(state);
+            petSprite.nextFrame();
+
+        }
+    }
+
 
     // Run for testing with a predefined pet
     public static void main(String[] args) {
         // Example usage
-        Pet pet = new Pet("Foxy", 100, 100, 100, 100, true, 100, "Normal");
+        Pet pet = new Pet("Sterling", 100, 100, 100, 100, true, 100, "Normal");
         Inventory inventory = new Inventory();
         Player player = new Player(null, inventory, false, pet);
 
         SwingUtilities.invokeLater(() -> new PlayGameGUI(player, 1, "name"));
+    }
+    @Override
+    public void onStateChange(String newState) {
+        updateVitalBars();
+    }
+    @Override
+    public void onStatWarning(String stat, boolean isWarning) {
+        if (isWarning) {
+            healthBar.setForeground(Color.RED);
+        }
+    }
+    public class CustomProgressBar extends JProgressBar {
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            String text = getValue() + "%";
+            int width = getWidth();
+            int height = getHeight();
+
+            Font font= null;
+
+            try {
+                font = Font.createFont(Font.TRUETYPE_FONT, new File("fonts/Jersey25-Regular.ttf"));
+                font = font.deriveFont(Font.PLAIN, 20);
+            } catch (FontFormatException | IOException e) {
+                e.printStackTrace();
+            }
+            g.setColor(Color.BLACK);
+            g.setFont(font);
+
+            FontMetrics fm = g.getFontMetrics();
+            int x = (width - fm.stringWidth(text)) / 2;
+            int y = (height + fm.getHeight()) / 2 - 2;
+
+            g.drawString(text, x, y);
+        }
     }
     
 }
