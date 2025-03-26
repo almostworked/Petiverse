@@ -39,7 +39,7 @@ public class Pet {
         if (!canExecuteAction("sleep")) return;
         state = "SLEEPING";
         while (sleep < 100) {
-            sleep += 10; // Simulate sleep recovery
+            sleep += 10; 
             sleep = Math.min(sleep, 100);
         }
         state = "NORMAL";
