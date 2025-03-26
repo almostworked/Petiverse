@@ -28,6 +28,12 @@ public class MainMenu extends JFrame {
 
         JLabel title = new JLabel("Petiverse");
 
+        // Play background music
+        //Sound sound = new Sound();
+        //String music = "temp_assets/background_music.wav";
+        //String buttonClick = "temp_assets/button-click.wav";
+        //sound.playMusic(music);
+
         // Initialize main menu buttons
         JButton startButton = new JButton("  Start new game  ");
         JButton loadButton = new JButton("  Load saved game  ");
@@ -39,6 +45,7 @@ public class MainMenu extends JFrame {
         startButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Start button clicked");
+                //sound.playEffect(buttonClick); // Play button sound fx
 
                 Pet foxy = new Foxy("Foxy");
                 Pet roscoe = new Roscoe("Roscoe");
@@ -51,24 +58,28 @@ public class MainMenu extends JFrame {
         loadButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Load button clicked");
+                //sound.playEffect(buttonClick);  // Play button sound fx
                 loadGame();
             }
         });
         instructionsButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Instructions/tutorial button clicked");
+                //sound.playEffect(buttonClick);  // Play button sound fx
                 displayInstructions();
             }
         });
         parentButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Parental controls button clicked");
+                //sound.playEffect(buttonClick); // Play button sound fx
                 parentalControls();
             }
         });
         exitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Exit button clicked");
+                //sound.playEffect(buttonClick); // Play button sound fx
                 exit();
             }
         });
