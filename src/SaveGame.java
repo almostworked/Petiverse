@@ -113,7 +113,6 @@ public class SaveGame {
         }
     }
 
-<<<<<<< HEAD
     /**
      * This method saves game states and information, calling upon the appropriate helper methods
      * If all information is saved as expected, a success message is output to the terminal
@@ -122,9 +121,6 @@ public class SaveGame {
      * @param inventory is the Inventory data to be saved
      * @param parentalControls are the ParentalControls to be saved
      */
-=======
-    // Main method to save all game data
->>>>>>> 01bf411f0e541dac96a75ce41ceb2dd4ea0dee43
     public void save(Pet pet, Inventory inventory, ParentalControls parentalControls) {
         savePet(pet); // Save pet data
         saveInventory(inventory); // Save inventory data
