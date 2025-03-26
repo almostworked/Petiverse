@@ -12,7 +12,8 @@ public class StateManager {
     private final List<StateChangeListener> listeners = new ArrayList<>();
     private Timer decayTimer;
     private Timer sleepRecoveryTimer;
-    private final int[] decayRates; // [sleep, fullness, happiness]
+    private final int[] decayRates; // [sleep, fullness, happiness] - not used for decay now
+    private int tickCounter = 0; // counts seconds
 
     public StateManager(Pet pet, int[] decayRates) {
         this.pet = pet;
@@ -49,9 +50,20 @@ public class StateManager {
     }
 
     private void decayStats() {
-        pet.setSleep(Math.max(pet.getSleep() - decayRates[0], 0));
-        pet.setFullness(Math.max(pet.getFullness() - decayRates[1], 0));
-        pet.setHappiness(Math.max(pet.getHappiness() - decayRates[2], 0));
+        tickCounter++;
+
+        // Every 5 seconds, reduce sleep and fullness by 1
+        if (tickCounter % 5 == 0) {
+            pet.setSleep(Math.max(pet.getSleep() - 1, 0));
+            pet.setFullness(Math.max(pet.getFullness() - 1, 0));
+        }
+
+        // Every 10 seconds, reduce happiness by 1
+        if (tickCounter % 10 == 0) {
+            pet.setHappiness(Math.max(pet.getHappiness() - 1, 0));
+            // Reset the counter to avoid indefinite growth
+            tickCounter = 0;
+        }
 
         checkWarnings();
         enforceStateRules();

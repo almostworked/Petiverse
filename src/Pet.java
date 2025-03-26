@@ -49,15 +49,13 @@ public class Pet {
 
     public void sleep() {
         if (!canExecuteAction("sleep")) return;
+        // Set state to SLEEPING and let StateManager handle gradual recovery
         state = "SLEEPING";
-        while (sleep < 100) {
-            sleep += 10; 
-            sleep = Math.min(sleep, 100);
-        }
-        state = "NORMAL";
         activePlayer.getScore().increaseScore(10);
     }
-
+    
+    
+    
     public void exercise() {
         if (!canExecuteAction("exercise")) return;
         health = Math.min(health + 10, 100);
