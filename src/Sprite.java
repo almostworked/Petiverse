@@ -33,8 +33,8 @@ public class Sprite extends Pet{
          * The constructor uses the super method because the class extends pet class
          */
 	
-	public Sprite(String name, int health, int sleep, int happiness, int hunger, boolean alive, String spriteImage, String spriteAnimation, String spriteSound) {
-		super(name, health, sleep, happiness, hunger, alive, hunger, spriteSound); // fix
+	public Sprite(String name, int health, int sleep, int happiness, int fullness, boolean alive, String spriteImage, String spriteAnimation, String spriteSound) {
+		super(name, health, sleep, happiness, fullness, alive, spriteSound); // fix
 		
 		this.spriteAnimation = spriteAnimation;
 		this.spriteImage = spriteImage;

@@ -225,39 +225,39 @@ public class PlayGameGUI extends JFrame {
     
             // Add action listeners
             feedButton.addActionListener(e -> {
-                Pet.feed(null); // Replace with actual selection logic
+                player.getActivePet().feed(null); // Replace with actual selection logic
                 updateVitalBars();
 
             });
     
             playButton.addActionListener(e -> {
-                player.play();
+                player.getActivePet().play();
                 updateVitalBars();
 
             });
     
             bedButton.addActionListener(e -> {
-                player.goToBed();
+                player.getActivePet().sleep();
                 player.getActivePet().setState("SLEEPING");
                 updateVitalBars();
 
             });
     
             giftButton.addActionListener(e -> {
-                player.giveGift(null);
+                player.getActivePet().giveGift(null);
                 stateLabel.setText("Current State: " + player.getActivePet().getState());
                 updateVitalBars();
 
             });
     
             exerciseButton.addActionListener(e -> {
-                player.exercise();
+                player.getActivePet().exercise();
                 updateVitalBars();
 
             });
     
             vetButton.addActionListener(e -> {
-                player.visitVet();
+                player.getActivePet().takeToVet();
                 updateVitalBars();
                
             });
@@ -396,18 +396,8 @@ public class PlayGameGUI extends JFrame {
         healthBar.setValue(activePet.getHealth());
         sleepBar.setValue(activePet.getSleep());
         happinessBar.setValue(activePet.getHappiness());
-        hungerBar.setValue(activePet.getHunger());
+        hungerBar.setValue(activePet.getFullness());
 
-    }
-
-    // Run for testing with a predefined pet
-    public static void main(String[] args) {
-        // Example usage
-        Pet pet = new Pet("Foxy", 100, 100, 100, 100, true, 100, "Normal");
-        Inventory inventory = new Inventory();
-        Player player = new Player(null, inventory, false, pet);
-
-        SwingUtilities.invokeLater(() -> new PlayGameGUI(player, 1, "name"));
     }
     
 }
