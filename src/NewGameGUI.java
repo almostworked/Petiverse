@@ -1,6 +1,8 @@
 import javax.swing.*;
+
 import java.io.FileWriter;
 import java.io.IOException;
+import java.security.KeyStore.Entry;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -106,8 +108,22 @@ public class NewGameGUI extends JFrame {
     public void openPlayGameInterface(String playerName, Pet selectedPet, int saveSlot) { // Added saveSLot argument - Daniella
         // You can pass the player and pet into the PlayGame interface here.
         // Assuming you have a class that implements PlayGame (like your Player class)
-        
-        Inventory inventory = new Inventory();  // Initialize inventory for the player
+
+        // Give the player some items in their inventory when starting a new game
+        Item apple = new Item("Apple", Item.ItemType.FOOD, 10);
+        Item fish = new Item("Fish", Item.ItemType.FOOD, 20);
+        Item ball = new Item("Ball", Item.ItemType.GIFT, 15);
+
+        List<Inventory.Entry> list = new ArrayList<Inventory.Entry>();
+        Inventory.Entry item = new Inventory.Entry(apple, 5);
+        Inventory.Entry item2 = new Inventory.Entry(fish, 3);
+        Inventory.Entry item3 = new Inventory.Entry(ball, 1);
+
+        list.add(item);
+        list.add(item2);
+        list.add(item3);
+
+        Inventory inventory = new Inventory(list, false);
         Player player = new Player(playerName, inventory, false, selectedPet); // Assuming false means not a parent
     
         // Assuming PlayGameGUI is your game window that needs the Player object
