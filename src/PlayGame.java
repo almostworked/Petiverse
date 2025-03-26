@@ -1,6 +1,9 @@
+
 public interface PlayGame {
-    public void displayPetState();
-    public void displayAllCommands();
-    public void displayGiftCommands();
-    public void back();
+    void displayPetState();
+    void displayAllCommands();
+    void displayGiftCommands();
+    void back();
+    
+
 }

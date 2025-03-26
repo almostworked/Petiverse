@@ -13,6 +13,9 @@ import java.awt.Image;
 import java.awt.RenderingHints;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -23,9 +26,11 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 
 
 public class PlayGameGUI extends JFrame {
@@ -87,7 +92,6 @@ public class PlayGameGUI extends JFrame {
         }
         JButton back = new JButton("< Main Menu");
         back.setFont(font);
-
         back.setContentAreaFilled(false);
         back.setBorderPainted(false);
         back.setFocusPainted(false);
@@ -96,6 +100,16 @@ public class PlayGameGUI extends JFrame {
         back.setForeground(Color.WHITE);
         back.setAlignmentX(LEFT_ALIGNMENT);
         back.setAlignmentY(TOP_ALIGNMENT);
+
+        JButton inventory = new JButton("Inventory");
+        inventory.setFont(font);
+        inventory.setBorderPainted(false);
+        inventory.setContentAreaFilled(false);
+        inventory.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        inventory.setOpaque(false);
+        inventory.setForeground(Color.WHITE);
+        inventory.setAlignmentX(RIGHT_ALIGNMENT);
+        inventory.setAlignmentY(TOP_ALIGNMENT);
 
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
@@ -107,11 +121,11 @@ public class PlayGameGUI extends JFrame {
         navRow.setLayout(new BorderLayout());
         navRow.setOpaque(false);
         navRow.add(back, BorderLayout.WEST);
+        navRow.add(inventory, BorderLayout.EAST);
 
         petNameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         JPanel titleRow = new JPanel();
         titleRow.setLayout(new BoxLayout(titleRow, BoxLayout.X_AXIS));
-
         titleRow.setOpaque(false);
         titleRow.add(Box.createHorizontalGlue()); // push label center
         titleRow.add(petNameLabel);
@@ -268,7 +282,11 @@ public class PlayGameGUI extends JFrame {
                 dispose();
                 new MainMenu().setVisible(true);
             });
-            
+            inventory.addActionListener(e -> {
+                System.out.println("Inventory button clicked");
+                displayInventory(player.getInventory());
+
+            });
     
     
             updateVitalBars();
@@ -397,6 +415,63 @@ public class PlayGameGUI extends JFrame {
         sleepBar.setValue(activePet.getSleep());
         happinessBar.setValue(activePet.getHappiness());
         hungerBar.setValue(activePet.getHunger());
+
+    }
+    private void displayInventory(Inventory inventory) {
+        JPanel inventoryPanel = new JPanel();
+        Map<Item, Integer>() items = inventory.itemMap;
+
+
+        for (Entry entry : inventory.itemMap) {
+
+        }
+
+        for (String game : savedGamesList) {
+            // Create a card for each save file
+            JPanel card = new JPanel();
+            card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
+            card.setBackground(new Color(255, 255, 255, 80)); // semi-transparent
+            card.setBorder(BorderFactory.createLineBorder(Color.decode("#6C5297"), 2));
+            card.setMaximumSize(new Dimension(500, 100));
+            card.setAlignmentX(Component.CENTER_ALIGNMENT);
+            card.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+            // Extract pet name and date from saved game string
+            String[] gameData = game.split(": ");
+            String petInfo = gameData[1];
+
+            JLabel petName = new JLabel(petInfo);
+            JLabel date = new JLabel("Created: Date"); // TODO: modify NewGame class to save creation date
+
+            petName.setForeground(Color.BLACK);
+            date.setForeground(Color.DARK_GRAY);
+
+            card.add(petName);
+            card.add(date);
+
+            // Load button for each game slot
+            JButton loadBtn = new JButton("Load");
+            loadBtn.addActionListener(e -> {
+                // Load the selected saved game here
+                System.out.println("Loading: " + petInfo);
+                //System.out.println(gameData[0]);
+                int slotNumber = Integer.parseInt(gameData[0].replace("Slot", "").trim());
+                System.out.println(slotNumber); // Ensure slot number is correct
+                LoadGame loadGame2 = new LoadGame();
+                loadGame2.loadGame(slotNumber); // Load the game from the selected slot
+            });
+            card.add(Box.createVerticalStrut(5));
+            card.add(loadBtn);
+
+            savedGames.add(Box.createVerticalStrut(10));
+            savedGames.add(card);
+        }
+
+        JScrollPane scrollPane = new JScrollPane(savedGames);
+        scrollPane.setOpaque(false);
+        scrollPane.setAlignmentX(Component.CENTER_ALIGNMENT);
+        scrollPane.setPreferredSize(new Dimension(300, 600));
+
 
     }
 
