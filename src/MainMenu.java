@@ -16,6 +16,7 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
+
 public class MainMenu extends JFrame {
     public static MainMenu menu;
     private JPanel mainMenuPanel;
@@ -39,11 +40,12 @@ public class MainMenu extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Start button clicked");
 
-                Pet pet1 = new Pet("Foxy", 100, 100, 100, 100, true, 100, "Normal");
-                Pet pet2 = new Pet("Roscoe", 100, 100, 100, 100, true, 100, "Normal");
-                Pet pet3 = new Pet("Sterling", 100, 100, 100, 100, true, 100, "Normal");
+                Pet foxy = new Foxy("Foxy");
+                Pet roscoe = new Roscoe("Roscoe");
+                Pet sterling = new Sterling("Sterling");
+                
 
-                new NewGameGUI(pet1, pet2, pet3);
+                new NewGameGUI(foxy, roscoe, sterling);
             }
         });
         loadButton.addActionListener(new ActionListener() {

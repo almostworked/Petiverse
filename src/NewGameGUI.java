@@ -88,7 +88,7 @@ public class NewGameGUI extends JFrame {
                 if (selectedPet != null) {
                     selectedPet.setHealth(100);
                     selectedPet.setSleep(100);
-                    selectedPet.setHunger(100);
+                    selectedPet.setFullness(100);
                     selectedPet.setHappiness(100);
                 }
 
@@ -132,7 +132,7 @@ public class NewGameGUI extends JFrame {
                 writer.write(saveSlot + "," + playerName + "," + petName + ","
                         + selectedPet.getHealth() + ","
                         + selectedPet.getSleep() + ","
-                        + selectedPet.getHunger() + ","
+                        + selectedPet.getFullness() + ","
                         + selectedPet.getHappiness() + "," + selectedPet.isAlive() + "," + selectedPet.getState() + "\n");
             }
         } catch (IOException e) {
@@ -142,13 +142,13 @@ public class NewGameGUI extends JFrame {
     
 
     public static void main(String[] args) {
-        Pet pet1 = new Pet("Foxy", 100, 100, 100, 100, true, 100, "Normal" );
-        Pet pet2 = new Pet("Roscoe", 100, 100, 100, 100, true, 100, "Normal" );
-        Pet pet3 = new Pet("Sterling", 100, 100, 100, 100, true, 100, "Normal" );
+        Pet foxy = new Foxy("Foxy");
+        Pet roscoe = new Roscoe("Roscoe");
+        Pet sterling = new Sterling("Sterling");
 
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                new NewGameGUI(pet1, pet2, pet3);
+                new NewGameGUI(foxy, roscoe, sterling);
             }
         });
     }

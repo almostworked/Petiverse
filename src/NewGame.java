@@ -42,7 +42,7 @@ public class NewGame {
         this.selectedPet.setHealth(100);
         this.selectedPet.setSleep(100);
         this.selectedPet.setHappiness(100);
-        this.selectedPet.setHunger(100);
+        this.selectedPet.setFullness(100);
         this.selectedPet.setAlive(true);
         this.selectedPet.setState("NORMAL");
 
@@ -72,7 +72,7 @@ public class NewGame {
         int health = this.selectedPet.getHealth();
         int sleep = this.selectedPet.getSleep();
         int happiness = this.selectedPet.getHappiness();
-        int hunger = this.selectedPet.getHunger();
+        int hunger = this.selectedPet.getFullness();
         boolean alive = this.selectedPet.isAlive();
         String state = this.selectedPet.getState();
         String creationDate = LocalDateTime.now().toString(); // Current date and time
