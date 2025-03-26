@@ -6,6 +6,7 @@ public class Pet {
     private int fullness;
     private String state;
     private boolean alive;
+    private static Player activePlayer;
 
     public Pet(String name, int health, int sleep, int happiness, int fullness, boolean alive, String state) {
         this.name = name;
@@ -17,21 +18,32 @@ public class Pet {
         this.state = "NORMAL";
     }
 
+    public static void setActivePlayer(Player player) {
+        activePlayer = player;
+    }
+
+    public static Player getActivePlayer() {
+        return activePlayer;
+    }
+
     public void feed(Item food) {
         if (!canExecuteAction("feed")) return;
         fullness = Math.min(fullness + food.getEffectValue(), 100);
+        activePlayer.getScore().increaseScore(food.getEffectValue());
         updateState();
     }
 
     public void play() {
         if (!canExecuteAction("play")) return;
         happiness = Math.min(happiness + 40, 100);
+        activePlayer.getScore().increaseScore(15);
         updateState();
     }
 
     public void giveGift(Item gift) {
         if (!canExecuteAction("giveGift")) return;
         happiness = Math.min(happiness + gift.getEffectValue(), 100);
+        activePlayer.getScore().increaseScore(gift.getEffectValue());
         updateState();
     }
 
@@ -43,6 +55,7 @@ public class Pet {
             sleep = Math.min(sleep, 100);
         }
         state = "NORMAL";
+        activePlayer.getScore().increaseScore(10);
     }
 
     public void exercise() {
@@ -50,12 +63,14 @@ public class Pet {
         health = Math.min(health + 10, 100);
         sleep = Math.max(sleep - 30, 0);
         fullness = Math.max(fullness - 10, 0);
+        activePlayer.getScore().increaseScore(10);
         updateState();
     }
 
     public void takeToVet() {
         health = 100;
         state = "NORMAL";
+        activePlayer.getScore().decreaseScore(15);
     }
 
     private void updateState() {
