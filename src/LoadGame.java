@@ -70,7 +70,7 @@ public class LoadGame {
                     boolean alive = Boolean.parseBoolean(data[7]);
                     String state = data[8];
                     
-                    loadedPet = new Pet(petName, health, sleep, hunger, happiness, alive, hunger, state);
+                    loadedPet = new Pet(petName, health, sleep, happiness, hunger, alive, state);
                     loadedPlayer = new Player(playerName, loadedInventory, isParent, loadedPet);
                     //loadedInventory = loadInventory(slotNumber); TO DO when inventory is configured
                     System.out.println("PET LOADED");

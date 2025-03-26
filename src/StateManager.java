@@ -21,20 +21,19 @@ public class StateManager {
     }
 
     private void initializeTimers() {
-        // Main stat decay timer (1 second interval)
+        // Main stat decay timer (runs every 1 second)
         decayTimer = new Timer(1000, e -> {
-            if (!pet.getState().equals("SLEEPING")) {
+            if (!"SLEEPING".equals(pet.getState())) {
                 decayStats();
             }
-            checkStateTransitions();
+            notifyStateChange(pet.getState());
         });
 
-        // Separate timer for sleep recovery when sleeping
+        // Timer for sleep recovery when the pet is sleeping
         sleepRecoveryTimer = new Timer(1000, e -> {
-            if (pet.getState().equals("SLEEPING")) {
+            if ("SLEEPING".equals(pet.getState())) {
                 int newSleep = Math.min(pet.getSleep() + decayRates[0], 100);
                 pet.setSleep(newSleep);
-                
                 if (newSleep >= 100) {
                     sleepRecoveryTimer.stop();
                     decayTimer.start();
@@ -45,7 +44,7 @@ public class StateManager {
     }
 
     public void setPetState(String newState) {
-        pet.setState( newState);
+        pet.setState(newState);
         notifyStateChange(newState);
     }
 
@@ -53,7 +52,7 @@ public class StateManager {
         pet.setSleep(Math.max(pet.getSleep() - decayRates[0], 0));
         pet.setFullness(Math.max(pet.getFullness() - decayRates[1], 0));
         pet.setHappiness(Math.max(pet.getHappiness() - decayRates[2], 0));
-        
+
         checkWarnings();
         enforceStateRules();
     }
@@ -66,12 +65,14 @@ public class StateManager {
 
     private void checkStatWarning(String stat, int current, int max) {
         boolean isWarning = current < max * 0.25;
-        listeners.forEach(listener -> listener.onStatWarning(stat, isWarning));
+        for (StateChangeListener listener : listeners) {
+            listener.onStatWarning(stat, isWarning);
+        }
     }
 
     private void enforceStateRules() {
-        String state = pet.getState();
-        switch (state) {
+        String currentState = pet.getState();
+        switch (currentState) {
             case "DEAD":
                 handleDeadState();
                 break;
@@ -84,6 +85,9 @@ public class StateManager {
             case "HUNGRY":
                 handleHungryState();
                 break;
+            default:
+                // No extra action for NORMAL state or others not handled
+                break;
         }
     }
 
@@ -95,13 +99,15 @@ public class StateManager {
 
     private void handleSleepingState() {
         decayTimer.stop();
-        sleepRecoveryTimer.start();
+        if (!sleepRecoveryTimer.isRunning()) {
+            sleepRecoveryTimer.start();
+        }
         applyHealthPenalty(5);
         notifyStateChange("SLEEPING");
     }
 
     private void handleAngryState() {
-        pet.setHappiness(pet.getHappiness() - 3);
+        pet.setHappiness(Math.max(pet.getHappiness() - 3, 0));
         notifyStateChange("ANGRY");
     }
 
@@ -119,17 +125,14 @@ public class StateManager {
         decayRates[2] *= multiplier;
     }
 
-    private void checkStateTransitions() {
-        String newState = pet.getState();
-        listeners.forEach(listener -> listener.onStateChange(newState));
-    }
-
     public void addStateChangeListener(StateChangeListener listener) {
         listeners.add(listener);
     }
 
     private void notifyStateChange(String newState) {
-        listeners.forEach(listener -> listener.onStateChange(newState));
+        for (StateChangeListener listener : listeners) {
+            listener.onStateChange(newState);
+        }
     }
 
     public void start() {
@@ -141,12 +144,13 @@ public class StateManager {
         sleepRecoveryTimer.stop();
     }
 
-    // For parental controls revival
+    // For parental controls: Revive the pet to full stats and NORMAL state.
     public void revivePet() {
         pet.setHealth(100);
         pet.setSleep(100);
         pet.setFullness(100);
         pet.setHappiness(100);
+        pet.setState("NORMAL");
         start();
         notifyStateChange("NORMAL");
     }
