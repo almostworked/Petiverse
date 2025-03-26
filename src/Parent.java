@@ -19,10 +19,6 @@ public class Parent extends Player {
         controls.setPassword(newPassword);
     }
 
-    public void displayControls() {
-        controls.displayParentalControlsScreen();
-    }
-
     public boolean isRestrictionsEnabled() {
         return controls.isRestrictionsEnabled();
     }
