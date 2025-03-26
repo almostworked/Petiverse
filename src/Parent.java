@@ -3,51 +3,61 @@
  * @author Daniella
  */
 public class Parent extends Player {
-    private String password;
-    private float time;
-    float maxTime;
-    private boolean restrictions;
 
-    public Parent(String name, Inventory inventory, Boolean isParent, Pet activePet) {
+    private ParentalControls controls;
+
+    public Parent(String name, Inventory inventory, boolean isParent, Pet activePet, String defaultPassword) {
         super(name, inventory, isParent, activePet);
-    }
-    public String getPassword(){
-        return password;
+        this.controls = new ParentalControls(defaultPassword);
     }
 
+    public boolean authenticate(String attempt) {
+        return controls.authenticate(attempt);
+    }
 
     public void setPassword(String newPassword) {
-        this.password = newPassword;
-
+        controls.setPassword(newPassword);
     }
 
     public void displayControls() {
-
+        controls.displayParentalControlsScreen();
     }
 
-    public boolean getRestrictions() {
-        return restrictions;
-
+    public boolean isRestrictionsEnabled() {
+        return controls.isRestrictionsEnabled();
     }
 
-    public void setRestrictions(boolean restrictions, float maxTime) {
-        this.restrictions = restrictions;
-        this.maxTime = maxTime;
+    public void setRestrictions(boolean enabled, int startHour, int endHour) {
+        controls.setRestrictionsEnabled(enabled);
+        controls.setAllowedPlayHours(startHour, endHour);
     }
 
     public float getTotalPlayTime() {
-        return time;
+        return controls.getTotalPlayTime();
     }
 
-    public float getAveragePlayTime(int sessionCount) {
-        if (sessionCount == 0) return 0;
-        return time / sessionCount;
-        
+    public float getAveragePlayTime() {
+        return controls.getAveragePlayTime();
     }
 
-    public void revivePet(String filename) {
-
+    public void addPlayTime(float minutesPlayed) {
+        controls.addPlayTime(minutesPlayed);
     }
 
-    
+    public void incrementSessionCount() {
+        controls.incrementSessionCount();
+    }
+
+    public void resetPlayTimeStats() {
+        controls.resetPlayTimeStats();
+    }
+
+    public void revivePet() {
+        controls.revivePet(getActivePet());
+    }
+
+    public ParentalControls getControls() {
+        return controls;
+    }
 }
+
