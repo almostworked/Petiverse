@@ -82,15 +82,4 @@ public class ParentalControls {
         }
         return "Allowed play hours: " + allowedStartHour + "to" + allowedEndHour;
     }
-
-    public void displayParentalControlsScreen() {
-        System.out.println("Parental Controls: ");
-        System.out.println("1) Toggle restrictions (currently " + (restrictionsEnabled ? "ON" : "OFF") + ")");
-        System.out.println("2) Set allowed play hours (currently " + allowedStartHour + " to " + allowedEndHour + ")");
-        System.out.println("3) View total/average play time (total: " + getTotalPlayTime() + ", average: " + getAveragePlayTime() + ")");
-        System.out.println("4) Revive pet");
-        System.out.println("5) Change password");
-        System.out.println("6) Reset usage stats");
-        System.out.println("7) Exit Parental Controls");
-    }
 }
