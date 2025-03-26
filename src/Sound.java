@@ -71,6 +71,33 @@ public class Sound {
     }
 
     /**
+     * Method to play a sound effect. Given a filepath, it plays the clip once
+     *
+     * @param location is the filepath of the audio recording
+     */
+    public void playEffect(String location) {
+        try {
+            File path = new File(location);
+            if (path.exists()) {
+                AudioInputStream audioInput = AudioSystem.getAudioInputStream(path);
+
+                clip = AudioSystem.getClip();
+                clip.open(audioInput);
+                clip.start();
+
+            } else {
+                System.out.println("File not found");
+            }
+        } catch (UnsupportedAudioFileException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (LineUnavailableException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * Method to pause audio
      */
     public void pauseMusic() {
