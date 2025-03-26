@@ -30,7 +30,7 @@ public class Inventory {
         itemMap.put(Item.APPLE, 5);
         itemMap.put(Item.STEAK, 3);
         itemMap.put(Item.BALL, 1);
-    }
+    } 
 
     /**
      * Constructor that initializes the inventory with existing items (Entry objects)

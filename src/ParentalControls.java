@@ -76,6 +76,13 @@ public class ParentalControls {
         return restrictionsEnabled;
     }
 
+    public String getRestrictions() {
+        if (!restrictionsEnabled) {
+            return "No restrictions";
+        }
+        return "Allowed play hours: " + allowedStartHour + "to" + allowedEndHour;
+    }
+
     public void displayParentalControlsScreen() {
         System.out.println("Parental Controls: ");
         System.out.println("1) Toggle restrictions (currently " + (restrictionsEnabled ? "ON" : "OFF") + ")");

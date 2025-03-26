@@ -1,9 +1,3 @@
-package src;
-
-import src.Inventory;
-import src.Pet;
-import src.logic.ParentalControls;
-
 import java.io.IOException;
 import java.io.FileWriter;
 import java.io.PrintWriter;
@@ -53,20 +47,17 @@ public class SaveGame {
             String creationDate = LocalDateTime.now().toString(); // Add creation date
             writer.println(String.format("%d,%s,%s,%d,%d,%d,%d,%b,%s,%s",
                     saveSlot, savedName, pet.getName(), pet.getHealth(), pet.getSleep(),
-                    pet.getHappiness(), pet.getHunger(), pet.isAlive(), pet.getState(), creationDate));
+                    pet.getHappiness(), pet.getFullness(), pet.isAlive(), pet.getState(), creationDate));
         } catch (IOException e) {
             System.out.println("Error saving pet data: " + e.getMessage());
         }
     }
 
-<<<<<<< HEAD
     /**
      * Appends the inventory contents to a csv file
      * @param inventory holds the game's inventory contents
      */
-=======
     // Save inventory details (if necessary)
->>>>>>> 01bf411f0e541dac96a75ce41ceb2dd4ea0dee43
     private void saveInventory(Inventory inventory) {
         String filename = "inventory.csv";
         try (PrintWriter writer = new PrintWriter(new FileWriter(filename, true))) {
@@ -76,34 +67,28 @@ public class SaveGame {
         }
     }
 
-<<<<<<< HEAD
     // FIXME
     /**
      * Appends the parental controls & restrictions to a csv file
      *
      * @param parentalControls contains the parental settings for this game
      */
-=======
     // Save parental control data (if applicable)
->>>>>>> 01bf411f0e541dac96a75ce41ceb2dd4ea0dee43
     private void saveParentalControls(ParentalControls parentalControls) {
         if (!isParent) return; // Skip if not in parental mode
 
         String filename = "parental.csv";
         try (PrintWriter writer = new PrintWriter(new FileWriter(filename, true))) {
-            writer.println(saveSlot + "," + parentalControls.isEnabled() + "," + parentalControls.getRestrictions());
+            writer.println(saveSlot + "," + parentalControls.isRestrictionsEnabled() + "," + parentalControls.getRestrictions());
         } catch (IOException e) {
             System.out.println("Error saving parental controls: " + e.getMessage());
         }
     }
 
-<<<<<<< HEAD
     /**
      * Appends the save slot, along with the savedName, to a csv file
      */
-=======
     // Save the player's name with their save slot (if necessary)
->>>>>>> 01bf411f0e541dac96a75ce41ceb2dd4ea0dee43
     private void saveSaveSlot() {
         String filename = "save_slots.csv";
         try (PrintWriter writer = new PrintWriter(new FileWriter(filename, true))) {
