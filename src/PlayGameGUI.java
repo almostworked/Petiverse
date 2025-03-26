@@ -225,7 +225,7 @@ public class PlayGameGUI extends JFrame {
     
             // Add action listeners
             feedButton.addActionListener(e -> {
-                player.feed(null); // Replace with actual selection logic
+                Pet.feed(null); // Replace with actual selection logic
                 updateVitalBars();
 
             });

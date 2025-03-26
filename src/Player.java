@@ -1,5 +1,3 @@
-package src;
-
 /**
  * Represents a player in the game, holding references to their inventory, score, and active pet.
  * Also implements the PlayGame interface for displaying pet/game information to the user.
@@ -125,7 +123,5 @@ public class Player implements PlayGame {
     public boolean isParent() {
         return this.isParent;
     }
-    public Pet getActivePet() {
-        return activePet;
-    }
+    
 }
