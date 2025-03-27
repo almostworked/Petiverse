@@ -49,7 +49,6 @@ public class Pet {
 
     public void sleep() {
         if (!canExecuteAction("sleep")) return;
-        // Set state to SLEEPING and let StateManager handle gradual recovery
         state = "SLEEPING";
         activePlayer.getScore().increaseScore(10);
     }

@@ -11,9 +11,9 @@ public class StateManager {
     private final Pet pet;
     private final List<StateChangeListener> listeners = new ArrayList<>();
     private Timer decayTimer;
-    private Timer sleepRecoveryTimer;
-    private final int[] decayRates; // [sleep, fullness, happiness] - not used for decay now
-    private int tickCounter = 0; // counts seconds
+    private Timer sleepTimer; // One-shot timer for the 10-second sleep wait
+    private final int[] decayRates; // [sleep, fullness, happiness]
+    private int tickCounter = 0; // counts seconds in the normal decay loop
 
     public StateManager(Pet pet, int[] decayRates) {
         this.pet = pet;
@@ -22,49 +22,49 @@ public class StateManager {
     }
 
     private void initializeTimers() {
-        // Main stat decay timer (runs every 1 second)
+        // Main decay timer for normal states (runs every second).
         decayTimer = new Timer(1000, e -> {
             if (!"SLEEPING".equals(pet.getState())) {
                 decayStats();
             }
             notifyStateChange(pet.getState());
         });
+        decayTimer.start();
 
-        // Timer for sleep recovery when the pet is sleeping
-        sleepRecoveryTimer = new Timer(1000, e -> {
-            if ("SLEEPING".equals(pet.getState())) {
-                int newSleep = Math.min(pet.getSleep() + decayRates[0], 100);
-                pet.setSleep(newSleep);
-                if (newSleep >= 100) {
-                    sleepRecoveryTimer.stop();
-                    decayTimer.start();
-                    notifyStateChange(pet.getState());
-                }
-            }
+        // waits 10 seconds then forces a wake-up.
+        sleepTimer = new Timer(10_000, e -> {
+            pet.setSleep(100);
+            pet.setState("NORMAL");
+            notifyStateChange("NORMAL");
+            decayTimer.start(); // Restart normal decay
+            sleepTimer.stop();
         });
+        sleepTimer.setRepeats(false);
     }
 
+    // Called by the UI (e.g., when the "go to bed" button is pressed)
     public void setPetState(String newState) {
         pet.setState(newState);
+        if ("SLEEPING".equals(newState)) {
+            handleSleepingState();
+        } else {
+            enforceStateRules();
+        }
         notifyStateChange(newState);
     }
 
     private void decayStats() {
         tickCounter++;
-
         // Every 5 seconds, reduce sleep and fullness by 1
         if (tickCounter % 5 == 0) {
             pet.setSleep(Math.max(pet.getSleep() - 1, 0));
             pet.setFullness(Math.max(pet.getFullness() - 1, 0));
         }
-
         // Every 10 seconds, reduce happiness by 1
         if (tickCounter % 10 == 0) {
             pet.setHappiness(Math.max(pet.getHappiness() - 1, 0));
-            // Reset the counter to avoid indefinite growth
-            tickCounter = 0;
+            tickCounter = 0; // reset the counter
         }
-
         checkWarnings();
         enforceStateRules();
     }
@@ -88,34 +88,31 @@ public class StateManager {
             case "DEAD":
                 handleDeadState();
                 break;
-            case "SLEEPING":
-                handleSleepingState();
-                break;
             case "ANGRY":
                 handleAngryState();
                 break;
             case "HUNGRY":
                 handleHungryState();
                 break;
+            // SLEEPING is managed by our sleepTimer so no extra action here.
             default:
-                // No extra action for NORMAL state or others not handled
                 break;
         }
     }
 
     private void handleDeadState() {
         decayTimer.stop();
-        sleepRecoveryTimer.stop();
+        sleepTimer.stop();
         notifyStateChange("DEAD");
     }
 
     private void handleSleepingState() {
-        decayTimer.stop();
-        if (!sleepRecoveryTimer.isRunning()) {
-            sleepRecoveryTimer.start();
+        decayTimer.stop(); // Stop normal decay during sleep
+        applyHealthPenalty(5); // Optional: apply immediate health penalty
+        // Start sleepTimer if it isn’t running already.
+        if (!sleepTimer.isRunning()) {
+            sleepTimer.restart();
         }
-        applyHealthPenalty(5);
-        notifyStateChange("SLEEPING");
     }
 
     private void handleAngryState() {
@@ -137,6 +134,7 @@ public class StateManager {
         decayRates[2] *= multiplier;
     }
 
+    // Listener registration
     public void addStateChangeListener(StateChangeListener listener) {
         listeners.add(listener);
     }
@@ -147,16 +145,18 @@ public class StateManager {
         }
     }
 
+    // Start the decay engine
     public void start() {
         decayTimer.start();
     }
 
+    // Stop all timers
     public void stop() {
         decayTimer.stop();
-        sleepRecoveryTimer.stop();
+        sleepTimer.stop();
     }
 
-    // For parental controls: Revive the pet to full stats and NORMAL state.
+    // For parental controls: revive pet to NORMAL
     public void revivePet() {
         pet.setHealth(100);
         pet.setSleep(100);
@@ -167,3 +167,4 @@ public class StateManager {
         notifyStateChange("NORMAL");
     }
 }
+
