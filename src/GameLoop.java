@@ -1,6 +1,5 @@
 import javax.swing.Timer;
 
-
 public class GameLoop {
     private final Timer gameTimer;
     private final Pet activePet;
@@ -27,7 +26,7 @@ public class GameLoop {
 
     public void start() {
         if (!isRunning) {
-            stateManager.start();
+            stateManager.start();  // Let StateManager handle all stat decay.
             gameTimer.start();
             isRunning = true;
             System.out.println("Game Loop started");
@@ -49,6 +48,7 @@ public class GameLoop {
             return;
         }
 
+        // The game loop no longer decays stats—it only checks the pet's state, shows warnings, autosaves, and updates the score.
         checkStateWarnings();
         handleAutoSave();
         updatePersistentScore();
