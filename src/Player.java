@@ -113,7 +113,10 @@ public class Player implements PlayGame {
      * @return The active pet object
      */
     public Pet getActivePet() {
-        return this.activePet;
+        return activePet;
+    }
+    public void setActivePet(Pet activePet) {
+        this.activePet = activePet;
     }
 
     /**

@@ -121,7 +121,7 @@ public class NewGameGUI extends JFrame {
 
         Inventory inventory = new Inventory(list, false); // Create an inventory with the list of items, no gifts
         Player player = new Player(playerName, inventory, false, selectedPet); // Assuming false means not a parent
-        
+        selectedPet.setActivePlayer(player);
         PlayGameGUI playGameGUI = new PlayGameGUI(player, saveSlot, playerName); // Added arguments for playgame gui - Daniella
         playGameGUI.setVisible(true);
     }

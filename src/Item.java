@@ -10,6 +10,7 @@ public class Item {
     private String name;
     private ItemType type;
     private int effectValue;
+    private int quantity;
 
     public Item(String name, ItemType type, int effectValue) {
         this.name = name;
@@ -34,21 +35,22 @@ public class Item {
     public int getEffectValue() {
         return effectValue;
     }
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+    public int getQuantity() {
+        return quantity;
+    }
 
-    public static Item getItem(String name, ItemType type) {
-        // Simple matching across the predefined items
+    public static Item getItem(String name) {
         for (Item item : new Item[]{APPLE, FISH, STEAK, BALL, COLLAR, TOY_MOUSE}) {
-            if (item.getName().equals(name) && item.getType().equals(type)) {
-                return item;
+            if (item.getName().equalsIgnoreCase(name)) {
+                return item;  // Ignore type and just return if name matches
             }
         }
-        throw new IllegalArgumentException("Invalid item: " + name + " of type " + type);
+        return null;
     }
-
-    public void setQuantity(int i) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setQuantity'");
-    }
+   
 }
 
 

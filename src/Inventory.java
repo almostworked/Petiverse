@@ -145,4 +145,23 @@ public class Inventory {
         }
         return items;
     }
+
+    public List<Item> getFoodItems() {
+        List<Item> foodItems = new ArrayList<>();
+        for (Item item : itemMap.keySet()) {
+            if (item.getType() == Item.ItemType.FOOD) {
+                foodItems.add(item);
+            }
+        }
+        return foodItems;
+    }
+    public List<Item> getGiftItems() {
+        List<Item> giftItems = new ArrayList<>();
+        for (Item item : itemMap.keySet()) {
+            if (item.getType() == Item.ItemType.FOOD) {
+                giftItems.add(item);
+            }
+        }
+        return giftItems;
+    }
 }

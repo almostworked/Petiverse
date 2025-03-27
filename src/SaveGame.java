@@ -1,7 +1,11 @@
 import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The purpose of this class is to save the data of a game in progress
@@ -40,17 +44,35 @@ public class SaveGame {
      * @param pet is the current pet (pet state) in this session
      */
     public static void savePet(Pet pet) {
-        String filename = "game_save.csv"; // Match LoadGame's file
-        try (PrintWriter writer = new PrintWriter(new FileWriter(filename, true))) {
-            // Format: saveSlot, playerName, petName, health, sleep, happiness, hunger, alive, state, creationDate
-            String creationDate = LocalDateTime.now().toString(); // Add creation date
-            writer.println(String.format("%d,%s,%s,%d,%d,%d,%d,%b,%s,%s",
-                    saveSlot, savedName, pet.getName(), pet.getHealth(), pet.getSleep(),
-                    pet.getHappiness(), pet.getFullness(), pet.isAlive(), pet.getState(), creationDate));
-        } catch (IOException e) {
-            System.out.println("Error saving pet data: " + e.getMessage());
+    String filename = "game_save.csv";
+    try {
+        List<String> lines = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] data = line.split(",");
+                if (data[0].equals(String.valueOf(saveSlot))) {
+                    String updatedLine = String.format("%d,%s,%s,%d,%d,%d,%d,%b,%s,%s",
+                            saveSlot, savedName, pet.getName(), pet.getHealth(), pet.getSleep(),
+                            pet.getHappiness(), pet.getFullness(), pet.isAlive(), pet.getState(), LocalDateTime.now().toString());
+                    lines.add(updatedLine);
+                } else {
+                    lines.add(line); 
+                }
+            }
         }
+
+        // Write back the data to the file
+        try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
+            for (String line : lines) {
+                writer.println(line);
+            }
+        }
+    } catch (IOException e) {
+        System.out.println("Error saving pet data: " + e.getMessage());
     }
+}
+
 
     /**
      * Appends the inventory contents to a csv file

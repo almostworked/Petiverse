@@ -7,6 +7,7 @@ public class Pet {
     private String state;
     private boolean alive;
     private static Player activePlayer;
+    private Runnable stateChangeListener;
 
     public Pet(String name, int health, int sleep, int happiness, int fullness, boolean alive, String state) {
         this.name = name;
@@ -28,8 +29,13 @@ public class Pet {
 
     public void feed(Item food) {
         if (!canExecuteAction("feed")) return;
-        fullness = Math.min(fullness + food.getEffectValue(), 100);
-        activePlayer.getScore().increaseScore(food.getEffectValue());
+        if (activePlayer.getInventory().getQuantity(food) > 0 && food.getEffectValue() > 0) {
+            activePlayer.getInventory().removeItem(food, 1);
+            fullness = Math.min(fullness + food.getEffectValue(), 100);
+            activePlayer.getScore().increaseScore(food.getEffectValue());
+        } else {
+            System.out.println("You don't have enough " + food.getName() + "s to give to your pet.");
+        }
         updateState();
     }
 
@@ -42,8 +48,15 @@ public class Pet {
 
     public void giveGift(Item gift) {
         if (!canExecuteAction("giveGift")) return;
-        happiness = Math.min(happiness + gift.getEffectValue(), 100);
-        activePlayer.getScore().increaseScore(gift.getEffectValue());
+        if (activePlayer.getInventory().getQuantity(gift) > 0 && gift.getEffectValue() > 0) {
+            activePlayer.getInventory().removeItem(gift, 1);
+            happiness = Math.min(happiness + gift.getEffectValue(), 100);
+            activePlayer.getScore().increaseScore(gift.getEffectValue());
+
+        } else {
+            System.out.println("You dont have any " + gift.getName() + "s to give to your pet.");
+        }
+        
         updateState();
     }
 
@@ -51,6 +64,7 @@ public class Pet {
         if (!canExecuteAction("sleep")) return;
         state = "SLEEPING";
         activePlayer.getScore().increaseScore(10);
+        
     }
     
     
@@ -65,6 +79,7 @@ public class Pet {
     }
 
     public void takeToVet() {
+        if (!canExecuteAction("vet")) return;
         health = 100;
         state = "NORMAL";
         activePlayer.getScore().decreaseScore(15);
@@ -73,11 +88,11 @@ public class Pet {
     private void updateState() {
         if (health <= 0) {
             state = "DEAD";
-        } else if (sleep <= 0) {
-            state = "SLEEPING";
-        } else if (happiness <= 0) {
+        } else if (sleep <= 20) {
+            state = "TIRED";
+        } else if (happiness <= 20) {
             state = "ANGRY";
-        } else if (fullness <= 0) {
+        } else if (fullness <= 30) {
             state = "HUNGRY";
         } else {
             state = "NORMAL";
@@ -105,6 +120,9 @@ public class Pet {
 
     public void setHealth(int health) {
         this.health = health;
+        if (this.health == 0) {
+            this.setState("DEAD");
+        }
     }
 
     public int getSleep() { 
@@ -137,6 +155,10 @@ public class Pet {
 
     public void setState(String state) {
         this.state = state;
+        if (stateChangeListener != null) {
+            stateChangeListener.run();
+        }
+
     }
 
     public boolean isAlive() {
@@ -146,4 +168,8 @@ public class Pet {
     public void setAlive(boolean alive) {
         this.alive = alive;
     }
+    public void setStateChangeListener(Runnable listener) {
+        this.stateChangeListener = listener;
+    }
+    
 }

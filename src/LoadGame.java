@@ -39,28 +39,18 @@ public class LoadGame {
      * @param slotNumber represent the integer game slot to be loaded
      */
     public void loadGame(int slotNumber) {
-
-        // made this actually work i think - Daniella
-
         Pet loadedPet = null;
         Player loadedPlayer = null;
         Inventory loadedInventory = new Inventory();
         boolean isParent = false; // Assuming player is not a parent
-        System.out.println("Unloaded info initialized");
-
+    
         try (BufferedReader reader = new BufferedReader(new FileReader(SAVE_FILE))) {
             String line;
             int slotCounter = 0;
-            System.out.println("String line and slot count initialized");
             while ((line = reader.readLine()) != null) {
-                System.out.println("Line confirmed not null");
-                String[] data = line.split(","); // Put individual fields into an array
-                System.out.println("Data length: " + data.length);
-                System.out.println("Slot counter: " + slotCounter);
-                System.out.println("Slot number: " + slotNumber);
-
-                if (data.length == 9 && slotCounter == slotNumber) { // Find the correct slot number
-                    System.out.println("Data length confirm = 9 and slotcounter = slot number");
+                String[] data = line.split(",");
+                if (data.length == 10 && slotCounter == slotNumber) { 
+                    System.out.println("passed data length and counter check"); // Find the correct slot number
                     String playerName = data[1]; // Assuming this is the username
                     String petName = data[2];
                     int health = Integer.parseInt(data[3]);
@@ -69,22 +59,25 @@ public class LoadGame {
                     int happiness = Integer.parseInt(data[6]);
                     boolean alive = Boolean.parseBoolean(data[7]);
                     String state = data[8];
+    
+                    // Create a Sprite instead of a Pet
+                    loadedPet = new Sprite(petName, health, sleep, happiness, hunger, alive, state);
                     
-                    loadedPet = new Pet(petName, health, sleep, happiness, hunger, alive, state);
+                    // Initialize the player and pass the pet
                     loadedPlayer = new Player(playerName, loadedInventory, isParent, loadedPet);
-                    //loadedInventory = loadInventory(slotNumber); TO DO when inventory is configured
-                    System.out.println("PET LOADED");
+    
+                    loadedPet.setState(state);
+    
                     PlayGameGUI playGameGUI = new PlayGameGUI(loadedPlayer, slotNumber, playerName); 
                     playGameGUI.setVisible(true);
-                    
+    
                     break;
                 }
                 slotCounter++;
             }
-
         } catch (IOException e) {
-                System.out.println("Error occurred when trying to load game");
+            System.out.println("Error occurred when trying to load game");
         }
-
     }
+    
 }

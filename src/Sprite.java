@@ -1,3 +1,5 @@
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -18,11 +20,12 @@ public class Sprite extends Pet{
          */
 	private String spriteImage;
 	private String spriteAnimation;
-	private String spriteSound;
         private String currentState;
         private String petName;
         private List<String> spriteImages;
         private int frameIndex;
+        private boolean forward = true;
+        private final PropertyChangeSupport support;
         
         /**
          * 
@@ -41,15 +44,18 @@ public class Sprite extends Pet{
          * The constructor uses the super method because the class extends pet class
          */
 	
-	public Sprite(String name, int health, int sleep, int happiness, int hunger, boolean alive, String state, List<String> spriteImages, String spriteSound) {
-		super(name, health, sleep, happiness, hunger, alive, state); // fix
-		
-		this.spriteSound = spriteSound;
+         public Sprite(String name, int health, int sleep, int happiness, int hunger, boolean alive, String state) {
+                super(name, health, sleep, happiness, hunger, alive, state); // Fix constructor
+                
                 this.petName = name;
                 this.currentState = state;
                 this.frameIndex = 0;
-                this.spriteImages = spriteImages;
-	}
+                this.spriteImages = new ArrayList<>();
+                this.support = new PropertyChangeSupport(this);
+                
+                updateSprite(); // Automatically assign images when Sprite is created
+            }
+            
 	
         /**
          * 
@@ -85,81 +91,110 @@ public class Sprite extends Pet{
 	public String displaySpriteAnimation() {
 		return spriteAnimation;
 	}
-	
-        /**
-         * 
-         * @param spriteSound set the sprite sound effect 
-         */
-	public void setSpritesound(String spriteSound){
-		this.spriteSound = spriteSound;
-	}
-	
-        /**
-         * 
-         * @return the current sprite sound
-         */
-	public String displaySpritesound(){
-		return spriteSound;	
-	}
+
+
 	
         /**
          * 
          * @return the name of the pet
          */
 	public String getName() {
-		return this.getName();	
+		return this.petName;	
 	}
         public void setCurrentState(String state) {
                 this.currentState = state;
-                updateSprite();
+                System.out.println("setCurrentState called with " + state);
+                
+                updateSprite();  // Call updateSprite to refresh sprite state
+            
+                this.resetAnimation();
+            }
+            
+        public void addPropertyChangeListener(PropertyChangeListener listener) {
+                support.addPropertyChangeListener(listener);;
         }
 
         public String getCurrentState() {
                 return currentState;
         }
 
-        private void updateSprite() {
+        public void updateSprite() {
+                spriteImages.clear(); // Reset images
+            
                 switch (currentState) {
-                        case "NORMAL":
-                                spriteImages = new ArrayList<>();
-                                spriteImages.add(petName + ".png");
-                                spriteImages.add(petName + "-Sprite1" + ".png");
-                                spriteImages.add(petName + "-Sprite2" + ".png");
-                                break;
-                        case "HUNGRY":
-                                spriteImages = new ArrayList<>();
-                                spriteImages.add(petName + ".png");
-                                spriteImages.add(petName + "-Sprite1" + ".png");
-                                spriteImages.add(petName + "-Sprite2" + ".png");
-                                break;
-                        case "ANGRY":
-                                spriteImages = new ArrayList<>();
-                                spriteImages.add(petName + "-Angry1" + ".png");
-                                spriteImages.add(petName + "-Angry2" + ".png");
-                                spriteImages.add(petName + "-Angry3" + ".png");
-                                break;
-                        case "SLEEPING":
-                                spriteImages = new ArrayList<>();
-                                spriteImages.add(petName + "-Sleeping1" + ".png");
-                                spriteImages.add(petName + "-Sleeping2" + ".png");
-                                spriteImages.add(petName + "-Sleeping3" + ".png");
-                                break;
-                        default:
-                                spriteImages = new ArrayList<>();
-                                spriteImages.add(petName + ".png");
-                                spriteImages.add(petName + "-Sprite1" + ".png");
-                                spriteImages.add(petName + "-Sprite2" + ".png");
-                                break;
+                    case "NORMAL":
+                        spriteImages.add("temp_assets/" + petName + ".png");
+                        spriteImages.add("temp_assets/" + petName + "-Sprite1.png");
+                        spriteImages.add("temp_assets/" + petName + "-Sprite2.png");
+                        break;
+                    case "HUNGRY":
+                        spriteImages.add("temp_assets/" + petName + "-Hungry.png");
+                       // spriteImages.add("temp_assets/" + petName + "-Hungry1.png");
+                        //spriteImages.add("temp_assets/" + petName + "-Hungry2.png");
+                       // spriteImages.add("temp_assets/" + petName + "-Hungry3.png");
+                        break;
+                    case "ANGRY":
+                        spriteImages.add("temp_assets/" + petName + "-Angry.png");
+                       // spriteImages.add("temp_assets/" + petName + "-Angry1.png");
+                       // spriteImages.add("temp_assets/" + petName + "-Angry2.png");
+                       // spriteImages.add("temp_assets/" + petName + "-Angry3.png");
+                        break;
+                    case "SLEEPING":
+                        spriteImages.add("temp_assets/" + petName + "-Sleep.png");
+                        spriteImages.add("temp_assets/" + petName + "-Sleep1.png");
+                        spriteImages.add("temp_assets/" + petName + "-Sleep2.png");
+                        spriteImages.add("temp_assets/" + petName + "-Sleep3.png");
+                        break;
+                case "DEAD":
+                        spriteImages.add("temp_assets/" + petName + "-Dead.png");
+                        break;
+                    default:
+                        spriteImages.add("temp_assets/" + petName + ".png");
+                        spriteImages.add("temp_assets/" + petName + "-Sprite1.png");
+                        spriteImages.add("temp_assets/" + petName + "-Sprite2.png");
+                        break;
                 }
+                this.resetAnimation();
         }
+            
 
         public List<String> getSprites() {
+                if (spriteImages == null || spriteImages.isEmpty()) {
+                    updateSprite(); // Ensure images are loaded if not already set
+                }
                 return spriteImages;
         }
+            
         public String getFrame() {
+                if (spriteImages.isEmpty()) {
+                    System.out.println("Error: No images in spriteImages.");
+                    return "temp_assets/default.png"; // Use a default image if the list is empty
+                }
+            
+                if (frameIndex >= spriteImages.size()) {
+                    frameIndex = 0; // Reset to the first image if the index is out of bounds
+                }
+            
                 return spriteImages.get(frameIndex);
-        }
+            }
+            
         public void nextFrame() {
-                frameIndex = (frameIndex + 1) % spriteImages.size();
+                if (forward) {
+                        frameIndex++;
+                        if (frameIndex == spriteImages.size() - 1) {
+                                forward = false;
+                        }
+                } else {
+                        frameIndex--;
+                        if (frameIndex < 0) {
+                                frameIndex = 0;
+                                forward = true;
+                        }
+                }
+                       
         }
+        public void resetAnimation() {
+                frameIndex = 0;
+        }
+       
 }

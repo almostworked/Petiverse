@@ -593,6 +593,7 @@ public class MainMenu extends JFrame {
                 System.out.println(slotNumber); // Ensure slot number is correct
                 LoadGame loadGame2 = new LoadGame();
                 loadGame2.loadGame(slotNumber); // Load the game from the selected slot
+                System.out.println("entered load game class");
             });
             card.add(Box.createVerticalStrut(5));
             card.add(loadBtn);
