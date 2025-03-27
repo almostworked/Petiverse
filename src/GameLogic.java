@@ -9,13 +9,8 @@ public class GameLogic {
         this.score = score;
     }
 
-    public void update() {
-        // Decay pet stats.
-        pet.setSleep(pet.getSleep() - 5);
-        pet.setFullness(pet.getFullness() - 3);
-        pet.setHappiness(pet.getHappiness() - 2);
-    }
-
+    // The update() method has been removed because StateManager is the central decay engine.
+    
     public boolean isGameOver() {
         return pet.getState().equals("DEAD");
     }
@@ -27,5 +22,5 @@ public class GameLogic {
     public int getScore() {
         return score.getScore();
     }
-
 }
+
