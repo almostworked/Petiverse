@@ -1,6 +1,8 @@
 /**
  * 
  * @author Fin Faniyi
+ * @author Marcus Cameron
+ *
  * Represents a pet in the game, with attributes such as health, sleep, happiness, fullness, and state.
  * The pet can perform various actions like eating, sleeping, playing, and exercising, which impact its state.
  */
@@ -13,6 +15,8 @@ public class Pet {
     private String state;
     private boolean alive;
     private static Player activePlayer;
+    private String musicpath = "temp_assets/game-button-click.wav";
+
 
     /**
      * 
@@ -56,6 +60,8 @@ public class Pet {
      */
     public void feed(Item food) {
         if (!canExecuteAction("feed")) return;
+        //Sound sound = new Sound();
+        //sound.playEffect(musicpath);
         fullness = Math.min(fullness + food.getEffectValue(), 100);
         activePlayer.getScore().increaseScore(food.getEffectValue());
         updateState();
@@ -66,6 +72,8 @@ public class Pet {
      */
     public void play() {
         if (!canExecuteAction("play")) return;
+        //Sound sound = new Sound();
+        //sound.playEffect(musicpath);
         happiness = Math.min(happiness + 40, 100);
         activePlayer.getScore().increaseScore(15);
         updateState();
@@ -78,6 +86,8 @@ public class Pet {
      */
     public void giveGift(Item gift) {
         if (!canExecuteAction("giveGift")) return;
+        //Sound sound = new Sound();
+        //sound.playEffect(musicpath);
         happiness = Math.min(happiness + gift.getEffectValue(), 100);
         activePlayer.getScore().increaseScore(gift.getEffectValue());
         updateState();
@@ -88,6 +98,8 @@ public class Pet {
      */
     public void sleep() {
         if (!canExecuteAction("sleep")) return;
+        //Sound sound = new Sound();
+        //sound.playEffect(musicpath);
         state = "SLEEPING";
         activePlayer.getScore().increaseScore(10);
     }
@@ -98,6 +110,8 @@ public class Pet {
      */
     public void exercise() {
         if (!canExecuteAction("exercise")) return;
+        //Sound sound = new Sound();
+        //sound.playEffect(musicpath);
         health = Math.min(health + 10, 100);
         sleep = Math.max(sleep - 30, 0);
         fullness = Math.max(fullness - 10, 0);
@@ -110,6 +124,8 @@ public class Pet {
      * Takes the pet to the vet, fully restoring health.
      */
     public void takeToVet() {
+        //Sound sound = new Sound();
+        //sound.playEffect(musicpath);
         health = 100;
         state = "NORMAL";
         activePlayer.getScore().decreaseScore(15);
