@@ -8,7 +8,16 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The purpose of this class is to present a graphical interface when creating a new game and
+ * implementing logic from class NewGame
+ *
+ * When a new game is seleced, the player is presented with pet options and is promted to enter information
+ * such as pet selection and save slot
+ * This information is saved and gameplay then begins
+ */
 public class NewGameGUI extends JFrame {
+    /** attributes */
     private List<Pet> availablePets;
     private JTextField playerNameBox;
     private JComboBox<String> petSelection;
@@ -16,6 +25,14 @@ public class NewGameGUI extends JFrame {
     private JButton startButton;
     private JLabel backButton;
 
+    /**
+     * This method is responsible for presenting the interface
+     * The user is displayed with a menu in which they enter initial information for this game
+     *
+     * @param pet1 is the first Pet option
+     * @param pet2 is the second Pet option
+     * @param pet3 is the third Pet option
+     */
     public NewGameGUI(Pet pet1, Pet pet2, Pet pet3) {
         availablePets = new ArrayList<>();
 
@@ -104,6 +121,14 @@ public class NewGameGUI extends JFrame {
         setLocationRelativeTo(null);
         setVisible(true);
     }
+
+    /**
+     * This method opens the PlayGame interface, allowing for the initialization of gameplay
+     *
+     * @param playerName is the String player's name
+     * @param selectedPet is the Pet the player has chosen
+     * @param saveSlot is the int save slot where the game will be saved
+     */
     public void openPlayGameInterface(String playerName, Pet selectedPet, int saveSlot) { // Added saveSLot argument - Daniella
         // Give the player some items in their inventory when starting a new game
         Item apple = new Item("Apple", Item.ItemType.FOOD, 10);
@@ -126,6 +151,13 @@ public class NewGameGUI extends JFrame {
         playGameGUI.setVisible(true);
     }
     
+     /**
+     * Method to save initial game information
+     *
+     * @param playerName is the String player's name
+     * @param saveSlot is the int save slot where the game will be saved
+     * @param petName is the String name of the pet
+     */
     private void saveGame(String playerName, int saveSlot, String petName) {
         try (FileWriter writer = new FileWriter("game_save.csv", true)) {
             // Get the selected pet object based on its name
