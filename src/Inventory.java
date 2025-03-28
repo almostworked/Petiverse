@@ -142,6 +142,7 @@ public class Inventory {
         List<Entry> items = new ArrayList<>();
         for (Map.Entry<Item, Integer> e : itemMap.entrySet()) {
             items.add(new Entry(e.getKey(), e.getValue()));
+            System.out.println(e.getKey());
         }
         return items;
     }
@@ -158,7 +159,7 @@ public class Inventory {
     public List<Item> getGiftItems() {
         List<Item> giftItems = new ArrayList<>();
         for (Item item : itemMap.keySet()) {
-            if (item.getType() == Item.ItemType.FOOD) {
+            if (item.getType() == Item.ItemType.GIFT) {
                 giftItems.add(item);
             }
         }
