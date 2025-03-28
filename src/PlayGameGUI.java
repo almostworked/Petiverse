@@ -316,18 +316,34 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
                     stateManager.setPetState("SLEEPING");
                     updateVitalBars();
 
-                }
-                
-                
+                }    
 
             });
     
             giftButton.addActionListener(e -> {
-                petSprite.setCurrentState(pet.getState());
+                List<Item> giftItems = player.getInventory().getGiftItems();
 
-                player.getActivePet().giveGift(null);
-                stateLabel.setText("Current State: " + player.getActivePet().getState());
-                updateVitalBars();
+                if (giftItems.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "You have no gift items!");
+                    return;
+                }
+                Item selectedGift = (Item) JOptionPane.showInputDialog(
+                    null,
+                    "Select a gift item:",
+                    "Give gift",
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    giftItems.toArray(),
+                    giftItems.get(0)
+                );
+
+                if (selectedGift != null) {
+                    player.getActivePet().giveGift(selectedGift);
+                    player.getInventory().removeItem(selectedGift, 1); 
+                    petSprite.setCurrentState(pet.getState());
+
+                    updateVitalBars(); 
+                }
 
             });
     
