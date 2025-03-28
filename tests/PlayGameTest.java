@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
- * @author fin faniy
+ * @author fin faniyi
  */
 public class PlayGameTest {
     
