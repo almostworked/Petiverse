@@ -1,5 +1,17 @@
 import javax.swing.Timer;
 
+/**
+ * Manages the main game loop for the virtual pet game.
+ * It periodically triggers updates such as checking the pet’s state,
+ * issuing warnings, autosaving progress, and updating the player’s score.
+ * The actual stat decay is handled by the {@link StateManager}.
+ * 
+ * This class ensures that the game state is consistently updated every second,
+ * and safely handles game-over conditions.
+ * 
+ * @author Adrian
+ * @version 1.0
+ */
 public class GameLoop {
     private final Timer gameTimer;
     private final Pet activePet;
@@ -9,6 +21,15 @@ public class GameLoop {
     private int autoSaveCounter;
     private boolean isRunning;
 
+    /**
+     * Constructs a new GameLoop instance.
+     *
+     * @param pet         the active pet being managed
+     * @param player      the player object associated with the game
+     * @param stateManager the manager responsible for stat decay and other timed changes
+     * @param saveSystem   the save system responsible for persisting game data
+     * @throws IllegalArgumentException if any argument is null
+     */
     public GameLoop(Pet pet, Player player, StateManager stateManager, SaveGame saveSystem) {
         if (pet == null || player == null || stateManager == null || saveSystem == null) {
             throw new IllegalArgumentException("Arguments cannot be null");
@@ -24,6 +45,10 @@ public class GameLoop {
         this.gameTimer = new Timer(1000, e -> performGameUpdate());
     }
 
+    /**
+     * Starts the game loop if it isn't already running.
+     * Begins the stat decay and timed updates.
+     */
     public void start() {
         if (!isRunning) {
             stateManager.start();  // Let StateManager handle all stat decay.
@@ -33,6 +58,9 @@ public class GameLoop {
         }
     }
 
+    /**
+     * Stops the game loop and halts stat decay.
+     */
     public void stop() {
         if (isRunning) {
             gameTimer.stop();
@@ -42,23 +70,32 @@ public class GameLoop {
         }
     }
 
+    /**
+     * Executes recurring game logic such as autosave, score update,
+     * and checking for pet status or warnings.
+     */
     private void performGameUpdate() {
         if (activePet.getState().equals("DEAD")) {
             handleGameOver();
             return;
         }
 
-        // The game loop no longer decays stats—it only checks the pet's state, shows warnings, autosaves, and updates the score.
         checkStateWarnings();
         handleAutoSave();
         updatePersistentScore();
     }
 
+    /**
+     * Handles end-of-game logic when the pet dies.
+     */
     private void handleGameOver() {
         stop();
         System.out.println("Game Over! " + activePet.getName() + " has died.");
     }
 
+    /**
+     * Displays a warning if any of the pet's stats drop below a set threshold.
+     */
     private void checkStateWarnings() {
         final int WARNING_THRESHOLD = 25;
         if (activePet.getHealth() < WARNING_THRESHOLD ||
@@ -69,19 +106,30 @@ public class GameLoop {
         }
     }
 
+    /**
+     * Increments the player's persistent score.
+     */
     private void updatePersistentScore() {
         player.getScore().increaseScore(1); 
     }
 
+    /**
+     * Periodically autosaves the game every 60 seconds.
+     */
     private void handleAutoSave() {
         autoSaveCounter++;
-        if (autoSaveCounter >= 60) { // Autosave every 60 seconds
+        if (autoSaveCounter >= 60) {
             saveSystem.save(activePet, player.getInventory(), null);
             autoSaveCounter = 0;
             System.out.println("Progress autosaved");
         }
     }
 
+    /**
+     * Checks whether the game loop is currently running.
+     *
+     * @return true if the game loop is active, false otherwise
+     */
     public boolean isRunning() {
         return isRunning;
     }
