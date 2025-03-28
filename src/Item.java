@@ -10,7 +10,7 @@ public class Item {
     public enum ItemType { FOOD, GIFT }
 
     private String name;
-    private static ItemType type;
+    private ItemType type;
         private int effectValue;
         private int quantity;
     
@@ -84,7 +84,7 @@ public class Item {
                     return item;  // Ignore type and just return if name matches
                 }
             }
-            throw new IllegalArgumentException("Invalid item: " + name + " of type " + type);
+            throw new IllegalArgumentException("Invalid item: " + name);
     }
 
     
