@@ -79,6 +79,8 @@ public class Pet {
         //Sound sound = new Sound();
         //sound.playEffect(musicpath);
         happiness = Math.min(happiness + 40, 100);
+        health = Math.min(health + 2, 100);
+        sleep = Math.min(sleep - 10, 100);
         activePlayer.getScore().increaseScore(15);
         updateState();
     }
@@ -110,6 +112,7 @@ public class Pet {
         //Sound sound = new Sound();
         //sound.playEffect(musicpath);
         state = "SLEEPING";
+        health = Math.min(health + 5, 100);
         activePlayer.getScore().increaseScore(10);
         
     }

@@ -24,8 +24,11 @@ public class Inventory {
 
         // Populate with default items:
         itemMap.put(Item.APPLE, 5);
-        itemMap.put(Item.STEAK, 3);
-        itemMap.put(Item.BALL, 1);
+        itemMap.put(Item.STEAK, 5);
+        itemMap.put(Item.BALL, 5);
+        itemMap.put(Item.FISH, 3);
+        itemMap.put(Item.COLLAR, 2);
+        itemMap.put(Item.TOY_MOUSE, 1);
     } 
 
     /**
