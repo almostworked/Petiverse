@@ -162,7 +162,7 @@ public class Inventory {
     public List<Item> getGiftItems() {
         List<Item> giftItems = new ArrayList<>();
         for (Item item : itemMap.keySet()) {
-            if (item.getType() == Item.ItemType.FOOD) {
+            if (item.getType() == Item.ItemType.GIFT) {
                 giftItems.add(item);
             }
         }

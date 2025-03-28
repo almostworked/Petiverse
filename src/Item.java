@@ -86,6 +86,10 @@ public class Item {
             }
             throw new IllegalArgumentException("Invalid item: " + name);
     }
+    @Override
+        public String toString() {
+            return name;
+        }
 
     
    
