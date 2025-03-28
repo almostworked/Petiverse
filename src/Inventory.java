@@ -142,6 +142,7 @@ public class Inventory {
         List<Entry> items = new ArrayList<>();
         for (Map.Entry<Item, Integer> e : itemMap.entrySet()) {
             items.add(new Entry(e.getKey(), e.getValue()));
+            System.out.println(e.getKey());
         }
         return items;
     }
