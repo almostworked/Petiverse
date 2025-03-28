@@ -89,7 +89,7 @@ public class Pet {
         if (health <= 0) {
             state = "DEAD";
         } else if (sleep <= 20) {
-            state = "TIRED";
+            state = "ANGRY";
         } else if (happiness <= 20) {
             state = "ANGRY";
         } else if (fullness <= 30) {
