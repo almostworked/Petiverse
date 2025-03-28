@@ -294,7 +294,6 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
 
                 if (selectedFood != null) {
                     player.getActivePet().feed(selectedFood);
-                    player.getInventory().removeItem(selectedFood, 1); 
                     petSprite.setCurrentState(pet.getState());
 
                     updateVitalBars(); 
@@ -339,7 +338,6 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
 
                 if (selectedGift != null) {
                     player.getActivePet().giveGift(selectedGift);
-                    player.getInventory().removeItem(selectedGift, 1); 
                     petSprite.setCurrentState(pet.getState());
 
                     updateVitalBars(); 
