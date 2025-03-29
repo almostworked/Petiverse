@@ -90,6 +90,24 @@ public class Item {
         public String toString() {
             return name;
         }
+        public static Item fromName(String name) {
+            switch (name.toLowerCase()) {
+                case "apple":
+                    return APPLE;
+                case "fish":
+                    return FISH;
+                case "steak":
+                    return STEAK;
+                case "ball":
+                    return BALL;
+                case "collar":
+                    return COLLAR;
+                case "toy mouse":
+                    return TOY_MOUSE;
+                default:
+                    throw new IllegalArgumentException("Invalid item: " + name);
+            }
+        }
 
     
    

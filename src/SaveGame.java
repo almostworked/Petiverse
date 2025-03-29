@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The purpose of this class is to save the data of a game in progress
@@ -79,14 +80,20 @@ public class SaveGame {
      * @param inventory holds the game's inventory contents
      */
     // Save inventory details (if necessary)
-    /*private void saveInventory(Inventory inventory) {
-        String filename = "inventory.csv";
-        try (PrintWriter writer = new PrintWriter(new FileWriter(filename, true))) {
-            writer.println(saveSlot + "," + String.join(";", inventory.getItems()));
-        } catch (IOException e) {
-            System.out.println("Error saving inventory data: " + e.getMessage());
+    private void saveInventory(Inventory inventory) {
+    String filename = "inventory.csv";
+    try (PrintWriter writer = new PrintWriter(new FileWriter(filename, true))) {
+        StringBuilder inventoryData = new StringBuilder();
+        for (Map.Entry<Item, Integer> entry : inventory.itemMap.entrySet()) {
+            inventoryData.append(entry.getKey().getName()).append(":").append(entry.getValue()).append(";");
         }
-    }*/
+        writer.println(saveSlot + "," + inventoryData.toString());
+    } catch (IOException e) {
+        System.out.println("Error saving inventory data: " + e.getMessage());
+    }
+}
+
+    
 
     /**
      * Appends the parental controls & restrictions to a csv file
@@ -134,6 +141,7 @@ public class SaveGame {
         savePet(pet); // Save pet data
        // saveInventory(inventory); // Save inventory data
         saveParentalControls(parentalControls); // Save parental controls if applicable
+        saveInventory(inventory);
         saveSaveSlot(); // Save the player's name with their save slot
 
         System.out.println("Game saved successfully in slot " + saveSlot);

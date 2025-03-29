@@ -78,12 +78,13 @@ public class Inventory {
             System.out.println("No items in inventory.");
         } else {
             for (Map.Entry<Item, Integer> entry : itemMap.entrySet()) {
-                System.out.println("Item object " + entry.getKey()
+                System.out.println("Item: " + entry.getKey().getName() 
                                    + " - Quantity: " + entry.getValue());
             }
         }
         return this;
     }
+    
 
     /**
      * Displays the available inventory management methods to the console.
@@ -141,14 +142,11 @@ public class Inventory {
         }
     }
 
-    public List<Entry> getItems() {
-        List<Entry> items = new ArrayList<>();
-        for (Map.Entry<Item, Integer> e : itemMap.entrySet()) {
-            items.add(new Entry(e.getKey(), e.getValue()));
-            System.out.println(e.getKey());
-        }
-        return items;
+    public List<Item> getItems() {
+        return new ArrayList<>(itemMap.keySet());
     }
+    
+    
 
     public List<Item> getFoodItems() {
         List<Item> foodItems = new ArrayList<>();

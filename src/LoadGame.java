@@ -43,16 +43,15 @@ public class LoadGame {
         Pet loadedPet = null;
         Player loadedPlayer = null;
         Inventory loadedInventory = new Inventory();
-        boolean isParent = false; // Assuming player is not a parent
+        boolean isParent = false;
     
         try (BufferedReader reader = new BufferedReader(new FileReader(SAVE_FILE))) {
             String line;
             int slotCounter = 0;
             while ((line = reader.readLine()) != null) {
                 String[] data = line.split(",");
-                if (data.length == 10 && slotCounter == slotNumber) { 
-                    System.out.println("passed data length and counter check"); // Find the correct slot number
-                    String playerName = data[1]; // Assuming this is the username
+                if (data.length >= 10 && slotCounter == slotNumber) {
+                    String playerName = data[1];
                     String petName = data[2];
                     int health = Integer.parseInt(data[3]);
                     int sleep = Integer.parseInt(data[4]);
@@ -61,10 +60,20 @@ public class LoadGame {
                     boolean alive = Boolean.parseBoolean(data[7]);
                     String state = data[8];
     
-                    // Create a Sprite instead of a Pet
+                    // Load inventory from data[9], which contains item data
+                    String[] inventoryItems = data[9].split(";");
+                    for (String itemEntry : inventoryItems) {
+                        String[] itemData = itemEntry.split(":");
+                        if (itemData.length == 2) {
+                            String itemName = itemData[0];
+                            int quantity = Integer.parseInt(itemData[1]);
+    
+                            Item item = Item.fromName(itemName);
+                            loadedInventory.setQuantity(item, quantity);
+                        }
+                    }
+    
                     loadedPet = new Sprite(petName, health, sleep, happiness, hunger, alive, state);
-                    
-                    // Initialize the player and pass the pet
                     loadedPlayer = new Player(playerName, loadedInventory, isParent, loadedPet);
                         
                     loadParentalControls(loadedPlayer, slotNumber);
@@ -73,7 +82,6 @@ public class LoadGame {
     
                     PlayGameGUI playGameGUI = new PlayGameGUI(loadedPlayer, slotNumber, playerName); 
                     playGameGUI.setVisible(true);
-    
                     break;
                 }
                 slotCounter++;

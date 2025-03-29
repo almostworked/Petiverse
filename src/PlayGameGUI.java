@@ -506,41 +506,37 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
         JDialog inventoryList = new JDialog((JFrame) SwingUtilities.getWindowAncestor(this), "Inventory", true);
         inventoryList.setSize(350, 400);
         inventoryList.setLocationRelativeTo(this);
-
+    
         JPanel inventoryPanel = new JPanel();
         inventoryPanel.setLayout(new BoxLayout(inventoryPanel, BoxLayout.Y_AXIS));
-        inventoryPanel.setBackground(new Color(255,255,255,220));
-
-        List<Inventory.Entry> inventoryEntries = inventory.getItems();
-
-        for (Inventory.Entry entry : inventoryEntries) {
-
+        inventoryPanel.setBackground(new Color(255, 255, 255, 220));
+    
+        // Iterate over the itemMap instead of using getItems()
+        for (Map.Entry<Item, Integer> entry : inventory.itemMap.entrySet()) {
+    
             JPanel card = new JPanel();
             card.setLayout(new BoxLayout(card, BoxLayout.PAGE_AXIS));
-            card.setBackground(new Color(255,255,255,80));
+            card.setBackground(new Color(255, 255, 255, 80));
             card.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-            card.setMaximumSize(new Dimension(300,300));
+            card.setMaximumSize(new Dimension(300, 300));
             card.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-           JLabel itemName = new JLabel(entry.item.getName());
-           JLabel quantity = new JLabel("x" + entry.quantity);
-
+    
+            JLabel itemName = new JLabel(entry.getKey().getName());
+            JLabel quantity = new JLabel("x" + entry.getValue());
+    
             itemName.setForeground(Color.BLACK);
-            // Add something that creates an icon for that particular item
+            // You can add an icon related to the item here if needed
             card.add(itemName);
             card.add(quantity);
             inventoryPanel.add(card);
-
         }
+    
         JScrollPane scrollPane = new JScrollPane(inventoryPanel);
-        
+    
         inventoryList.add(scrollPane);
         inventoryList.setVisible(true);
-       // add(scrollPane);
-       // revalidate();
-        //repaint();
-
     }
+    
 
 
     // Run for testing with a predefined pet
