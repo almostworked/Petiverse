@@ -58,7 +58,7 @@ public class MainMenu extends JFrame {
 
                 new NewGameGUI(foxy, roscoe, sterling);
             }
-        });
+        });   
         loadButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Load button clicked");
