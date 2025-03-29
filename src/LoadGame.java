@@ -66,7 +66,9 @@ public class LoadGame {
                     
                     // Initialize the player and pass the pet
                     loadedPlayer = new Player(playerName, loadedInventory, isParent, loadedPet);
-    
+                        
+                    loadParentalControls(loadedPlayer, slotNumber);
+
                     loadedPet.setState(state);
     
                     PlayGameGUI playGameGUI = new PlayGameGUI(loadedPlayer, slotNumber, playerName); 
