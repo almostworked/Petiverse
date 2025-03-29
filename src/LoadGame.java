@@ -59,9 +59,8 @@ public class LoadGame {
                     int happiness = Integer.parseInt(data[6]);
                     boolean alive = Boolean.parseBoolean(data[7]);
                     String state = data[8];
+                    String dateCreated = data[9];
                     int score = Integer.parseInt(data[10]);
-    
-                    
     
                     loadedPet = new Sprite(petName, health, sleep, happiness, hunger, alive, state);
                     loadedPlayer = new Player(playerName, loadedInventory, isParent, loadedPet);

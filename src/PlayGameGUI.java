@@ -158,6 +158,7 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
         playerScore.setFont(font);
         scorePanel.setOpaque(false);
         scorePanel.add(playerScore);
+
         player.getScore().addPropertyChangeListener(evt -> {
             if ("score".equals(evt.getPropertyName())) {
                 playerScore.setText("Score: " + evt.getNewValue());
@@ -173,11 +174,9 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
 
         navRow.setLayout(new BorderLayout());
         navRow.setOpaque(false);
-        navRow.add(back, BorderLayout.WEST);
-        navRow.add(inventory, BorderLayout.EAST);
-       // navRow.add(score, BorderLayout.EAST);
-
+       
         petNameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        petNameLabel.setAlignmentY(Component.TOP_ALIGNMENT);
         JPanel titleRow = new JPanel();
         titleRow.setLayout(new BoxLayout(titleRow, BoxLayout.X_AXIS));
         titleRow.setOpaque(false);
@@ -186,9 +185,13 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
         titleRow.add(Box.createHorizontalGlue()); // keep centered
         topPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
 
+        navRow.add(back, BorderLayout.WEST);
+        navRow.add(titleRow, BorderLayout.CENTER);
+        navRow.add(inventory, BorderLayout.EAST);
+
         topPanel.add(navRow);
-        topPanel.add(titleRow);
-        topPanel.add(scorePanel);
+        topPanel.add(Box.createRigidArea(new Dimension(0, -5)));
+        topPanel.add(scorePanel, BorderLayout.WEST);
 
         mainContentPanel.add(topPanel, BorderLayout.NORTH);
 
