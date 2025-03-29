@@ -17,6 +17,7 @@ import java.util.List;
      */
 public class LoadGame {
     private static final String SAVE_FILE = "game_save.csv";
+    private static final String PARENTAL_FILE = "parental.csv";
 
     public List<String> loadSavedGames() {
         List<String> savedGames = new ArrayList<String>();
@@ -77,6 +78,38 @@ public class LoadGame {
             }
         } catch (IOException e) {
             System.out.println("Error occurred when trying to load game");
+        }
+    }
+
+    /**
+     * Method to load parental controls for a game
+     * Currently assumes data is stored as (slot,password,restrictionsEnabled,startHour,endHour)
+     *
+     * @param player
+     * @param slotNumber
+     */
+    private void loadParentalControls(Player player, int slotNumber) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(PARENTAL_FILE))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] data = line.split(",");
+
+                // Currently assumes the form (slot,password,restrictionsEnabled,startHour,endHour,...)
+                if (data.length >= 5 && Integer.parseInt(data[0]) == slotNumber) {
+                    System.out.println("Loading parental controls");
+
+                    String parentPassword = data[1];
+                    boolean restrictionsEnabled = Boolean.parseBoolean(data[2]);
+                    int startHour = Integer.parseInt(data[3]);
+                    int endHour = Integer.parseInt(data[4]);
+
+                    Parent parent = new Parent(player.getName(), player.getInventory(), true, player.getActivePet(), parentPassword);
+                    parent.setRestrictions(restrictionsEnabled, startHour, endHour);
+                    break;
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error occurred when trying to load parental controls.");
         }
     }
     
