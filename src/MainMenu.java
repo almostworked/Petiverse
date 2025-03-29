@@ -6,6 +6,8 @@
  */
 
 import javax.swing.*;
+import javax.swing.GroupLayout.Alignment;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
@@ -135,20 +137,18 @@ public class MainMenu extends JFrame {
             soundButton.setBackground(Color.decode("#D9D9D9"));
 
             exitButton.setFont(font);
-            exitButton.setForeground(Color.decode("#6C5297"));
-            exitButton.setBackground(Color.decode("#D9D9D9"));
-
-
-            // Create a border for the buttons
+            exitButton.setForeground(Color.decode("#D9D9D9"));
+            exitButton.setBackground(Color.decode("#6C5297"));
+            
+          
             Border buttonBorder = BorderFactory.createLineBorder(Color.decode("#8B73B2"), 3);
             startButton.setBorder(buttonBorder);
             loadButton.setBorder(buttonBorder);
             instructionsButton.setBorder(buttonBorder);
             parentButton.setBorder(buttonBorder);
             soundButton.setBorder(buttonBorder);
-            exitButton.setBorder(buttonBorder);
+            exitButton.setBorder(BorderFactory.createLineBorder(Color.WHITE, 3));
 
-            // Align buttons down the centre
             startButton.setAlignmentX(Component.CENTER_ALIGNMENT);
             loadButton.setAlignmentX(Component.CENTER_ALIGNMENT);
             instructionsButton.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -156,8 +156,7 @@ public class MainMenu extends JFrame {
             soundButton.setAlignmentX(Component.CENTER_ALIGNMENT);
             exitButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-            // Create background using imported background image
-            JPanel background = new JPanel() { // Override the paintComponent method to add the custom background
+            JPanel background = new JPanel() {
                 @Override
                 protected void paintComponent(Graphics g) {
                     super.paintComponent(g);
@@ -165,12 +164,12 @@ public class MainMenu extends JFrame {
                     g.drawImage(backgroundPic.getImage(), 0, 0, getWidth(), getHeight(), this);
                 }
             };
-            background.setLayout(new BoxLayout(background, BoxLayout.Y_AXIS)); // BoxLayout for vertical stacking
+            background.setLayout(new BoxLayout(background, BoxLayout.Y_AXIS));
 
-            // Add titles + buttons to the frame with space in between
-            background.add(Box.createVerticalStrut(140));
-            background.add(title);
             background.add(Box.createVerticalStrut(20)); 
+            background.add(Box.createVerticalStrut(80)); 
+            background.add(title);
+            background.add(Box.createVerticalStrut(10)); 
             background.add(startButton);
             background.add(Box.createVerticalStrut(20)); 
             background.add(loadButton);
@@ -182,6 +181,7 @@ public class MainMenu extends JFrame {
             background.add(soundButton);
             background.add(Box.createVerticalStrut(20)); 
             background.add(exitButton);
+
     
             // Set the background panel as the content pane
             mainMenuPanel = background;
@@ -553,8 +553,9 @@ public class MainMenu extends JFrame {
         topPanel.setOpaque(false);
         topPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 0));
 
+        Font font = null;
         try {
-            Font font = Font.createFont(Font.TRUETYPE_FONT, new File("fonts/Jersey25-Regular.ttf"));
+            font = Font.createFont(Font.TRUETYPE_FONT, new File("fonts/Jersey25-Regular.ttf"));
             font = font.deriveFont(Font.PLAIN, 70);
             title.setFont(font);
             title.setForeground(Color.WHITE);
@@ -571,6 +572,7 @@ public class MainMenu extends JFrame {
 
         JPanel savedGames = new JPanel();
         savedGames.setLayout(new BoxLayout(savedGames, BoxLayout.Y_AXIS));
+        savedGames.setBackground(Color.WHITE);
         savedGames.setOpaque(false);
 
         // Retrieve saved games
@@ -599,13 +601,23 @@ public class MainMenu extends JFrame {
             JLabel date = new JLabel("Created: " + formattedDate);
 
             petName.setForeground(Color.BLACK);
+            font = font.deriveFont(Font.PLAIN, 25);
+            petName.setFont(font);
             date.setForeground(Color.DARK_GRAY);
+            font = font.deriveFont(Font.PLAIN, 15);
+
+            date.setFont(font);
 
             card.add(petName);
             card.add(date);
 
             // Load button for each game slot
             JButton loadBtn = new JButton("Load");
+            font = font.deriveFont(Font.PLAIN, 25);
+
+            loadBtn.setFont(font);
+            loadBtn.setForeground(Color.WHITE);
+            loadBtn.setBackground(Color.decode("#6C5297"));
             loadBtn.addActionListener(e -> {
                 // Load the selected saved game here
                 System.out.println("Loading: " + petInfo);
