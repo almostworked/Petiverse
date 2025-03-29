@@ -33,23 +33,23 @@ public class MainMenu extends JFrame {
         JLabel title = new JLabel("Petiverse");
 
         // Play background music
-        //Sound sound = new Sound();
-        //String music = "temp_assets/background_music.wav";
-        //String buttonClick = "temp_assets/button-click.wav";
-        //sound.playMusic(music);
+        Sound sound = new Sound();
+        String music = "temp_assets/background_music.wav";
+        String buttonClick = "temp_assets/button-click.wav";
 
         // Initialize main menu buttons
         JButton startButton = new JButton("  Start new game  ");
         JButton loadButton = new JButton("  Load saved game  ");
         JButton instructionsButton = new JButton("  Tutorial & Instructions  ");
         JButton parentButton = new JButton("  Parental Controls  ");
+        JButton soundButton = new JButton("  Sound: OFF  ");
         JButton exitButton = new JButton("  Exit  ");
 
         // Add action listeners for each button
         startButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Start button clicked");
-                //sound.playEffect(buttonClick); // Play button sound fx
+                sound.playEffect(buttonClick); // Play button sound fx
 
                 Pet foxy = new Foxy("Foxy");
                 Pet roscoe = new Roscoe("Roscoe");
@@ -62,28 +62,34 @@ public class MainMenu extends JFrame {
         loadButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Load button clicked");
-                //sound.playEffect(buttonClick);  // Play button sound fx
+                sound.playEffect(buttonClick);
                 loadGame();
             }
         });
         instructionsButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Instructions/tutorial button clicked");
-                //sound.playEffect(buttonClick);  // Play button sound fx
+                sound.playEffect(buttonClick);
                 displayInstructions();
             }
         });
         parentButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Parental controls button clicked");
-                //sound.playEffect(buttonClick); // Play button sound fx
+                sound.playEffect(buttonClick);
                 parentalControls();
+            }
+        });
+        soundButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                sound.toggleSound();
+                soundButton.setText(sound.isSoundEnabled() ? "  Sound: ON  " : "  Sound: OFF  ");
             }
         });
         exitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Exit button clicked");
-                //sound.playEffect(buttonClick); // Play button sound fx
+                sound.playEffect(buttonClick);
                 exit();
             }
         });
@@ -91,6 +97,7 @@ public class MainMenu extends JFrame {
         loadButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         instructionsButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         parentButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        soundButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         exitButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
 
@@ -121,6 +128,10 @@ public class MainMenu extends JFrame {
             parentButton.setForeground(Color.decode("#6C5297"));
             parentButton.setBackground(Color.decode("#D9D9D9"));
 
+            soundButton.setFont(font);
+            soundButton.setForeground(Color.decode("#6C5297"));
+            soundButton.setBackground(Color.decode("#D9D9D9"));
+
             exitButton.setFont(font);
             exitButton.setForeground(Color.decode("#6C5297"));
             exitButton.setBackground(Color.decode("#D9D9D9"));
@@ -132,6 +143,7 @@ public class MainMenu extends JFrame {
             loadButton.setBorder(buttonBorder);
             instructionsButton.setBorder(buttonBorder);
             parentButton.setBorder(buttonBorder);
+            soundButton.setBorder(buttonBorder);
             exitButton.setBorder(buttonBorder);
 
             // Align buttons down the centre
@@ -139,6 +151,7 @@ public class MainMenu extends JFrame {
             loadButton.setAlignmentX(Component.CENTER_ALIGNMENT);
             instructionsButton.setAlignmentX(Component.CENTER_ALIGNMENT);
             parentButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+            soundButton.setAlignmentX(Component.CENTER_ALIGNMENT);
             exitButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
             // Create background using imported background image
@@ -163,6 +176,8 @@ public class MainMenu extends JFrame {
             background.add(instructionsButton);
             background.add(Box.createVerticalStrut(20)); 
             background.add(parentButton);
+            background.add(Box.createVerticalStrut(20));
+            background.add(soundButton);
             background.add(Box.createVerticalStrut(20)); 
             background.add(exitButton);
     

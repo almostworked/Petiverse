@@ -95,19 +95,22 @@ public class SaveGame {
 
     
 
-    // FIXME
     /**
      * Appends the parental controls & restrictions to a csv file
+     * Saves parental control data (if applicable)
      *
      * @param parentalControls contains the parental settings for this game
      */
-    // Save parental control data (if applicable)
     private void saveParentalControls(ParentalControls parentalControls) {
         if (!isParent) return; // Skip if not in parental mode
 
         String filename = "parental.csv";
         try (PrintWriter writer = new PrintWriter(new FileWriter(filename, true))) {
-            writer.println(saveSlot + "," + parentalControls.isRestrictionsEnabled() + "," + parentalControls.getRestrictions());
+
+            // SET THE DEFAULT PASSWORD TO "password" FOR NOW
+            writer.println(String.format("%d,%s,%b,%s,%s",
+                    saveSlot, "password", parentalControls.isRestrictionsEnabled(),
+                    parentalControls.getRestrictions(), LocalDateTime.now()));
         } catch (IOException e) {
             System.out.println("Error saving parental controls: " + e.getMessage());
         }

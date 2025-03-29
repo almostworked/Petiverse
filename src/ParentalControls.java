@@ -18,6 +18,8 @@ public class ParentalControls {
     private int allowedEndHour;
     private float totalPlayTime;
     private int sessionCount;
+    private float maxAllowedMinutes = 60; 
+
 
     /**
      * Constructs a new ParentalControls instance with a given password.
@@ -83,6 +85,15 @@ public class ParentalControls {
         int currentHour = LocalTime.now().getHour();
         return (currentHour >= allowedStartHour && currentHour < allowedEndHour);
     }
+
+    public void setMaxAllowedMinutes(float minutes) {
+        this.maxAllowedMinutes = minutes;
+    }
+
+    public float getMaxAllowedMinutes() {
+        return this.maxAllowedMinutes;
+    }
+
 
     /**
      * Adds playtime (in minutes) to the total tracked time.
