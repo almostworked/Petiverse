@@ -64,6 +64,7 @@ public class Pet {
         if (activePlayer.getInventory().getQuantity(food) > 0 && food.getEffectValue() > 0) {
             activePlayer.getInventory().removeItem(food, 1);
             fullness = Math.min(fullness + food.getEffectValue(), 100);
+            happiness = Math.min(happiness + 5, 100);
             activePlayer.getScore().increaseScore(food.getEffectValue());
         } else {
             System.out.println("You don't have enough " + food.getName() + "s to give to your pet.");
@@ -78,7 +79,7 @@ public class Pet {
         if (!canExecuteAction("play")) return;
         //Sound sound = new Sound();
         //sound.playEffect(musicpath);
-        happiness = Math.min(happiness + 40, 100);
+        happiness = Math.min(happiness + 15, 100);
         health = Math.min(health + 2, 100);
         sleep = Math.min(sleep - 10, 100);
         activePlayer.getScore().increaseScore(15);
@@ -127,7 +128,7 @@ public class Pet {
         //sound.playEffect(musicpath);
         health = Math.min(health + 10, 100);
         sleep = Math.max(sleep - 30, 0);
-        fullness = Math.max(fullness - 10, 0);
+        fullness = Math.max(fullness - 20, 0);
         activePlayer.getScore().increaseScore(10);
         updateState();
     }
