@@ -10,6 +10,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
@@ -588,9 +590,13 @@ public class MainMenu extends JFrame {
             // Extract pet name and date from saved game string
             String[] gameData = game.split(": ");
             String petInfo = gameData[1];
+            String dateCreated = gameData[2];
+            LocalDateTime dateTime = LocalDateTime.parse(dateCreated.substring(0,19));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d'th', yyyy 'at' h:mm a");
+            String formattedDate = dateTime.format(formatter);
 
             JLabel petName = new JLabel(petInfo);
-            JLabel date = new JLabel("Created: Date"); // TODO: modify NewGame class to save creation date
+            JLabel date = new JLabel("Created: " + formattedDate);
 
             petName.setForeground(Color.BLACK);
             date.setForeground(Color.DARK_GRAY);
