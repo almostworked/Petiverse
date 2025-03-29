@@ -50,7 +50,7 @@ public class LoadGame {
             int slotCounter = 0;
             while ((line = reader.readLine()) != null) {
                 String[] data = line.split(",");
-                if (data.length >= 10 && slotCounter == slotNumber) {
+                if (data.length >= 11 && slotCounter == slotNumber) {
                     String playerName = data[1];
                     String petName = data[2];
                     int health = Integer.parseInt(data[3]);
@@ -59,22 +59,13 @@ public class LoadGame {
                     int happiness = Integer.parseInt(data[6]);
                     boolean alive = Boolean.parseBoolean(data[7]);
                     String state = data[8];
+                    int score = Integer.parseInt(data[10]);
     
-                    // Load inventory from data[9], which contains item data
-                    String[] inventoryItems = data[9].split(";");
-                    for (String itemEntry : inventoryItems) {
-                        String[] itemData = itemEntry.split(":");
-                        if (itemData.length == 2) {
-                            String itemName = itemData[0];
-                            int quantity = Integer.parseInt(itemData[1]);
-    
-                            Item item = Item.fromName(itemName);
-                            loadedInventory.setQuantity(item, quantity);
-                        }
-                    }
+                    
     
                     loadedPet = new Sprite(petName, health, sleep, happiness, hunger, alive, state);
                     loadedPlayer = new Player(playerName, loadedInventory, isParent, loadedPet);
+                    loadedPlayer.getScore().setScore(score);
                         
                     loadParentalControls(loadedPlayer, slotNumber);
 

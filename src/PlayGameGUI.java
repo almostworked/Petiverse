@@ -58,12 +58,12 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
     private Sprite petSprite;
     private Timer animationTimer;
     private boolean warningShown = false;
+    private Score score;
     
     
     public PlayGameGUI(Player player, int saveSlot, String playerName) {
         int[] decay = {1,2,3};
         StateManager stateManager = new StateManager(player.getActivePet(), decay);
-        stateManager.start();
         stateManager.addStateChangeListener(this); 
         
         instance = this;
@@ -73,10 +73,12 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
         this.saveGame = new SaveGame(saveSlot, false);
         this.saveGame.setSavedName(playerName);
         this.pet = player.getActivePet();
+        this.score = player.getScore();
         Pet.setActivePlayer(player);
 
-        
-        
+        GameLoop gameLoop = new GameLoop(pet, player, stateManager, saveGame);
+        gameLoop.start();
+
         JPanel mainContentPanel = new JPanel(new BorderLayout());
         mainContentPanel.setOpaque(false);
 
@@ -150,6 +152,18 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
         inventory.setAlignmentX(RIGHT_ALIGNMENT);
         inventory.setAlignmentY(TOP_ALIGNMENT);
 
+        JPanel scorePanel = new JPanel();
+        JLabel playerScore = new JLabel("Score: " + score.getScore());
+        playerScore.setForeground(Color.WHITE);
+        playerScore.setFont(font);
+        scorePanel.setOpaque(false);
+        scorePanel.add(playerScore);
+        player.getScore().addPropertyChangeListener(evt -> {
+            if ("score".equals(evt.getPropertyName())) {
+                playerScore.setText("Score: " + evt.getNewValue());
+            }
+        });
+
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
         topPanel.setOpaque(false);
@@ -161,6 +175,7 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
         navRow.setOpaque(false);
         navRow.add(back, BorderLayout.WEST);
         navRow.add(inventory, BorderLayout.EAST);
+       // navRow.add(score, BorderLayout.EAST);
 
         petNameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         JPanel titleRow = new JPanel();
@@ -173,6 +188,7 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
 
         topPanel.add(navRow);
         topPanel.add(titleRow);
+        topPanel.add(scorePanel);
 
         mainContentPanel.add(topPanel, BorderLayout.NORTH);
 

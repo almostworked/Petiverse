@@ -131,20 +131,8 @@ public class NewGameGUI extends JFrame {
      */
     public void openPlayGameInterface(String playerName, Pet selectedPet, int saveSlot) { // Added saveSLot argument - Daniella
         // Give the player some items in their inventory when starting a new game
-        Item apple = new Item("Apple", Item.ItemType.FOOD, 10);
-        Item fish = new Item("Fish", Item.ItemType.FOOD, 20);
-        Item ball = new Item("Ball", Item.ItemType.GIFT, 15);
 
-        List<Inventory.Entry> list = new ArrayList<Inventory.Entry>();
-        Inventory.Entry item = new Inventory.Entry(apple, 5);
-        Inventory.Entry item2 = new Inventory.Entry(fish, 3);
-        Inventory.Entry item3 = new Inventory.Entry(ball, 1);
-
-        list.add(item);
-        list.add(item2);
-        list.add(item3);
-
-        Inventory inventory = new Inventory(list, false); // Create an inventory with the list of items, no gifts
+        Inventory inventory = new Inventory(); // Create an inventory with the list of items, no gifts
         Player player = new Player(playerName, inventory, false, selectedPet); // Assuming false means not a parent
         selectedPet.setActivePlayer(player);
         inventory.displayInventory();

@@ -24,6 +24,7 @@ public class GameLoop {
     private int giftCycleIndex = 0;
     private final Item[] giftCycleItems = {Item.BALL, Item.COLLAR, Item.TOY_MOUSE};
     private int sessionSeconds = 0;
+    private int scoreUpdateCounter = 0;
 
     /**
      * Constructs a new GameLoop instance.
@@ -164,8 +165,13 @@ public class GameLoop {
      * Updates the persistent score by increasing it by a fixed amount every second.
      */
     private void updatePersistentScore() {
-        // Just an example: each second, add 1 point
-        player.getScore().increaseScore(1);
+        scoreUpdateCounter++;
+        // Increase the score every 5 seconds
+        if (scoreUpdateCounter >= 5) {
+            player.getScore().increaseScore(1);
+            scoreUpdateCounter = 0; // Reset the counter after updating
+            System.out.println("Score updated: " + player.getScore().getScore());
+        }
     }
 
     /**
