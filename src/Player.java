@@ -19,6 +19,9 @@ public class Player implements PlayGame {
      * @param isParent  True if player is a parent
      * @param activePet The pet currently controlled by this player
      */
+    public Player() {
+        
+    }
     public Player(String name, Inventory inventory, Boolean isParent, Pet activePet) {
         this.name = name;
         this.inventory = inventory;

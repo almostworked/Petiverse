@@ -1,3 +1,10 @@
+/**
+ * PlayGameGUI.java: The main game screen where the player can take care of their virtual pet. Includes pet vitals,
+ * sprites, commands, score and inventory.
+ * 
+ * @author Daniella
+ * @version 1.0
+ */
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;

@@ -1,13 +1,17 @@
+import java.io.Serializable;
+
 /**
  * Parent class representing a player with parental controls.
  * This class extends Player and encapsulates the additional functionality
  * for managing parental restrictions such as authentication, playtime tracking,
- * setting play limits, and pet revival.
+ * setting play limits, and pet revival. It implements the Serializable interface
+ * for parent account creation purposes.
  * 
  * @author Daniella
+ * @version 1.5
  */
-public class Parent extends Player {
-
+public class Parent extends Player implements Serializable {
+    private static final long serial = 7308126631322386768L; // Serial ID for account creation
     private ParentalControls controls;
 
     /**
@@ -19,6 +23,10 @@ public class Parent extends Player {
      * @param activePet the active pet associated with the player
      * @param defaultPassword the default password for parental controls
      */
+    public Parent() {
+        super();
+        this.controls = new ParentalControls("");
+    }
     public Parent(String name, Inventory inventory, boolean isParent, Pet activePet, String defaultPassword) {
         super(name, inventory, isParent, activePet);
         this.controls = new ParentalControls(defaultPassword);
@@ -31,8 +39,9 @@ public class Parent extends Player {
      * @return true if the password matches, false otherwise
      */
     public boolean authenticate(String attempt) {
-        return controls.authenticate(attempt);
+        return controls != null && controls.authenticate(attempt);
     }
+    
 
     /**
      * Sets a new password for the parental controls.

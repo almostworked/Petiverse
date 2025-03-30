@@ -355,18 +355,17 @@ public class MainMenu extends JFrame {
         header.setFont(new Font("Arial", Font.BOLD, 24));
         parentalFrame.add(header, BorderLayout.NORTH);
     
-        JTextArea info = new JTextArea("Here you can set limits, view activity logs, or restrict features.");
-        info.setEditable(false);
-        info.setWrapStyleWord(true);
-        info.setLineWrap(true);
-        info.setMargin(new Insets(10, 10, 10, 10));
-        parentalFrame.add(info, BorderLayout.CENTER);
-
-        JLabel totalPlay = new JLabel("Total play time: ");
-        JLabel averagePlay = new JLabel("Average play time: ");
-        JLabel setTime = new JLabel("> Set play time limit <");
-
-        JButton timeLimit = new JButton("60");
+        JButton createAccountBtn = new JButton("Make a Parent Account");
+        JButton loginBtn = new JButton("Log In");
+    
+        createAccountBtn.addActionListener(e -> createParentAccount());
+        loginBtn.addActionListener(e -> loginToParentalControls());
+    
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 2));
+        buttonPanel.add(createAccountBtn);
+        buttonPanel.add(loginBtn);
+    
+        parentalFrame.add(buttonPanel, BorderLayout.CENTER);
     
         JButton closeBtn = new JButton("Close");
         closeBtn.addActionListener(e -> parentalFrame.dispose());
@@ -375,7 +374,81 @@ public class MainMenu extends JFrame {
         parentalFrame.setVisible(true);
     }
     
+    private void createParentAccount() {
+        if (ParentAccountManager.parentAccountExists()) {
+            JOptionPane.showMessageDialog(null, "Parent account already exists. Please log in.");
+            return;
+        }
     
+        String password = JOptionPane.showInputDialog("Set Parent Password:");
+        if (password != null && !password.isEmpty()) {
+            Parent parent = new Parent("Parent", new Inventory(), true, null, password);
+            ParentAccountManager.saveParentAccount(parent);
+            JOptionPane.showMessageDialog(null, "Parent account created successfully!");
+        } else {
+            JOptionPane.showMessageDialog(null, "Password cannot be empty.");
+        }
+    }
+    
+    private void loginToParentalControls() {
+        Parent parent = ParentAccountManager.loadParentAccount();
+        if (parent == null) {
+            JOptionPane.showMessageDialog(null, "No parent account found. Please create one.");
+            return;
+        }
+    
+        String password = JOptionPane.showInputDialog("Enter Parent Password:");
+        if (password != null && parent.authenticate(password)) {
+            showParentalControlOptions(parent);
+        } else {
+            JOptionPane.showMessageDialog(null, "Incorrect password.");
+        }
+    }
+    
+    private void showParentalControlOptions(Parent parent) {
+        JFrame controlFrame = new JFrame("Parental Control Options");
+        controlFrame.setSize(400, 300);
+        controlFrame.setLocationRelativeTo(null);
+    
+        JLabel infoLabel = new JLabel("Parental Controls");
+        infoLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        JButton setTimeLimitBtn = new JButton("Set Play Time Limit");
+        JButton changePasswordBtn = new JButton("Change Password");
+    
+        setTimeLimitBtn.addActionListener(e -> {
+            String input = JOptionPane.showInputDialog("Enter max allowed minutes:");
+            if (input != null) {
+                try {
+                    float minutes = Float.parseFloat(input);
+                    parent.getControls().setMaxAllowedMinutes(minutes);
+                    ParentAccountManager.saveParentAccount(parent);
+                    JOptionPane.showMessageDialog(null, "Play time limit set to " + minutes + " minutes.");
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(null, "Invalid number format.");
+                }
+            }
+        });
+    
+        changePasswordBtn.addActionListener(e -> {
+            String newPassword = JOptionPane.showInputDialog("Enter New Password:");
+            if (newPassword != null && !newPassword.isEmpty()) {
+                parent.setPassword(newPassword);
+                ParentAccountManager.saveParentAccount(parent);
+                JOptionPane.showMessageDialog(null, "Password changed successfully!");
+            } else {
+                JOptionPane.showMessageDialog(null, "Password cannot be empty.");
+            }
+        });
+    
+        JPanel panel = new JPanel(new GridLayout(3, 1));
+        panel.add(infoLabel);
+        panel.add(setTimeLimitBtn);
+        panel.add(changePasswordBtn);
+    
+        controlFrame.add(panel);
+        controlFrame.setVisible(true);
+        
+    }
 
     public void playNewGame() { // Start a new game
         JPanel newGamePanel = new JPanel() {
@@ -572,7 +645,7 @@ public class MainMenu extends JFrame {
 
         JPanel savedGames = new JPanel();
         savedGames.setLayout(new BoxLayout(savedGames, BoxLayout.Y_AXIS));
-        savedGames.setBorder(new EmptyBorder(0,10, 10 ,10));
+        savedGames.setBorder(new EmptyBorder(0,20, 10 ,20));
         savedGames.setOpaque(false);
 
         // Retrieve saved games
@@ -585,7 +658,7 @@ public class MainMenu extends JFrame {
             card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
             card.setBackground(new Color(255, 255, 255, 50)); // semi-transparent
             card.setOpaque(true);
-            card.setBorder(BorderFactory.createLineBorder(Color.decode("#6C5297"), 3));
+            card.setBorder(BorderFactory.createLineBorder(Color.decode("#6C5297"), 5));
             card.setMaximumSize(new Dimension(500, 160));
             card.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -595,12 +668,14 @@ public class MainMenu extends JFrame {
             String petInfo = gameData[1];
             String petName = petInfo.split("'s pet ")[1].trim();
             String dateCreated = gameData[2];
+            String state = gameData[3];
             LocalDateTime dateTime = LocalDateTime.parse(dateCreated.substring(0,19));
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d'th', yyyy 'at' h:mm a");
             String formattedDate = dateTime.format(formatter);
 
             JLabel petNameLabel = new JLabel(petInfo);
             JLabel date = new JLabel("Created: " + formattedDate);
+            JLabel currentState = new JLabel("Current state: " + state);
 
             petNameLabel.setForeground(Color.BLACK);
             font = font.deriveFont(Font.PLAIN, 25);
@@ -608,16 +683,18 @@ public class MainMenu extends JFrame {
             date.setForeground(Color.DARK_GRAY);
             font = font.deriveFont(Font.PLAIN, 15);
             date.setFont(font);
+            currentState.setFont(font);
 
             JPanel imagePanel = new JPanel();
             imagePanel.setLayout(new BoxLayout(imagePanel, BoxLayout.X_AXIS));
-            ImageIcon image = getPetImage(petName);
+            ImageIcon image = getPetImage(petName, state);
             JLabel imageLabel = new JLabel(image);
 
             imagePanel.add(imageLabel);
             card.add(imagePanel);
-            card.add(petNameLabel); // Add pet name label
+            card.add(petNameLabel);
             card.add(date);
+            card.add(currentState);
 
             JButton loadBtn = new JButton("Load");
             font = font.deriveFont(Font.PLAIN, 25);
@@ -643,20 +720,42 @@ public class MainMenu extends JFrame {
         JScrollPane scrollPane = new JScrollPane(savedGames);
         scrollPane.setAlignmentX(Component.CENTER_ALIGNMENT);
         scrollPane.setPreferredSize(new Dimension(300, 600));
-        scrollPane.setBorder(new EmptyBorder(0,15,0,15));
+        scrollPane.setBorder(new EmptyBorder(0,25,0,25));
         scrollPane.setOpaque(false);
-        scrollPane.getVerticalScrollBar().setUnitIncrement(20); // Adjust this value as needed
+        scrollPane.getVerticalScrollBar().setUnitIncrement(20);
 
-// Increase the block increment (scrolling by clicking the scrollbar track)
-scrollPane.getVerticalScrollBar().setBlockIncrement(50);
+        scrollPane.getVerticalScrollBar().setBlockIncrement(50);
 
         loadGamePanel.add(scrollPane);
         setContentPane(loadGamePanel);
         revalidate();
         repaint();
     }
-    public ImageIcon getPetImage(String petName) {
-        ImageIcon petIcon = new ImageIcon("temp_assets/" + petName + ".png");
+    public ImageIcon getPetImage(String petName, String state) {
+        System.out.println(state);
+        ImageIcon petIcon;
+        switch (state) {
+            case "NORMAL":
+                petIcon = new ImageIcon("temp_assets/" + petName + ".png");
+                break;
+            case "HUNGRY":
+                petIcon = new ImageIcon("temp_assets/" + petName + "-Hungry" +".png");
+                break;
+            case "ANGRY":
+                petIcon = new ImageIcon("temp_assets/" + petName + "-Angry" + ".png");
+                break;
+            case "SLEEPING":
+                petIcon = new ImageIcon("temp_assets/" + petName + "-Sleep" + ".png");
+                break;
+        case "DEAD":
+            petIcon = new ImageIcon("temp_assets/" + petName + "-Dead" + ".png");
+                break;
+            default:
+                petIcon = new ImageIcon("temp_assets/" + petName + ".png");
+                break;
+        }
+
+
         Image petImage = petIcon.getImage();
         Image resized = petImage.getScaledInstance(50, 50, Image.SCALE_SMOOTH);
         return new ImageIcon(resized);

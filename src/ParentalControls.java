@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.time.LocalTime;
 
 /**
@@ -10,7 +11,8 @@ import java.time.LocalTime;
  * Author: Adrian  
  * @version 1.0
  */
-public class ParentalControls {
+public class ParentalControls implements Serializable {
+    private static final long serial = 7308126631322386768L; // Serial ID for account creation, matches Parent.java
 
     private String password;
     private boolean restrictionsEnabled;

@@ -2,6 +2,9 @@
  * Interface that defines the methods for interacting with the game.
  * These methods allow the player to view the state of their pet, 
  * available commands, gift options, and go back to a previous screen.
+ * 
+ * @author Daniella
+ * @version 1.0
  */
 public interface PlayGame {
 

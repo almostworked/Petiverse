@@ -26,7 +26,7 @@ public class LoadGame {
             while ((line = reader.readLine()) != null) {
                 String[] data = line.split(",");
                 if (data.length >= 3) {
-                    savedGames.add("Slot " + data[0] + ": " + data[1] + "'s pet " + data[2]  + ": " + data[9]);
+                    savedGames.add("Slot " + data[0] + ": " + data[1] + "'s pet " + data[2]  + ": " + data[9] + ": " + data[8]);
                 }
             }
         } catch (IOException e) {
