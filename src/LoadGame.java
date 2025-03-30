@@ -49,7 +49,7 @@ public class LoadGame {
     
         try (BufferedReader reader = new BufferedReader(new FileReader(SAVE_FILE))) {
             String line;
-            int slotCounter = 0;
+            int slotCounter = 1;
             while ((line = reader.readLine()) != null) {
                 System.out.println("not null");
                 String[] data = line.split(",");

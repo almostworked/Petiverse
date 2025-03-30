@@ -650,6 +650,8 @@ public class MainMenu extends JFrame {
         loadGamePanel.add(topPanel, BorderLayout.NORTH);
         loadGamePanel.add(title);
         loadGamePanel.add(Box.createVerticalStrut(30));
+        loadGamePanel.setOpaque(false);
+        topPanel.setOpaque(false);
 
         JPanel savedGames = new JPanel();
         savedGames.setLayout(new BoxLayout(savedGames, BoxLayout.Y_AXIS));
@@ -659,6 +661,19 @@ public class MainMenu extends JFrame {
         // Retrieve saved games
         LoadGame loadGame = new LoadGame();
         List<String> savedGamesList = loadGame.loadSavedGames();
+        if (savedGamesList.isEmpty()) {
+            JPanel msg = new JPanel();
+            JLabel noGames = new JLabel("You have no saved games yet.");
+            font = font.deriveFont(Font.PLAIN, 40);
+            noGames.setFont(font);
+            noGames.setForeground(Color.decode("#6C5297"));
+            noGames.setVisible(true);
+            msg.add(noGames);
+            msg.setVisible(true);
+            savedGames.add(Box.createVerticalStrut(50));
+            savedGames.add(msg);
+
+        }
 
         for (String game : savedGamesList) {
             // Create a card for each save file
@@ -712,27 +727,27 @@ public class MainMenu extends JFrame {
             loadBtn.setBackground(Color.decode("#6C5297"));
             loadBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
             loadBtn.addActionListener(e -> {
-                System.out.println("Loading: " + petInfo);
-                int slotNumber = Integer.parseInt(gameData[0].replace("Slot", "").trim());
-                System.out.println(slotNumber);
-                LoadGame loadGame2 = new LoadGame();
-                loadGame2.loadGame(slotNumber);
-                System.out.println("entered load game class");
+            System.out.println("Loading: " + petInfo);
+            int slotNumber = Integer.parseInt(gameData[0].replace("Slot", "").trim());
+            System.out.println(slotNumber);
+            LoadGame loadGame2 = new LoadGame();
+            loadGame2.loadGame(slotNumber);
+            System.out.println("entered load game class");
             });
             card.add(Box.createVerticalStrut(5));
             card.add(loadBtn);
             savedGames.add(Box.createVerticalStrut(10));
             savedGames.add(card);
         }
-
         JScrollPane scrollPane = new JScrollPane(savedGames);
         scrollPane.setAlignmentX(Component.CENTER_ALIGNMENT);
         scrollPane.setPreferredSize(new Dimension(300, 600));
         scrollPane.setBorder(new EmptyBorder(0,25,0,25));
-        scrollPane.setOpaque(false);
         scrollPane.getVerticalScrollBar().setUnitIncrement(20);
-
         scrollPane.getVerticalScrollBar().setBlockIncrement(50);
+        Color transparentColor = new Color(0, 0, 0, 50); 
+        scrollPane.setBackground(transparentColor);
+        scrollPane.setOpaque(false); 
 
         loadGamePanel.add(scrollPane);
         setContentPane(loadGamePanel);
