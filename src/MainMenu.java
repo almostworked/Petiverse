@@ -572,7 +572,7 @@ public class MainMenu extends JFrame {
 
         JPanel savedGames = new JPanel();
         savedGames.setLayout(new BoxLayout(savedGames, BoxLayout.Y_AXIS));
-        savedGames.setBackground(Color.WHITE);
+        savedGames.setBorder(new EmptyBorder(0,10, 10 ,10));
         savedGames.setOpaque(false);
 
         // Retrieve saved games
@@ -583,67 +583,83 @@ public class MainMenu extends JFrame {
             // Create a card for each save file
             JPanel card = new JPanel();
             card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
-            card.setBackground(new Color(255, 255, 255, 80)); // semi-transparent
-            card.setBorder(BorderFactory.createLineBorder(Color.decode("#6C5297"), 2));
-            card.setMaximumSize(new Dimension(500, 100));
+            card.setBackground(new Color(255, 255, 255, 50)); // semi-transparent
+            card.setOpaque(true);
+            card.setBorder(BorderFactory.createLineBorder(Color.decode("#6C5297"), 3));
+            card.setMaximumSize(new Dimension(500, 160));
             card.setAlignmentX(Component.CENTER_ALIGNMENT);
-            card.setBorder(new EmptyBorder(10, 10, 10, 10));
+
 
             // Extract pet name and date from saved game string
             String[] gameData = game.split(": ");
             String petInfo = gameData[1];
+            String petName = petInfo.split("'s pet ")[1].trim();
             String dateCreated = gameData[2];
             LocalDateTime dateTime = LocalDateTime.parse(dateCreated.substring(0,19));
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d'th', yyyy 'at' h:mm a");
             String formattedDate = dateTime.format(formatter);
 
-            JLabel petName = new JLabel(petInfo);
+            JLabel petNameLabel = new JLabel(petInfo);
             JLabel date = new JLabel("Created: " + formattedDate);
 
-            petName.setForeground(Color.BLACK);
+            petNameLabel.setForeground(Color.BLACK);
             font = font.deriveFont(Font.PLAIN, 25);
-            petName.setFont(font);
+            petNameLabel.setFont(font);
             date.setForeground(Color.DARK_GRAY);
             font = font.deriveFont(Font.PLAIN, 15);
-
             date.setFont(font);
 
-            card.add(petName);
+            JPanel imagePanel = new JPanel();
+            imagePanel.setLayout(new BoxLayout(imagePanel, BoxLayout.X_AXIS));
+            ImageIcon image = getPetImage(petName);
+            JLabel imageLabel = new JLabel(image);
+
+            imagePanel.add(imageLabel);
+            card.add(imagePanel);
+            card.add(petNameLabel); // Add pet name label
             card.add(date);
 
-            // Load button for each game slot
             JButton loadBtn = new JButton("Load");
             font = font.deriveFont(Font.PLAIN, 25);
 
             loadBtn.setFont(font);
             loadBtn.setForeground(Color.WHITE);
             loadBtn.setBackground(Color.decode("#6C5297"));
+            loadBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
             loadBtn.addActionListener(e -> {
-                // Load the selected saved game here
                 System.out.println("Loading: " + petInfo);
-                //System.out.println(gameData[0]);
                 int slotNumber = Integer.parseInt(gameData[0].replace("Slot", "").trim());
-                System.out.println(slotNumber); // Ensure slot number is correct
+                System.out.println(slotNumber);
                 LoadGame loadGame2 = new LoadGame();
-                loadGame2.loadGame(slotNumber); // Load the game from the selected slot
+                loadGame2.loadGame(slotNumber);
                 System.out.println("entered load game class");
             });
             card.add(Box.createVerticalStrut(5));
             card.add(loadBtn);
-
             savedGames.add(Box.createVerticalStrut(10));
             savedGames.add(card);
         }
 
         JScrollPane scrollPane = new JScrollPane(savedGames);
-        scrollPane.setOpaque(false);
         scrollPane.setAlignmentX(Component.CENTER_ALIGNMENT);
         scrollPane.setPreferredSize(new Dimension(300, 600));
+        scrollPane.setBorder(new EmptyBorder(0,15,0,15));
+        scrollPane.setOpaque(false);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(20); // Adjust this value as needed
+
+// Increase the block increment (scrolling by clicking the scrollbar track)
+scrollPane.getVerticalScrollBar().setBlockIncrement(50);
 
         loadGamePanel.add(scrollPane);
         setContentPane(loadGamePanel);
         revalidate();
         repaint();
+    }
+    public ImageIcon getPetImage(String petName) {
+        ImageIcon petIcon = new ImageIcon("temp_assets/" + petName + ".png");
+        Image petImage = petIcon.getImage();
+        Image resized = petImage.getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+        return new ImageIcon(resized);
     }
 
 
