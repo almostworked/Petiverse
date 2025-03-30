@@ -51,8 +51,13 @@ public class LoadGame {
             String line;
             int slotCounter = 0;
             while ((line = reader.readLine()) != null) {
+                System.out.println("not null");
                 String[] data = line.split(",");
+                System.out.println(data.length);
+                System.out.println("slot counter: " + slotCounter + "slotnum: " + slotNumber);
+
                 if (data.length >= 11 && slotCounter == slotNumber) {
+                    System.out.println("passed check");
                     String playerName = data[1];
                     String petName = data[2];
                     int health = Integer.parseInt(data[3]);
@@ -75,8 +80,9 @@ public class LoadGame {
                     PlayGameGUI playGameGUI = new PlayGameGUI(loadedPlayer, slotNumber, playerName); 
                     playGameGUI.setVisible(true);
                     break;
+                } else {
+                    slotCounter++;
                 }
-                slotCounter++;
             }
         } catch (IOException e) {
             System.out.println("Error occurred when trying to load game");

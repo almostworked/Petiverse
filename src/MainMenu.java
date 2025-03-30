@@ -58,9 +58,8 @@ public class MainMenu extends JFrame {
                 Pet foxy = new Foxy("Foxy");
                 Pet roscoe = new Roscoe("Roscoe");
                 Pet sterling = new Sterling("Sterling");
-                
-
                 new NewGameGUI(foxy, roscoe, sterling);
+                dispose();
             }
         });   
         loadButton.addActionListener(new ActionListener() {
@@ -260,9 +259,11 @@ public class MainMenu extends JFrame {
             back.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     System.out.println("Back to main menu button clicked");
-                    menu.setContentPane(mainMenuPanel); // Go back to main menu panel
-                    menu.revalidate();
-                    menu.repaint();
+                  //  menu.setContentPane(mainMenuPanel); // Go back to main menu panel
+                    MainMenu newMenu = new MainMenu();
+                    dispose();
+                    newMenu.setVisible(true);
+                   ;
                 }
             });
 
@@ -412,6 +413,8 @@ public class MainMenu extends JFrame {
     
         JLabel infoLabel = new JLabel("Parental Controls");
         infoLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        JLabel totalTime = new JLabel("Total play time: " + parent.getTotalPlayTime());
+        JLabel avTime = new JLabel("Average play time: " + parent.getAveragePlayTime());
         JButton setTimeLimitBtn = new JButton("Set Play Time Limit");
         JButton changePasswordBtn = new JButton("Change Password");
     
@@ -440,8 +443,11 @@ public class MainMenu extends JFrame {
             }
         });
     
-        JPanel panel = new JPanel(new GridLayout(3, 1));
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.add(infoLabel);
+        panel.add(totalTime);
+        panel.add(avTime);
         panel.add(setTimeLimitBtn);
         panel.add(changePasswordBtn);
     
@@ -449,8 +455,10 @@ public class MainMenu extends JFrame {
         controlFrame.setVisible(true);
         
     }
-
-    public void playNewGame() { // Start a new game
+    /**
+     * @deprecated
+     */
+    /*public void playNewGame() { // Start a new game
         JPanel newGamePanel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
@@ -586,7 +594,7 @@ public class MainMenu extends JFrame {
         setContentPane(newGamePanel);
         revalidate();
         repaint();
-    }
+    }*/
 
     public void loadGame() {
         JPanel loadGamePanel = new JPanel() {
@@ -608,9 +616,9 @@ public class MainMenu extends JFrame {
         back.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Back to main menu button clicked");
-                menu.setContentPane(mainMenuPanel); // Go back to main menu panel
-                menu.revalidate();
-                menu.repaint();
+                MainMenu newMenu = new MainMenu();
+                dispose();
+                newMenu.setVisible(true);
             }
         });
         back.setContentAreaFilled(false);
