@@ -159,7 +159,7 @@ public class Pet {
         } else if (fullness <= 30) {
             state = "HUNGRY";
         } else if (state == "SLEEPING") {
-            state = "SLEEPING";
+            state = "SLEEPING"; // this is dumb but it fixed something
         } else {
             state = "NORMAL";
         }
