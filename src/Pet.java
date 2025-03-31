@@ -119,8 +119,6 @@ public class Pet {
 
         
     }
-    
-    
     /**
      * Exercises the pet, improving health but reducing sleep and fullness.
      */
@@ -152,14 +150,14 @@ public class Pet {
     public void updateState() {
         if (health <= 0) {
             state = "DEAD";
-        } else if (sleep <= 20) {
-            state = "ANGRY";
+        } else if (state == "SLEEPING") { // this is dumb but it fixed something
+            state = "SLEEPING";
         } else if (happiness <= 20) {
             state = "ANGRY";
         } else if (fullness <= 30) {
             state = "HUNGRY";
-        } else if (state == "SLEEPING") {
-            state = "SLEEPING"; // this is dumb but it fixed something
+        } else if (sleep <= 20) {
+            state = "ANGRY"; 
         } else {
             state = "NORMAL";
         }
@@ -175,7 +173,7 @@ public class Pet {
     private boolean canExecuteAction(String action) {
         if (state.equals("DEAD")) return false;
         if (state.equals("SLEEPING")) return false;
-        if (state.equals("ANGRY") && !(action.equals("giveGift") || action.equals("play"))) return false;
+        if (state.equals("ANGRY") && !(action.equals("giveGift") || action.equals("play") || (action.equals("sleep") && sleep <= 20))) return false;
         return true;
     }
 

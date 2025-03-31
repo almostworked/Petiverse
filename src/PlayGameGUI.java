@@ -336,38 +336,38 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
             });
     
             bedButton.addActionListener(e -> {
-                if (pet.getState() != "DEAD") {
+                if (pet.getState() == "HUNGRY") {
+                    JOptionPane.showMessageDialog(this, "Warning: Your pet is very hungry and won't sleep!", "Can't go to bed", JOptionPane.WARNING_MESSAGE);
+                } else {
                     pet.sleep();
                     stateManager.setPetState("SLEEPING");
                     updateVitalBars();
-
-                }    
-
+                }
             });
     
             giftButton.addActionListener(e -> {
                 if (pet.getState() != "DEAD") {
                     List<Item> giftItems = player.getInventory().getGiftItems();
 
-                if (giftItems.isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "You have no gift items!");
-                    return;
-                }
-                Item selectedGift = (Item) JOptionPane.showInputDialog(
-                    null,
-                    "Select a gift item:",
-                    "Give gift",
-                    JOptionPane.QUESTION_MESSAGE,
-                    null,
-                    giftItems.toArray(),
-                    giftItems.get(0)
-                );
+                    if (giftItems.isEmpty()) {
+                        JOptionPane.showMessageDialog(null, "You have no gift items!");
+                        return;
+                    }
+                    Item selectedGift = (Item) JOptionPane.showInputDialog(
+                        null,
+                        "Select a gift item:",
+                        "Give gift",
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        giftItems.toArray(),
+                        giftItems.get(0)
+                    );
 
-                if (selectedGift != null) {
-                    player.getActivePet().giveGift(selectedGift);
+                    if (selectedGift != null) {
+                        pet.giveGift(selectedGift);
 
-                    updateVitalBars(); 
-                }
+                        updateVitalBars(); 
+                    }
 
                 }
                 
