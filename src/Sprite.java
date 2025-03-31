@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 /**
  * 
- * @author faniyi
+ * @author Fin faniyi
+ * @verison 1.0
  * These are the attributes for the class; spriteImage, spriteAnimation, and spriteSound
  * The {@code Sprite} class extends the {@code Pet} class and represents a visual and animated pet with additional attributes.
  * This class includes additional sprite-specific properties like image, animation, and sound effects
