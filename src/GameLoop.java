@@ -47,7 +47,7 @@ public class GameLoop {
         this.isRunning = false;
 
         // Configure timer to trigger every second (1000ms)
-        this.gameTimer = new Timer(1000, _ -> performGameUpdate());
+        this.gameTimer = new Timer(1000, e -> performGameUpdate());
     }
 
     /**
