@@ -6,8 +6,6 @@
  */
 
 import javax.swing.*;
-import javax.swing.GroupLayout.Alignment;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
@@ -29,19 +27,15 @@ public class MainMenu extends JFrame {
     public static MainMenu menu;
     private JPanel mainMenuPanel;
 
-    public MainMenu() { // Creates main menu frame
+    public MainMenu() { 
 
         setTitle("Petiverse");
         setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS)); // Sets an organized layout for the components on screen
 
         JLabel title = new JLabel("Petiverse");
 
-        // Play background music
-        Sound sound = new Sound();
-        String music = "temp_assets/background_music.wav";
         String buttonClick = "temp_assets/button-click.wav";
 
-        // Initialize main menu buttons
         JButton startButton = new JButton("  Start new game  ");
         JButton loadButton = new JButton("  Load saved game  ");
         JButton instructionsButton = new JButton("  Tutorial & Instructions  ");
@@ -49,11 +43,10 @@ public class MainMenu extends JFrame {
         JButton soundButton = new JButton("  Sound: OFF  ");
         JButton exitButton = new JButton("  Exit  ");
 
-        // Add action listeners for each button
         startButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Start button clicked");
-                sound.playEffect(buttonClick); // Play button sound fx
+                Sound.playEffect(buttonClick); 
 
                 Pet foxy = new Foxy("Foxy");
                 Pet roscoe = new Roscoe("Roscoe");
@@ -65,34 +58,34 @@ public class MainMenu extends JFrame {
         loadButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Load button clicked");
-                sound.playEffect(buttonClick);
+                Sound.playEffect(buttonClick);
                 loadGame();
             }
         });
         instructionsButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Instructions/tutorial button clicked");
-                sound.playEffect(buttonClick);
+                Sound.playEffect(buttonClick);
                 displayInstructions();
             }
         });
         parentButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Parental controls button clicked");
-                sound.playEffect(buttonClick);
+                Sound.playEffect(buttonClick);
                 parentalControls();
             }
         });
         soundButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                sound.toggleSound();
-                soundButton.setText(sound.isSoundEnabled() ? "  Sound: ON  " : "  Sound: OFF  ");
+                Sound.toggleSound();
+                soundButton.setText(Sound.isSoundEnabled() ? "  Sound: ON  " : "  Sound: OFF  ");
             }
         });
         exitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Exit button clicked");
-                sound.playEffect(buttonClick);
+                Sound.playEffect(buttonClick);
                 exit();
             }
         });
@@ -359,8 +352,8 @@ public class MainMenu extends JFrame {
         JButton createAccountBtn = new JButton("Make a Parent Account");
         JButton loginBtn = new JButton("Log In");
     
-        createAccountBtn.addActionListener(e -> createParentAccount());
-        loginBtn.addActionListener(e -> loginToParentalControls());
+        createAccountBtn.addActionListener(_ -> createParentAccount());
+        loginBtn.addActionListener(_ -> loginToParentalControls());
     
         JPanel buttonPanel = new JPanel(new GridLayout(1, 2));
         buttonPanel.add(createAccountBtn);
@@ -369,7 +362,7 @@ public class MainMenu extends JFrame {
         parentalFrame.add(buttonPanel, BorderLayout.CENTER);
     
         JButton closeBtn = new JButton("Close");
-        closeBtn.addActionListener(e -> parentalFrame.dispose());
+        closeBtn.addActionListener(_ -> parentalFrame.dispose());
         parentalFrame.add(closeBtn, BorderLayout.SOUTH);
     
         parentalFrame.setVisible(true);
@@ -418,7 +411,7 @@ public class MainMenu extends JFrame {
         JButton setTimeLimitBtn = new JButton("Set Play Time Limit");
         JButton changePasswordBtn = new JButton("Change Password");
     
-        setTimeLimitBtn.addActionListener(e -> {
+        setTimeLimitBtn.addActionListener(_ -> {
             String input = JOptionPane.showInputDialog("Enter max allowed minutes:");
             if (input != null) {
                 try {
@@ -432,7 +425,7 @@ public class MainMenu extends JFrame {
             }
         });
     
-        changePasswordBtn.addActionListener(e -> {
+        changePasswordBtn.addActionListener(_ -> {
             String newPassword = JOptionPane.showInputDialog("Enter New Password:");
             if (newPassword != null && !newPassword.isEmpty()) {
                 parent.setPassword(newPassword);
@@ -726,14 +719,17 @@ public class MainMenu extends JFrame {
             loadBtn.setForeground(Color.WHITE);
             loadBtn.setBackground(Color.decode("#6C5297"));
             loadBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-            loadBtn.addActionListener(e -> {
+
+            loadBtn.addActionListener(_ -> {
             System.out.println("Loading: " + petInfo);
             int slotNumber = Integer.parseInt(gameData[0].replace("Slot", "").trim());
             System.out.println(slotNumber);
             LoadGame loadGame2 = new LoadGame();
             loadGame2.loadGame(slotNumber);
             System.out.println("entered load game class");
+            dispose();
             });
+
             card.add(Box.createVerticalStrut(5));
             card.add(loadBtn);
             savedGames.add(Box.createVerticalStrut(10));

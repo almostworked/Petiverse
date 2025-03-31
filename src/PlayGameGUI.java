@@ -82,6 +82,9 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
         this.pet = player.getActivePet();
         this.score = player.getScore();
         Pet.setActivePlayer(player);
+        this.player.getInventory().displayInventory();
+        this.saveGame.save(this.pet, this.player.getInventory());
+
 
         GameLoop gameLoop = new GameLoop(pet, player, stateManager, saveGame);
         gameLoop.start();
@@ -321,6 +324,8 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
 
                 if (selectedFood != null) {
                     player.getActivePet().feed(selectedFood);
+                    this.saveGame.save(this.pet, this.player.getInventory());
+
 
                     updateVitalBars(); 
                 }
@@ -365,6 +370,8 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
 
                     if (selectedGift != null) {
                         pet.giveGift(selectedGift);
+                        this.saveGame.save(this.pet, this.player.getInventory());
+
 
                         updateVitalBars(); 
                     }

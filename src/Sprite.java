@@ -2,8 +2,6 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-
 /**
  * 
  * @author faniyi
@@ -53,9 +51,8 @@ public class Sprite extends Pet{
                 this.spriteImages = new ArrayList<>();
                 this.support = new PropertyChangeSupport(this);
                 
-                updateSprite(); // Automatically assign images when Sprite is created
+                updateSprite();
             }
-            
 	
         /**
          * 
@@ -91,8 +88,6 @@ public class Sprite extends Pet{
 	public String displaySpriteAnimation() {
 		return spriteAnimation;
 	}
-
-
 	
         /**
          * 
@@ -102,12 +97,9 @@ public class Sprite extends Pet{
 		return this.petName;	
 	}
         public void setCurrentState(String state) {
-                this.currentState = state;
-                System.out.println("setCurrentState called with " + state);
-                
-                updateSprite();  // Call updateSprite to refresh sprite state
-                //this.resetAnimation();
-            }
+                this.currentState = state;                
+                updateSprite(); 
+        }
             
         public void addPropertyChangeListener(PropertyChangeListener listener) {
                 support.addPropertyChangeListener(listener);;
@@ -118,26 +110,18 @@ public class Sprite extends Pet{
         }
 
         public void updateSprite() {
-                spriteImages.clear(); // Reset images
+                spriteImages.clear();
                 switch (currentState) {
                     case "NORMAL":
                         spriteImages.add("temp_assets/" + petName + ".png");
                         spriteImages.add("temp_assets/" + petName + "-Sprite1.png");
                         spriteImages.add("temp_assets/" + petName + "-Sprite2.png");
-                        System.out.println("sprite images added with size " + spriteImages.size());
-
                         break;
                     case "HUNGRY":
                         spriteImages.add("temp_assets/" + petName + "-Hungry.png");
-                       // spriteImages.add("temp_assets/" + petName + "-Hungry1.png");
-                        //spriteImages.add("temp_assets/" + petName + "-Hungry2.png");
-                       // spriteImages.add("temp_assets/" + petName + "-Hungry3.png");
                         break;
                     case "ANGRY":
                         spriteImages.add("temp_assets/" + petName + "-Angry.png");
-                       // spriteImages.add("temp_assets/" + petName + "-Angry1.png");
-                       // spriteImages.add("temp_assets/" + petName + "-Angry2.png");
-                       // spriteImages.add("temp_assets/" + petName + "-Angry3.png");
                         break;
                     case "SLEEPING":
                     System.out.println("SLEEPING case entered in updateSprite");
@@ -145,7 +129,6 @@ public class Sprite extends Pet{
                         spriteImages.add("temp_assets/" + petName + "-Sleep1.png");
                         spriteImages.add("temp_assets/" + petName + "-Sleep2.png");
                         spriteImages.add("temp_assets/" + petName + "-Sleep3.png");
-                        System.out.println("sprite images added with size " + spriteImages.size());
                         break;
                 case "DEAD":
                         spriteImages.add("temp_assets/" + petName + "-Dead.png");
@@ -157,13 +140,12 @@ public class Sprite extends Pet{
                         break;
                 }
                 this.resetAnimation();
-                System.out.println("animation reset");
         }
             
 
         public List<String> getSprites() {
                 if (spriteImages == null || spriteImages.isEmpty()) {
-                    updateSprite(); // Ensure images are loaded if not already set
+                    updateSprite(); 
                 }
                 return spriteImages;
         }
@@ -171,11 +153,10 @@ public class Sprite extends Pet{
         public String getFrame() {
                 if (spriteImages.isEmpty()) {
                     System.out.println("Error: No images in spriteImages.");
-                    return "temp_assets/default.png"; // Use a default image if the list is empty
                 }
             
                 if (frameIndex >= spriteImages.size()) {
-                    frameIndex = 0; // Reset to the first image if the index is out of bounds
+                    frameIndex = 0; 
                 }
             
                 return spriteImages.get(frameIndex);
@@ -186,7 +167,6 @@ public class Sprite extends Pet{
                         frameIndex++;
                         if (frameIndex == spriteImages.size() - 1) {
                                 forward = false;
-                                System.out.println("forward = false");
                         }
                 } else {
                         frameIndex--;

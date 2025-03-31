@@ -5,11 +5,13 @@ import javax.swing.border.EmptyBorder;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.security.KeyStore.Entry;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The purpose of this class is to present a graphical interface when creating a new game and
@@ -27,6 +29,7 @@ public class NewGameGUI extends JFrame {
     private JButton startButton;
     private JLabel backButton;
     private JLabel imageLabel;
+    private Inventory inventory = new Inventory();
 
     public NewGameGUI(Pet pet1, Pet pet2, Pet pet3) {
         availablePets = new ArrayList<>();
@@ -203,6 +206,7 @@ public class NewGameGUI extends JFrame {
                 }
 
                 saveGame(playerName, saveSlot, petName);
+                saveInventory(inventory, saveSlot);
                 openPlayGameInterface(playerName, selectedPet, saveSlot);
 
                 JOptionPane.showMessageDialog(null, "New game created with " + petName);
@@ -258,24 +262,9 @@ public class NewGameGUI extends JFrame {
      * @param saveSlot is the int save slot where the game will be saved
      */
     public void openPlayGameInterface(String playerName, Pet selectedPet, int saveSlot) { // Added saveSLot argument - Daniella
-        // Give the player some items in their inventory when starting a new game
-        Item apple = new Item("Apple", Item.ItemType.FOOD, 10);
-        Item fish = new Item("Fish", Item.ItemType.FOOD, 20);
-        Item ball = new Item("Ball", Item.ItemType.GIFT, 15);
-
-        List<Inventory.Entry> list = new ArrayList<Inventory.Entry>();
-        Inventory.Entry item = new Inventory.Entry(apple, 5);
-        Inventory.Entry item2 = new Inventory.Entry(fish, 3);
-        Inventory.Entry item3 = new Inventory.Entry(ball, 1);
-
-        list.add(item);
-        list.add(item2);
-        list.add(item3);
-
-        Inventory inventory = new Inventory(list, false); // Create an inventory with the list of items, no gifts
+       // Inventory inventory = new Inventory(); // Create an inventory with the list of items, no gifts
         Player player = new Player(playerName, inventory, false, selectedPet); // Assuming false means not a parent
         selectedPet.setActivePlayer(player);
-        inventory.displayInventory();
 
         PlayGameGUI playGameGUI = new PlayGameGUI(player, saveSlot, playerName); // Added arguments for playgame gui - Daniella
         playGameGUI.setVisible(true);
@@ -312,6 +301,18 @@ public class NewGameGUI extends JFrame {
         }
     }
     
+    private void saveInventory(Inventory inventory, int saveSlot) {
+        String filename = "inventory.csv";
+        try (PrintWriter writer = new PrintWriter(new FileWriter(filename, true))) {
+            StringBuilder inventoryData = new StringBuilder();
+            for (Map.Entry<Item, Integer> entry : inventory.itemMap.entrySet()) {
+            inventoryData.append(entry.getKey().getName()).append(":").append(entry.getValue()).append(";");
+            }
+            writer.println(saveSlot + "," + inventoryData.toString());
+            } catch (IOException e) {
+            System.out.println("Error saving inventory data: " + e.getMessage());
+        }
+    }
 
     public static void main(String[] args) {
         Pet foxy = new Foxy("Foxy");

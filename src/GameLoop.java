@@ -47,7 +47,7 @@ public class GameLoop {
         this.isRunning = false;
 
         // Configure timer to trigger every second (1000ms)
-        this.gameTimer = new Timer(1000, e -> performGameUpdate());
+        this.gameTimer = new Timer(1000, _ -> performGameUpdate());
     }
 
     /**
@@ -182,7 +182,7 @@ public class GameLoop {
         autoSaveCounter++;
         if (autoSaveCounter >= 60) {
             // Use your save logic
-            saveSystem.save(activePet, player.getInventory(), null);
+            saveSystem.save(activePet, player.getInventory());
             autoSaveCounter = 0;
             System.out.println("Progress autosaved");
         }

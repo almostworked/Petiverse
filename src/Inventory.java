@@ -30,6 +30,13 @@ public class Inventory {
         itemMap.put(Item.COLLAR, 2);
         itemMap.put(Item.TOY_MOUSE, 1);
     } 
+    public Inventory(boolean exists) {
+        if (exists) {
+            this.itemMap = new HashMap<>();
+            
+        } 
+    }
+
 
     /**
      * Constructor that initializes the inventory with existing items (Entry objects)

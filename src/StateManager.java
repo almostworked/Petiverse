@@ -70,7 +70,6 @@ public class StateManager {
      * @param newState the new state to set
      */
     public void setPetState(String newState) {
-        System.out.println("setPetState entered");
         pet.setState(newState);
         if ("SLEEPING".equals(newState)) {
             handleSleepingState();
@@ -161,7 +160,6 @@ public class StateManager {
      * Applies immediate health penalty and starts a timer to wake up.
      */
     private void handleSleepingState() {
-        System.out.println("handleSleepingState entered");
         decayTimer.stop();
         notifyStateChange("SLEEPING");
         applyHealthPenalty(5);
