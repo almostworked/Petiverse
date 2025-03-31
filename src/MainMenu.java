@@ -15,8 +15,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-//import javax.swing.event.*;
-//import javax.swing.Timer;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
@@ -26,6 +24,11 @@ import javax.swing.text.StyledDocument;
 public class MainMenu extends JFrame {
     public static MainMenu menu;
     private JPanel mainMenuPanel;
+
+    /**
+     * Constructs a MainMenu object. Contains start new game, load saved games, tutorial, parental controls,
+     * sound and exit buttons which call their respective methods.
+     */
 
     public MainMenu() { 
 
@@ -173,8 +176,6 @@ public class MainMenu extends JFrame {
             background.add(Box.createVerticalStrut(20)); 
             background.add(exitButton);
 
-    
-            // Set the background panel as the content pane
             mainMenuPanel = background;
             setContentPane(mainMenuPanel);
 
@@ -182,26 +183,25 @@ public class MainMenu extends JFrame {
             e.printStackTrace();
         }
 
-        setSize(700, 600); // Set the size of the frame
-        setLocationRelativeTo(null); // Centres the frame on screen
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Close window when X button pressed
+        setSize(700, 600);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     }
-    // Fancy button animation to be potentially implemented later
-    /*private JButton customButton(String text) {
-        JButton button = new JButton(text);
-        return button;
-    }*/
 
-    public static void main(String args[]) { // main(): Starts game/sets up GUI when program is run
+    /**
+     * Main method: starts game and sets up main menu GUI when program is run.
+     * @param args
+     */
+    public static void main(String args[]) {
         menu = new MainMenu();
         menu.setVisible(true);
 
     }
-
-    public int displayStats() {
-        return 0;
-    }
+    /**
+     * Displays the instructions/tutorial window containing information about vitals, commands, score,
+     * inventory, pet health and pet state.
+     */
 
     public void displayInstructions() { // Show instructions/tutorial window
         JPanel instructions = new JPanel() {
@@ -213,6 +213,7 @@ public class MainMenu extends JFrame {
             }
         };
         instructions.setLayout(new BoxLayout(instructions, BoxLayout.Y_AXIS));
+        instructions.setOpaque(false);
         JLabel title = new JLabel("Instructions/Tutorial");
 
         try {
@@ -259,7 +260,6 @@ public class MainMenu extends JFrame {
                 }
             });
 
-            // Create a text pane to hold instructions; allows colour changes + ability to add icons/images using HTML
             JTextPane instructionsTextPane = new JTextPane();
             instructionsTextPane.setEditable(false);
             instructionsTextPane.setOpaque(false);
@@ -268,21 +268,18 @@ public class MainMenu extends JFrame {
 
             StyledDocument doc = instructionsTextPane.getStyledDocument();
 
-            // Align instructions down the centre
             SimpleAttributeSet center = new SimpleAttributeSet();
             StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
             doc.setParagraphAttributes(0, doc.getLength(), center, false);
 
-            // Style for instructions headings
             SimpleAttributeSet instructionTitle = new SimpleAttributeSet();
             StyleConstants.setBold(instructionTitle, true);
-            StyleConstants.setForeground(instructionTitle, Color.WHITE);
+            StyleConstants.setForeground(instructionTitle, Color.decode("#8B73B2"));
             StyleConstants.setFontFamily(instructionTitle, font.getFontName());
 
-            // Style for normal instructions text
             SimpleAttributeSet normalStyle = new SimpleAttributeSet();
             StyleConstants.setFontSize(normalStyle, 20);
-            StyleConstants.setForeground(normalStyle, Color.WHITE);
+            StyleConstants.setForeground(normalStyle, Color.BLACK);
             StyleConstants.setFontFamily(normalStyle, font.getFontName());
 
             try {
@@ -291,40 +288,40 @@ public class MainMenu extends JFrame {
                 doc.insertString(doc.getLength(), "Vital bars go down over time. Taking care of your pet will keep them full.\n\n", normalStyle);
 
                 doc.insertString(doc.getLength(), "- COMMANDS -\n", instructionTitle);
-                doc.insertString(doc.getLength(), "• Feed - Give your pet food.\n", normalStyle);
-                doc.insertString(doc.getLength(), "• Go to bed - Rest your pet to restore energy.\n", normalStyle);
-                doc.insertString(doc.getLength(), "• Give gift - Make your pet happy with a gift.\n", normalStyle);
-                doc.insertString(doc.getLength(), "• Take to vet - Heal your pet when sick.\n", normalStyle);
-                doc.insertString(doc.getLength(), "• Play - Interact with your pet for joy.\n", normalStyle);
+                doc.insertString(doc.getLength(), "• Feed  - Give your pet food.\n", normalStyle);
+                doc.insertString(doc.getLength(), "• Go to bed   - Rest your pet to restore energy.\n", normalStyle);
+                doc.insertString(doc.getLength(), "• Give gift   - Make your pet happy with a gift.\n", normalStyle);
+                doc.insertString(doc.getLength(), "• Take to vet   - Heal your pet when sick.\n", normalStyle);
+                doc.insertString(doc.getLength(), "• Play   - Interact with your pet for joy.\n", normalStyle);
                 doc.insertString(doc.getLength(), "• Exercise - Keep your pet fit and active.\n\n", normalStyle);
 
                 doc.insertString(doc.getLength(), "- HEALTH -\n", instructionTitle);
-                doc.insertString(doc.getLength(), "The health bar shows your pet's overall wellbeing. When a vital is at zero, health will start to go down.\nYou must replenish vitals and take your pet to the vet to fill its health up again.\nWhen health is at zero, you can no longer take care of your pet.\n\n", normalStyle);
+                doc.insertString(doc.getLength(), "The health bar shows your pet's overall wellbeing. When a vital is at zero or your pet is hungry, health will start to go down.\nYou must take your pet to the vet to fill its health up again, which requires a score of at least 300.\nWhen health is at zero, you can no longer take care of your pet.\n\n", normalStyle);
 
-                doc.insertString(doc.getLength(), "- LEVEL -\n", instructionTitle);
-                doc.insertString(doc.getLength(), "As you take care of your pet, you will earn points.\nWith enough points you can level up. As you level up, you will earn food and gifts. At each level milestone, you will earn new pet options.\n\n", normalStyle);
+                doc.insertString(doc.getLength(), "- SCORE -\n", instructionTitle);
+                doc.insertString(doc.getLength(), "As you take care of your pet, you will earn points.\nAs you earn points, you will earn food and gifts.\n\n", normalStyle);
 
                 doc.insertString(doc.getLength(), "- PET STATE -\n", instructionTitle);
-                doc.insertString(doc.getLength(), "Your pet can be in one of four possible states:\n> Normal <\nall commands available\n> Hungry <\nall commands available\n> Sleeping <\nno commands available\n> Dead <\nno commands available\n\n", normalStyle);
+                doc.insertString(doc.getLength(), "Your pet can be in one of four possible states:\n> Normal <\nall commands available\n> Hungry <\nsleep command unavailable\n> Sleeping <\nno commands available\n> Dead <\nno commands available\n> Angry <\nsome commands available, depending on state priority\n", normalStyle);
 
                 doc.insertString(doc.getLength(), "- INVENTORY -\n", instructionTitle);
-                doc.insertString(doc.getLength(), "Your inventory contains the food and gifts you currently have for your pet. Try not to overfeed your pet.\nYou can earn items by completing tasks on the inventory page.\n\n", normalStyle);
+                doc.insertString(doc.getLength(), "Your inventory contains the food and gifts you currently have for your pet. Each new game begins with a set of items; use them wisely.\nThe longer you play, the more items you earn.\n\n", normalStyle);
 
             } catch (BadLocationException e) {
                 e.printStackTrace();
             }
 
-            // Creating a scrolling window for instructions
             JScrollPane scrollPane = new JScrollPane(instructionsTextPane);
             scrollPane.setPreferredSize(new Dimension(300,600));
             scrollPane.setOpaque(false);
-            scrollPane.getViewport().setOpaque(false);
+            instructionsTextPane.setCaretPosition(0);
 
             RoundedPanel scrollContainer = new RoundedPanel(new Color(0, 0, 0, 150), 25); // Semi-transparent black
             scrollContainer.setLayout(new BorderLayout());
             scrollContainer.add(scrollPane, BorderLayout.CENTER);
             scrollContainer.setMaximumSize(new Dimension(600, 300));
             scrollContainer.setAlignmentX(Component.CENTER_ALIGNMENT);
+            scrollContainer.setOpaque(false);
 
             instructions.add(scrollContainer);
 
@@ -337,6 +334,13 @@ public class MainMenu extends JFrame {
         repaint();
 
     }
+    /**
+     * Displays the parental controls window, where the user can either create a global parent account
+     * by setting up a password or log in to the existing global parent account with the previously
+     * set password.
+     * @see createParentAccount
+     * @see loginToParentalControls
+     */
 
     public void parentalControls() {
         JFrame parentalFrame = new JFrame("Parental Controls");
@@ -373,6 +377,13 @@ public class MainMenu extends JFrame {
     
         parentalFrame.setVisible(true);
     }
+    /**
+     * Method for when the user has not set up a parent account and would like to create one. Utilizes
+     * the ParentAccountManager class to check if a parent account already exists and save a newly
+     * created parent account.
+     * @see ParentAccountManager
+     * @see Parent
+     */
     
     private void createParentAccount() {
         if (ParentAccountManager.parentAccountExists()) {
@@ -389,6 +400,14 @@ public class MainMenu extends JFrame {
             JOptionPane.showMessageDialog(null, "Password cannot be empty.");
         }
     }
+    /**
+     * Method for logging in to an existing global parent account. Creates a Parent object by loading the
+     * existing account from ParentAccountManager. Authenticates log in using the Parent's authenticate()
+     * method.
+     * @see ParentAccountManager
+     * @see Parent
+     * @see Parent#authenticate(String)
+     */
     
     private void loginToParentalControls() {
         Parent parent = ParentAccountManager.loadParentAccount();
@@ -404,6 +423,12 @@ public class MainMenu extends JFrame {
             JOptionPane.showMessageDialog(null, "Incorrect password.");
         }
     }
+    /**
+     * Displays the parental control options once a user has successfully logged in as a parent. Allows
+     * parent to view total play time across all pets, average play time per pet, set a play time limit
+     * or change their password.
+     * @param parent
+     */
     
     private void showParentalControlOptions(Parent parent) {
         JFrame controlFrame = new JFrame("Parental Control Options");
@@ -455,146 +480,14 @@ public class MainMenu extends JFrame {
         
     }
     /**
-     * @deprecated
+     * Method to load a saved game, invoked when "Load saved game" is clicked from main menu. Displays
+     * a list of saved pets along with player name, pet name, creation date and current pet state.
+     * Creates a LoadGame object when a saved pet is loaded. Displays a small image of each saved pet
+     * based on default pet name (pet type) and last saved state using getPetImage.
+     * @see LoadGame
+     * @see LoadGame#loadGame(int)
+     * @see MainMenu#getPetImage(String, String)
      */
-    /*public void playNewGame() { // Start a new game
-        JPanel newGamePanel = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                ImageIcon background = new ImageIcon("temp_assets/Background2.jpg");
-                g.drawImage(background.getImage(), 0, 0, getWidth(), getHeight(), this);
-            }
-        };
-        JLabel title = new JLabel("Start New Game");
-        newGamePanel.setLayout(new BoxLayout(newGamePanel, BoxLayout.Y_AXIS));
-        newGamePanel.setOpaque(false);
-
-        JLabel userLabel = new JLabel("Enter your name: ");
-        JTextField userName = new JTextField(15);
-
-        JLabel petLabel = new JLabel("Choose your pet:");
-        String[] petOptions = {"Foxy", "Roscoe", "Sterling"};
-        JComboBox<String> petDropdown = new JComboBox<>(petOptions);
-
-        JLabel petNameLabel = new JLabel("Name your pet:");
-        JTextField petNameField = new JTextField(15);
-
-        JButton back = new JButton("< Main Menu");
-
-        JButton confirm = new JButton("Start Game");
-
-        back.setForeground(Color.WHITE);
-        back.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("Back to main menu button clicked");
-                menu.setContentPane(mainMenuPanel); // Go back to main menu panel
-                menu.revalidate();
-                menu.repaint();
-            }
-        });
-        back.setContentAreaFilled(false);
-        back.setBorderPainted(false);
-        back.setFocusPainted(false);
-        back.setOpaque(false);
-        back.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        back.setForeground(Color.decode("#FFFFFF"));
-        back.setAlignmentX(LEFT_ALIGNMENT);
-        back.setAlignmentY(TOP_ALIGNMENT);
-
-        JPanel topPanel = new JPanel(new BorderLayout());
-        topPanel.setOpaque(false);
-        topPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 0)); // Padding
-        topPanel.add(back, BorderLayout.WEST);
-
-        try {
-            Font font = Font.createFont(Font.TRUETYPE_FONT, new File("fonts/Jersey25-Regular.ttf"));
-            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(font);
-            font = font.deriveFont(Font.PLAIN, 70); // Title text size
-
-            title.setFont(font);
-            title.setForeground(Color.decode("#FFFFFF"));
-            title.setAlignmentX(Component.CENTER_ALIGNMENT);
-            title.setAlignmentY(TOP_ALIGNMENT);
-
-            font = font.deriveFont(Font.PLAIN, 25);
-            // Create a back button so the user can navigate back to the main menu
-            back.setFont(font);
-
-            userLabel.setFont(font);
-            userLabel.setForeground(Color.WHITE);
-            userLabel.setAlignmentX(CENTER_ALIGNMENT);
-
-            userName.setFont(font);
-            userName.setForeground(Color.WHITE);
-            userName.setOpaque(false);
-
-            petLabel.setFont(font);
-            petLabel.setForeground(Color.WHITE);
-            petLabel.setAlignmentX(CENTER_ALIGNMENT);
-
-            petNameLabel.setFont(font);
-            petNameLabel.setForeground(Color.WHITE);
-            petNameLabel.setAlignmentX(CENTER_ALIGNMENT);
-
-            petNameField.setFont(font);
-            petNameField.setForeground(Color.WHITE);
-            petNameField.setOpaque(false);
-
-            confirm.setFont(font);
-            confirm.setAlignmentX(CENTER_ALIGNMENT);
-            confirm.setOpaque(false);
-            confirm.setBorderPainted(true);
-
-
-        } catch (FontFormatException | IOException e) {
-            e.printStackTrace();
-        }
-        confirm.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        // Confirm user wants to start a new game, send info to NewGame class
-        confirm.addActionListener(e -> {
-            String username = userName.getText().trim();
-            String petType = (String) petDropdown.getSelectedItem();
-            String petName = petNameField.getText().trim();
-
-            if (username.isEmpty() || petName.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Please fill out all fields.");
-                return;
-            }
-
-            // Call method in NewGame with username, pet type and pet name. Example usage:
-
-            // NewGame newGame = new NewGame(username, petType, petName);
-            // newGame.start();
-
-            // Call method in SaveGame to save initial data
-
-            this.setVisible(false); // Hide menu and launch the game
-        });
-
-        // Add buttons and labels to New Game panel
-        newGamePanel.add(topPanel, BorderLayout.NORTH);
-        newGamePanel.add(title);
-        newGamePanel.add(Box.createVerticalStrut(30));
-        newGamePanel.add(userLabel);
-        newGamePanel.add(userName);
-        newGamePanel.add(Box.createVerticalStrut(20));
-        newGamePanel.add(petLabel);
-        newGamePanel.add(petDropdown);
-        newGamePanel.add(Box.createVerticalStrut(20));
-        newGamePanel.add(petNameLabel);
-        newGamePanel.add(petNameField);
-        newGamePanel.add(Box.createVerticalStrut(20));
-        newGamePanel.add(confirm);
-
-        // Set this panel as new content pane
-        setContentPane(newGamePanel);
-        revalidate();
-        repaint();
-    }*/
-
     public void loadGame() {
         JPanel loadGamePanel = new JPanel() {
             @Override
@@ -657,10 +550,10 @@ public class MainMenu extends JFrame {
         savedGames.setBorder(new EmptyBorder(0,20, 10 ,20));
         savedGames.setOpaque(false);
 
-        // Retrieve saved games
         LoadGame loadGame = new LoadGame();
         List<String> savedGamesList = loadGame.loadSavedGames();
         System.out.println(savedGamesList);
+
         if (savedGamesList.isEmpty()) {
             JPanel msg = new JPanel();
             JLabel noGames = new JLabel("You have no saved games yet.");
@@ -729,8 +622,8 @@ public class MainMenu extends JFrame {
             System.out.println("Loading: " + petInfo);
             int slotNumber = Integer.parseInt(gameData[0].replace("Slot", "").trim());
             System.out.println(slotNumber);
-            LoadGame loadGame2 = new LoadGame();
-            loadGame2.loadGame(slotNumber);
+            LoadGame loadSavedGame = new LoadGame();
+            loadSavedGame.loadGame(slotNumber);
             System.out.println("entered load game class");
             dispose();
             });
@@ -755,6 +648,12 @@ public class MainMenu extends JFrame {
         revalidate();
         repaint();
     }
+    /**
+     * Method for retrieving a pet's image based on its default name and saved state.
+     * @param petName
+     * @param state
+     * @return
+     */
     public ImageIcon getPetImage(String petName, String state) {
         ImageIcon petIcon;
         switch (state) {
@@ -778,22 +677,22 @@ public class MainMenu extends JFrame {
                 break;
         }
 
-
         Image petImage = petIcon.getImage();
         Image resized = petImage.getScaledInstance(50, 50, Image.SCALE_SMOOTH);
         return new ImageIcon(resized);
     }
-
-
-    public void displaySettings() {
-
-    }
+    /**
+     * Method for exiting the game gracefully. Invoked when user clicks exit button from main menu.
+     */
 
     public void exit() {
-        System.exit(0); // Exit the game gracefully
+        System.exit(0);
 
 
     }
+    /**
+     * Inner class for panel styling purposes using the overrided method paintComponent.
+     */
     class RoundedPanel extends JPanel {
         private final Color backgroundColor;
         private final int cornerRadius;

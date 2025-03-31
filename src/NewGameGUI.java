@@ -1,7 +1,6 @@
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;

@@ -1,6 +1,6 @@
 /**
  * ParentAccountManager.java: Create a .dat file to store parent info. Saves and load parent password. 
- * The parent is global across all pets and instances. Delete the .dat file if new parent account must be
+ * <b>The parent is global across all pets and instances.</b> Delete the .dat file if new parent account must be
  * created.
  * 
  * @author Daniella
@@ -17,6 +17,10 @@ import java.io.ObjectOutputStream;
 public class ParentAccountManager {
 
     private static final String FILE_PATH = "parent_account.dat";
+    /**
+     * Method to save the parent account to the .dat file. 
+     * @param parent
+     */
 
     public static void saveParentAccount(Parent parent) {
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(FILE_PATH))) {
@@ -26,6 +30,10 @@ public class ParentAccountManager {
             e.printStackTrace();
         }
     }
+    /**
+     * Method to load the parent account from the .dat file.
+     * @return
+     */
     
     public static Parent loadParentAccount() {
         File file = new File(FILE_PATH);
@@ -44,7 +52,10 @@ public class ParentAccountManager {
         }
     }
     
-
+    /**
+     * Boolean method to check if the parent account already exists.
+     * @return
+     */
     public static boolean parentAccountExists() {
         File file = new File(FILE_PATH);
         return file.exists();

@@ -56,6 +56,17 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
     private boolean warningShown = false;
     private Score score;
     
+    /**
+     * Constructor that takes the player, save slot and player name as arguments. Initializes all
+     * fields and begins the game loop from GameLoop.java. Creates command, inventory and back buttons
+     * calling their respective methods. Starts animation for pet sprite and updates it accordingly.
+     * @param player
+     * @param saveSlot
+     * @param playerName
+     * @see GameLoop
+     * @see GameLoop#start()
+     * @see PlayGameGUI#updatePetSprite()
+     */
     
     public PlayGameGUI(Player player, int saveSlot, String playerName) {
         int[] decay = {1,2,3};
@@ -404,7 +415,11 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
                 instance.stateLabel.setText("Current State: " + petState);
             }
         }
-    
+        /**
+         * Creates progress bars for a pet's vitals. Calls the updateVitalBars() methods to set values
+         * for each bar.
+         * @see PlayGameGUI#updateVitalBars()
+         */
         private void createVitalBars() {
 
             healthBar = new CustomProgressBar();
@@ -425,6 +440,11 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
             updateVitalBars();
     
         }
+        /**
+         * Creates panel for the vital bars to be displayed evenly with their respective labels using a 
+         * box layout.
+         * @return
+         */
         private JPanel createVitalPanel() {
             JPanel vitalPanel = new JPanel();
             vitalPanel.setLayout(new BoxLayout(vitalPanel, BoxLayout.Y_AXIS)); // Vertical layout
@@ -432,11 +452,10 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
             Font font = null;
             try {
                 font = Font.createFont(Font.TRUETYPE_FONT, new File("fonts/Jersey25-Regular.ttf"));
-                font = font.deriveFont(Font.PLAIN, 35); // Title text size
+                font = font.deriveFont(Font.PLAIN, 35); 
             } catch (FontFormatException | IOException e) {
                 e.printStackTrace();
             }
-            // Sleep
             JLabel vitalLabel = new JLabel("Vitals");
             vitalLabel.setFont(font);
             vitalLabel.setForeground(Color.WHITE);
@@ -447,41 +466,37 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
 
             JPanel sleepPanel = new JPanel();
             sleepPanel.setOpaque(false);
-            sleepPanel.setLayout(new BoxLayout(sleepPanel, BoxLayout.Y_AXIS)); // Vertical layout
+            sleepPanel.setLayout(new BoxLayout(sleepPanel, BoxLayout.Y_AXIS));
             sleepLabel = new JLabel("sleep",SwingConstants.CENTER);
             sleepLabel.setFont(font);
             sleepLabel.setForeground(Color.WHITE);
             sleepPanel.add(sleepLabel);
             sleepPanel.add(sleepBar);
             vitalPanel.add(sleepPanel);
-            vitalPanel.add(Box.createRigidArea(new Dimension(0, 10))); // Add some space between components
+            vitalPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         
-            // Fullness (Hunger)
             JPanel fullnessPanel = new JPanel();
             fullnessPanel.setOpaque(false);
-            fullnessPanel.setLayout(new BoxLayout(fullnessPanel, BoxLayout.Y_AXIS)); // Vertical layout
+            fullnessPanel.setLayout(new BoxLayout(fullnessPanel, BoxLayout.Y_AXIS));
             fullnessLabel = new JLabel("food", SwingConstants.CENTER);
             fullnessLabel.setFont(font);
             fullnessLabel.setForeground(Color.WHITE);
             fullnessPanel.add(fullnessLabel);
-            fullnessPanel.add(hungerBar); // Assuming fullness corresponds to hunger
+            fullnessPanel.add(hungerBar);
             vitalPanel.add(fullnessPanel);
-            vitalPanel.add(Box.createRigidArea(new Dimension(0, 10))); // Add some space between components
+            vitalPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         
-            // Happiness
             JPanel happinessPanel = new JPanel();
             happinessPanel.setOpaque(false);
-            happinessPanel.setLayout(new BoxLayout(happinessPanel, BoxLayout.Y_AXIS)); // Vertical layout
+            happinessPanel.setLayout(new BoxLayout(happinessPanel, BoxLayout.Y_AXIS));
             happinessLabel = new JLabel("happiness",SwingConstants.CENTER);
             happinessLabel.setFont(font);
             happinessLabel.setForeground(Color.WHITE);
             happinessPanel.add(happinessLabel);
             happinessPanel.add(happinessBar);
             vitalPanel.add(happinessPanel);
-            vitalPanel.add(Box.createRigidArea(new Dimension(0, 10))); // Add some space between components
-        
-           // vitalPanel.setPreferredSize(new Dimension(200, 400)); // Adjust as needed
-           
+            vitalPanel.add(Box.createRigidArea(new Dimension(0, 10))); 
+                   
             return vitalPanel;
         }
         private JLabel createPetTitle() {
@@ -500,7 +515,11 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
         return petNameLabel;
     }
     
-    
+    /**
+     * Method for updating the value/fullness of a pet's vital bars. Used continuously with onStateChange
+     * and called whenever a player performs a command.
+     * @see onStateChange
+     */
     private void updateVitalBars() {
         healthBar.setValue(pet.getHealth());
         if (pet.getHealth() < 50) {
@@ -519,8 +538,12 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
 
         }
 
-
     }
+    /**
+     * Method for displaying a player's saved inventory for that particular pet. Creates an inventory list
+     * using the inventory argument and makes a card for each item (name + quantity).
+     * @param inventory
+     */
     private void displayInventory(Inventory inventory) {
         JDialog inventoryList = new JDialog((JFrame) SwingUtilities.getWindowAncestor(this), "Inventory", true);
         inventoryList.setSize(350, 400);
@@ -566,28 +589,41 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
         inventoryList.setVisible(true);
     }
     
-
+    /**
+     * Main method used to run an example usage of a pet and performs invokeLater() method from 
+     * SwingUtilities. 
+     * @see Pet
+     * @see Inventory
+     * @see Player
+     * @param args
+     */
     public static void main(String[] args) {
         try {
             UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
         } catch (Exception e) {
             e.printStackTrace();
         }
-        // Example usage
         Pet pet = new Sterling("Sterling");
         Inventory inventory = new Inventory();
         Player player = new Player(null, inventory, false, pet);
 
         SwingUtilities.invokeLater(() -> new PlayGameGUI(player, 1, "name"));
     }
-    @Override
+    /**
+     * Method to set a pet's current state text, sprite, and update vital bars based on the pet's current
+     * state and new state.
+     * @Override
+     * @param newState
+     */
     public void onStateChange(String newState) {
         stateLabel.setText("Current State: " + newState);
         petSprite.setCurrentState(pet.getState());
         System.out.println(pet.getState());
         updateVitalBars();
     }
-
+    /**
+     * Method to create progress bars with custom aesthetics.
+     */
     public class CustomProgressBar extends JProgressBar {
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
@@ -613,8 +649,13 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
             g.drawString(text, x, y);
         }
     }
-
-    @Override
+    /**
+     * Method to display a warning message to the player when a vital has a warning attached to it.
+     * @Override
+     * @param stat
+     * @param isWarning
+     * 
+     */
     public void onStatWarning(String stat, boolean isWarning) {
         if (stat.equals("HEALTH") && isWarning && !warningShown) {
             JOptionPane.showMessageDialog(this, "Warning: Your pet's health is below 50! This can lower your score.", "Health Warning", JOptionPane.WARNING_MESSAGE);
@@ -633,6 +674,15 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
 
         }
     }
+    /**
+     * Method to animate a pet using the Sprite class, and sets the size of the pet sprite.
+     * @param sprite
+     * @param petImageLabel
+     * @see Sprite
+     * @see Sprite#getFrame()
+     * @see Sprite#nextFrame()
+     * @see Sprite#resetAnimation()
+     */
     private void animate(Sprite sprite, JLabel petImageLabel) {
         String imagePath = sprite.getFrame();
         
@@ -653,19 +703,19 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
     
         sprite.nextFrame();
     }
+    /**
+     * Starts the pet sprite's animation using a specified timer, sprite and pet image label.
+     * @param sprite
+     * @param petImageLabel
+     */
     private void startAnimation(Sprite sprite, JLabel petImageLabel) {
         animationTimer = new Timer(150, e -> animate(sprite, petImageLabel)); 
         animationTimer.start();  
     }
-
-    private void stopAnimation() {
-        if (animationTimer != null) {
-            animationTimer.stop();
-        }
-    }
-
+    /**
+     * Updates a pet sprite using the Sprite class. Used on a continuous loop in main menu.
+     */
     private void updatePetSprite() {
-
         String imagePath = petSprite.getFrame();
         File imageFile = new File(imagePath);
         if (imageFile.exists()) {
