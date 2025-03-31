@@ -3,9 +3,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 /**
  * Manages a collection of items for a player, including the ability to add, remove,
  * or update item quantities. By default, it starts with 5 Apples, 3 Steaks, and 1 Ball.
+ * @author Adrian Caricari
+ * @author Fin Faniyi
+ * @version 1.0
  */
 public class Inventory {
     /**
