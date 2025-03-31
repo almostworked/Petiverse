@@ -12,6 +12,9 @@ import java.util.Map;
  * The purpose of this class is to save the data of a game in progress
  * Game states are stored in respective csv files and are available to be loaded
  * in future play sessions
+ *
+ * @author Marcus
+ * @version 2.0
  */
 public class SaveGame {
     /** attributes */
