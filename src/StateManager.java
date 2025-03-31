@@ -252,5 +252,10 @@ public class StateManager {
         start();
         notifyStateChange("NORMAL");
     }
+
+    // For testing
+    public Timer getDecayTimer() {
+        return decayTimer;
+    }
 }
 
