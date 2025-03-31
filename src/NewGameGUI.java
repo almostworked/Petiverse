@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.security.KeyStore.Entry;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -24,6 +23,7 @@ import java.util.Map;
 public class NewGameGUI extends JFrame {
     private List<Pet> availablePets;
     private JTextField playerNameBox;
+    private JTextField petNameBox;
     private JComboBox<String> petSelection;
     private JComboBox<Integer> saveSlotBox;
     private JButton startButton;
@@ -76,23 +76,26 @@ public class NewGameGUI extends JFrame {
             }
         });
 
-        JLabel nameLabel = new JLabel("  Player Name:  ");
+        JLabel nameLabel = new JLabel("  Player Name:     ");
         nameLabel.setFont(font);
         nameLabel.setForeground(Color.WHITE);
         nameLabel.setBounds(50, 100, 150, 30);
         
         playerNameBox = new JTextField();
+        petNameBox = new JTextField();
 
-        JLabel petLabel = new JLabel("  Choose a Pet:  ");
+        JLabel petLabel = new JLabel("  Choose a Pet:     ");
         petLabel.setFont(font);
         petLabel.setForeground(Color.WHITE);
 
         petSelection = new JComboBox<>();
         for (Pet pet : availablePets) petSelection.addItem(pet.getName());
         
+        JLabel petName = new JLabel("  Name your Pet:  ");
+        petName.setFont(font);
+        petName.setForeground(Color.WHITE);
 
-
-        JLabel saveSlotLabel = new JLabel("  Save Slot:       ");
+        JLabel saveSlotLabel = new JLabel("  Save Slot:          ");
         saveSlotLabel.setFont(font);
         saveSlotLabel.setForeground(Color.WHITE);
 
@@ -111,13 +114,19 @@ public class NewGameGUI extends JFrame {
         saveSlotLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         saveSlotBox.setAlignmentX(Component.CENTER_ALIGNMENT);
         startButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        petNameBox.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         playerNameBox.setForeground(Color.decode("#6C5297"));
         playerNameBox.setBackground(Color.decode("#D9D9D9"));
-        playerNameBox.setBorder(new EmptyBorder(10,30,30,10));
+        playerNameBox.setBorder(new EmptyBorder(10,30,40,10));
 
         petSelection.setForeground(Color.decode("#6C5297"));
         petSelection.setBackground(Color.decode("#D9D9D9"));
+        petSelection.setBorder(new EmptyBorder(10,30,40,10));
+
+        petNameBox.setForeground(Color.decode("#6C5297"));
+        petNameBox.setBackground(Color.decode("#D9D9D9"));
+        petNameBox.setBorder(new EmptyBorder(10,30,40,10));
 
         saveSlotBox.setForeground(Color.decode("#6C5297"));
         saveSlotBox.setBackground(Color.decode("#D9D9D9"));
@@ -125,19 +134,26 @@ public class NewGameGUI extends JFrame {
         startButton.setForeground(Color.decode("#D9D9D9"));
         startButton.setBackground(Color.decode("#6C5297"));
         font = font.deriveFont(Font.PLAIN, 35);
+
         startButton.setFont(font);
+        font = font.deriveFont(Font.PLAIN, 20);
+        playerNameBox.setFont(font);
+        petNameBox.setFont(font);
+        petSelection.setFont(font);
+        saveSlotBox.setFont(font);
         startButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         Border border = BorderFactory.createLineBorder(Color.decode("#8B73B2"), 5);
         playerNameBox.setBorder(border);
         petSelection.setBorder(border);
         saveSlotBox.setBorder(border);
+        petNameBox.setBorder(border);
         startButton.setBorder(border = (BorderFactory.createLineBorder(Color.decode("#D9D9D9"),5)));
         
-        playerNameBox.setPreferredSize(new Dimension(300, 50));
-        petSelection.setPreferredSize(new Dimension(300, 50));
-        saveSlotBox.setPreferredSize(new Dimension(300, 50));
-        startButton.setPreferredSize(new Dimension(200, 50));
+        playerNameBox.setPreferredSize(new Dimension(300, 70));
+        petSelection.setPreferredSize(new Dimension(300, 70));
+        saveSlotBox.setPreferredSize(new Dimension(300, 70));
+        startButton.setPreferredSize(new Dimension(200, 70));
 
         JLabel titleText = new JLabel("Start New Game");
         font = font.deriveFont(Font.PLAIN, 70);
@@ -172,6 +188,8 @@ public class NewGameGUI extends JFrame {
         inputPanel.add(Box.createVerticalStrut(10)); 
         inputPanel.add(createInputPanel(petLabel, petSelection));
         inputPanel.add(Box.createVerticalStrut(10)); 
+        inputPanel.add(createInputPanel(petName, petNameBox));
+        inputPanel.add(Box.createVerticalStrut(10)); 
         inputPanel.add(createInputPanel(saveSlotLabel, saveSlotBox));
         inputPanel.add(Box.createVerticalStrut(20));
         inputPanel.add(startButtonPanel);
@@ -191,11 +209,12 @@ public class NewGameGUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 String playerName = playerNameBox.getText();
                 int saveSlot = (int) saveSlotBox.getSelectedItem();
-                String petName = (String) petSelection.getSelectedItem();
+                String petType = (String) petSelection.getSelectedItem();
+                String petName = (String) petNameBox.getText();
 
                 Pet selectedPet = null;
                 for (Pet pet : availablePets) {
-                    if (pet.getName().equals(petName)) selectedPet = pet;
+                    if (pet.getName().equals(petType)) selectedPet = pet;
                 }
 
                 if (selectedPet != null) {
@@ -205,9 +224,9 @@ public class NewGameGUI extends JFrame {
                     selectedPet.setHappiness(100);
                 }
 
-                saveGame(playerName, saveSlot, petName);
+                saveGame(playerName, saveSlot, petType, petName);
                 saveInventory(inventory, saveSlot);
-                openPlayGameInterface(playerName, selectedPet, saveSlot);
+                openPlayGameInterface(playerName, selectedPet, saveSlot, petName);
 
                 JOptionPane.showMessageDialog(null, "New game created with " + petName);
                 dispose();
@@ -261,10 +280,11 @@ public class NewGameGUI extends JFrame {
      * @param selectedPet is the Pet the player has chosen
      * @param saveSlot is the int save slot where the game will be saved
      */
-    public void openPlayGameInterface(String playerName, Pet selectedPet, int saveSlot) { // Added saveSLot argument - Daniella
+    public void openPlayGameInterface(String playerName, Pet selectedPet, int saveSlot, String petName) { // Added saveSLot argument - Daniella
        // Inventory inventory = new Inventory(); // Create an inventory with the list of items, no gifts
+        selectedPet.setCustomName(petName);
         Player player = new Player(playerName, inventory, false, selectedPet); // Assuming false means not a parent
-        selectedPet.setActivePlayer(player);
+        Pet.setActivePlayer(player);
 
         PlayGameGUI playGameGUI = new PlayGameGUI(player, saveSlot, playerName); // Added arguments for playgame gui - Daniella
         playGameGUI.setVisible(true);
@@ -277,20 +297,17 @@ public class NewGameGUI extends JFrame {
      * @param saveSlot is the int save slot where the game will be saved
      * @param petName is the String name of the pet
      */
-    private void saveGame(String playerName, int saveSlot, String petName) {
+    private void saveGame(String playerName, int saveSlot, String petType, String petName) {
         try (FileWriter writer = new FileWriter("game_save.csv", true)) {
-            // Get the selected pet object based on its name
             Pet selectedPet = null;
             for (Pet pet : availablePets) {
-                if (pet.getName().equals(petName)) {
+                if (pet.getName().equals(petType)) {
                     selectedPet = pet;
                     break;
                 }
             }
-    
-            // If the pet is found, write all fields into the CSV
             if (selectedPet != null) {
-                writer.write(saveSlot + "," + playerName + "," + petName + ","
+                writer.write(saveSlot + "," + playerName + "," + petType + "," + petName + ","
                         + selectedPet.getHealth() + ","
                         + selectedPet.getSleep() + ","
                         + selectedPet.getFullness() + ","

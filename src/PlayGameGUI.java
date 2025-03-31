@@ -10,24 +10,16 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.awt.FontFormatException;
-import java.awt.GridLayout;
 import java.awt.Image;
-import java.awt.RenderingHints;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
-import java.security.KeyStore.Entry;
 import java.util.List;
-import java.util.Map;
 import java.util.Map;
 import javax.swing.Timer;
 import javax.swing.UIManager;
@@ -36,7 +28,6 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -46,8 +37,6 @@ import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
-import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
 
 
 public class PlayGameGUI extends JFrame implements StateManager.StateChangeListener {
@@ -304,7 +293,7 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
 
         setLocationRelativeTo(null);
         setVisible(true);
-            feedButton.addActionListener(e -> {
+            feedButton.addActionListener(_ -> {
                 if (pet.getState() != "DEAD") {
                     List<Item> foodItems = player.getInventory().getFoodItems();
 
@@ -343,7 +332,7 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
             bedButton.addActionListener(e -> {
                 if (pet.getState() == "HUNGRY") {
                     JOptionPane.showMessageDialog(this, "Warning: Your pet is very hungry and won't sleep!", "Can't go to bed", JOptionPane.WARNING_MESSAGE);
-                } else {
+                } else if (pet.getState() != "DEAD") {
                     pet.sleep();
                     stateManager.setPetState("SLEEPING");
                     updateVitalBars();
@@ -375,10 +364,7 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
 
                         updateVitalBars(); 
                     }
-
                 }
-                
-
             });
     
             exerciseButton.addActionListener(e -> {
@@ -388,10 +374,13 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
             });
     
             vetButton.addActionListener(e -> {
-                //petSprite.setCurrentState(pet.getState());
+                if (player.getScore().getScore() < 300) {
+                    JOptionPane.showMessageDialog(null, "You must have a score of 300 to take your pet to the vet!");
 
-                player.getActivePet().takeToVet();
-                updateVitalBars();
+                } else {
+                    player.getActivePet().takeToVet();
+                    updateVitalBars();
+                }
                
             });
             back.addActionListener(e -> {
@@ -399,8 +388,6 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
                 SaveGame saveFile = new SaveGame(saveSlot, player.isParent());
                 saveFile.savePet(player.getActivePet());
 
-               // IMPLEMENT SAVE LOGIC BEFORE USER GOES BACK TO MAIN MENU
-               // saveGame.save(player.getActivePet(), player.getInventory(), null);
                 dispose();
                 new MainMenu().setVisible(true);
             });
@@ -410,7 +397,6 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
 
             });
     
-    
             updateVitalBars();
         }
         public static void updatePetState(String petState) {
@@ -418,7 +404,6 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
                 instance.stateLabel.setText("Current State: " + petState);
             }
         }
-        
     
         private void createVitalBars() {
 
@@ -500,7 +485,7 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
             return vitalPanel;
         }
         private JLabel createPetTitle() {
-            petNameLabel = new JLabel(player.getActivePet().getName(), SwingConstants.CENTER);
+            petNameLabel = new JLabel(player.getActivePet().getCustomName(), SwingConstants.CENTER);
             petNameLabel.setForeground(Color.WHITE);
         try {
             Font font = Font.createFont(Font.TRUETYPE_FONT, new File("fonts/Jersey25-Regular.ttf"));
@@ -545,7 +530,6 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
         inventoryPanel.setLayout(new BoxLayout(inventoryPanel, BoxLayout.Y_AXIS));
         inventoryPanel.setBackground(new Color(255, 255, 255, 220));
     
-        // Iterate over the itemMap instead of using getItems()
         for (Map.Entry<Item, Integer> entry : inventory.itemMap.entrySet()) {
     
             JPanel card = new JPanel();
@@ -557,9 +541,20 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
     
             JLabel itemName = new JLabel(entry.getKey().getName());
             JLabel quantity = new JLabel("x" + entry.getValue());
+
+            Font font = null;
+
+            try {
+                font = Font.createFont(Font.TRUETYPE_FONT, new File("fonts/Jersey25-Regular.ttf"));
+                font = font.deriveFont(Font.PLAIN, 20);
+            } catch (FontFormatException | IOException e) {
+                e.printStackTrace();
+            }
+            itemName.setFont(font);
+            quantity.setFont(font);
+            quantity.setForeground(Color.decode("#4E337B"));
     
             itemName.setForeground(Color.BLACK);
-            // You can add an icon related to the item here if needed
             card.add(itemName);
             card.add(quantity);
             inventoryPanel.add(card);
@@ -572,8 +567,6 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
     }
     
 
-
-    // Run for testing with a predefined pet
     public static void main(String[] args) {
         try {
             UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
@@ -641,18 +634,16 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
         }
     }
     private void animate(Sprite sprite, JLabel petImageLabel) {
-        // Get the current frame image from the sprite object
         String imagePath = sprite.getFrame();
         
         File imageFile = new File(imagePath);
         if (imageFile.exists()) {
-            // Load the image and scale it
             ImageIcon petIcon = new ImageIcon(imagePath);
             Image image = petIcon.getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH);
-            petImageLabel.setIcon(new ImageIcon(image));  // Update the JLabel with the new pet image
+            petImageLabel.setIcon(new ImageIcon(image));  
         } else {
             petImageLabel.setText("Image not found");
-            String defaultImagePath = sprite.getName() + ".png";  // Replace with the default image path
+            String defaultImagePath = sprite.getName() + ".png";
             ImageIcon defaultIcon = new ImageIcon(defaultImagePath);
             Image defaultImage = defaultIcon.getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH);
             petImageLabel.setIcon(new ImageIcon(defaultImage));
@@ -660,12 +651,11 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
 
         }
     
-        // Move to the next frame for animation
         sprite.nextFrame();
     }
     private void startAnimation(Sprite sprite, JLabel petImageLabel) {
-        animationTimer = new Timer(150, e -> animate(sprite, petImageLabel));  // 150ms delay between frame changes
-        animationTimer.start();  // Start the animation loop
+        animationTimer = new Timer(150, e -> animate(sprite, petImageLabel)); 
+        animationTimer.start();  
     }
 
     private void stopAnimation() {
@@ -675,14 +665,10 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
     }
 
     private void updatePetSprite() {
-        // Update the pet's image immediately when state changes
-        // Force a state change after 2 seconds for testing
-
 
         String imagePath = petSprite.getFrame();
         File imageFile = new File(imagePath);
         if (imageFile.exists()) {
-            // Load the image and scale it
             ImageIcon petIcon = new ImageIcon(imagePath);
             Image image = petIcon.getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH);
             petImageLabel.setIcon(new ImageIcon(image));

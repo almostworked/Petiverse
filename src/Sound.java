@@ -9,7 +9,6 @@ import javax.sound.sampled.*;
 public class Sound {
     /** attributes */
     private static Clip clip;
-    private long clipTimePosition = 0;
     private static boolean isSoundEnabled = false;
 
     /**

@@ -11,7 +11,6 @@ import java.io.Serializable;
  * @version 1.5
  */
 public class Parent extends Player implements Serializable {
-    private static final long serial = 7308126631322386768L; // Serial ID for account creation
     private ParentalControls controls;
 
     /**

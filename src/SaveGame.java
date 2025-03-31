@@ -53,8 +53,8 @@ public class SaveGame {
             while ((line = reader.readLine()) != null) {
                 String[] data = line.split(",");
                 if (data[0].equals(String.valueOf(saveSlot))) {
-                    String updatedLine = String.format("%d,%s,%s,%d,%d,%d,%d,%b,%s,%s,%d",
-                            saveSlot, savedName, pet.getName(), pet.getHealth(), pet.getSleep(),
+                    String updatedLine = String.format("%d,%s,%s,%s,%d,%d,%d,%d,%b,%s,%s,%d",
+                            saveSlot, savedName, pet.getName(), pet.getCustomName(), pet.getHealth(), pet.getSleep(),
                             pet.getHappiness(), pet.getFullness(), pet.isAlive(), pet.getState(), LocalDateTime.now().toString(), pet.getActivePlayer().getScore().getScore());
                     lines.add(updatedLine);
                 } else {

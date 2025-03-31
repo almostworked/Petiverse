@@ -15,7 +15,7 @@ public class Pet {
     private String state;
     private boolean alive;
     private static Player activePlayer;
-    private String musicpath = "temp_assets/game-button-click.wav";
+    private String customName;
 
 
     /**
@@ -141,7 +141,7 @@ public class Pet {
         if (!canExecuteAction("vet")) return;
         health = 100;
         state = "NORMAL";
-        activePlayer.getScore().decreaseScore(15);
+        activePlayer.getScore().decreaseScore(200);
     }
 
     /**
@@ -315,6 +315,13 @@ public class Pet {
     }
     public void setStateChangeListener(Runnable listener) {
         this.stateChangeListener = listener;
+    }
+
+    public String getCustomName() {
+        return customName;
+    }
+    public void setCustomName(String name) {
+        this.customName = name;
     }
     
 }

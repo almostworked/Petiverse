@@ -99,15 +99,14 @@ public class MainMenu extends JFrame {
 
         try {
             Font font = Font.createFont(Font.TRUETYPE_FONT, new File("fonts/Jersey25-Regular.ttf"));
-            font = font.deriveFont(Font.PLAIN, 100); // Title text size
+            font = font.deriveFont(Font.PLAIN, 100);
 
             title.setFont(font);
             title.setForeground(Color.decode("#FFFFFF"));
             title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-            font = font.deriveFont(Font.PLAIN, 25); // Button text size
+            font = font.deriveFont(Font.PLAIN, 25);
 
-            // Set fonts, text colour, background colour
             startButton.setFont(font);
             startButton.setForeground(Color.decode("#6C5297"));
             startButton.setBackground(Color.decode("#D9D9D9"));
@@ -654,6 +653,7 @@ public class MainMenu extends JFrame {
         // Retrieve saved games
         LoadGame loadGame = new LoadGame();
         List<String> savedGamesList = loadGame.loadSavedGames();
+        System.out.println(savedGamesList);
         if (savedGamesList.isEmpty()) {
             JPanel msg = new JPanel();
             JLabel noGames = new JLabel("You have no saved games yet.");
@@ -669,22 +669,20 @@ public class MainMenu extends JFrame {
         }
 
         for (String game : savedGamesList) {
-            // Create a card for each save file
             JPanel card = new JPanel();
             card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
-            card.setBackground(new Color(255, 255, 255, 50)); // semi-transparent
+            card.setBackground(new Color(255, 255, 255, 50));
             card.setOpaque(true);
             card.setBorder(BorderFactory.createLineBorder(Color.decode("#6C5297"), 5));
             card.setMaximumSize(new Dimension(500, 160));
             card.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-
-            // Extract pet name and date from saved game string
             String[] gameData = game.split(": ");
             String petInfo = gameData[1];
             String petName = petInfo.split("'s pet ")[1].trim();
             String dateCreated = gameData[2];
             String state = gameData[3];
+            String petType = gameData[4];
             LocalDateTime dateTime = LocalDateTime.parse(dateCreated.substring(0,19));
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d'th', yyyy 'at' h:mm a");
             String formattedDate = dateTime.format(formatter);
@@ -703,7 +701,7 @@ public class MainMenu extends JFrame {
 
             JPanel imagePanel = new JPanel();
             imagePanel.setLayout(new BoxLayout(imagePanel, BoxLayout.X_AXIS));
-            ImageIcon image = getPetImage(petName, state);
+            ImageIcon image = getPetImage(petType, state);
             JLabel imageLabel = new JLabel(image);
 
             imagePanel.add(imageLabel);
@@ -751,7 +749,6 @@ public class MainMenu extends JFrame {
         repaint();
     }
     public ImageIcon getPetImage(String petName, String state) {
-        System.out.println(state);
         ImageIcon petIcon;
         switch (state) {
             case "NORMAL":
@@ -810,6 +807,4 @@ public class MainMenu extends JFrame {
             super.paintComponent(g);
         }
     }
-
-
 }

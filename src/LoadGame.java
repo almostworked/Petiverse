@@ -28,7 +28,7 @@ public class LoadGame {
             while ((line = reader.readLine()) != null) {
                 String[] data = line.split(",");
                 if (data.length >= 3) {
-                    savedGames.add("Slot " + data[0] + ": " + data[1] + "'s pet " + data[2]  + ": " + data[9] + ": " + data[8]);
+                    savedGames.add("Slot " + data[0] + ": " + data[1] + "'s pet " + data[3]  + ": " + data[10] + ": " + data[9] + ": " + data[2]);
                 }
             }
         } catch (IOException e) {
@@ -54,19 +54,21 @@ public class LoadGame {
             int slotCounter = 1;
             while ((line = reader.readLine()) != null) {
                 String[] data = line.split(",");
-                if (data.length >= 11 && slotCounter == slotNumber) {
+                if (data.length >= 12 && slotCounter == slotNumber) {
                     System.out.println("passed check + found game slot number");
                     String playerName = data[1];
-                    String petName = data[2];
-                    int health = Integer.parseInt(data[3]);
-                    int sleep = Integer.parseInt(data[4]);
-                    int hunger = Integer.parseInt(data[5]);
-                    int happiness = Integer.parseInt(data[6]);
-                    boolean alive = Boolean.parseBoolean(data[7]);
-                    String state = data[8];
-                    int score = Integer.parseInt(data[10]);
+                    String petType = data[2];
+                    String petName = data[3];
+                    int health = Integer.parseInt(data[4]);
+                    int sleep = Integer.parseInt(data[5]);
+                    int hunger = Integer.parseInt(data[6]);
+                    int happiness = Integer.parseInt(data[7]);
+                    boolean alive = Boolean.parseBoolean(data[8]);
+                    String state = data[9];
+                    int score = Integer.parseInt(data[11]);
     
-                    loadedPet = new Sprite(petName, health, sleep, happiness, hunger, alive, state);
+                    loadedPet = new Sprite(petType, health, sleep, happiness, hunger, alive, state);
+                    loadedPet.setCustomName(petName);
                     loadedPlayer = new Player(playerName, loadedInventory, isParent, loadedPet);
                     loadedPlayer.getScore().setScore(score);
                         

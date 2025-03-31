@@ -95,20 +95,13 @@ public class GameLoop {
             return;
         }
 
-        // If player is parent, track how many seconds they have played
         if (player.isParent()) {
             sessionSeconds++;
-            // Convert seconds to minutes as fractional
-            float minutesPlayedSoFar = sessionSeconds / 60f;
-
-            // Update parent's total playtime in ParentalControls
             Parent p = (Parent) player;
-            p.addPlayTime(1f / 60f);  // Each second, add 1/60 of a minute
+            p.addPlayTime(1f / 60f);
 
-            // Now check if we have exceeded the parent's limit
             float maxAllowed = p.getControls().getMaxAllowedMinutes(); // e.g. 60
             if (p.getTotalPlayTime() >= maxAllowed) {
-                // If we exceed the time limit, stop the game
                 System.out.println("Time limit reached! Stopping the game...");
                 stop();
                 return;
@@ -119,7 +112,6 @@ public class GameLoop {
         handleAutoSave();
         updatePersistentScore();
 
-        // Food item reward every 3 minutes (180 seconds)
         foodItemCounter++;
         if (foodItemCounter >= 180) {
             Item foodReward = foodCycleItems[foodCycleIndex];
@@ -129,7 +121,6 @@ public class GameLoop {
             foodItemCounter = 0;
         }
 
-        // Gift item reward every 5 minutes (300 seconds)
         giftItemCounter++;
         if (giftItemCounter >= 300) {
             Item giftReward = giftCycleItems[giftCycleIndex];
