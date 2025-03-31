@@ -18,6 +18,8 @@ import java.util.Map;
  * When a new game is seleced, the player is presented with pet options and is promted to enter information
  * such as pet selection and save slot
  * This information is saved and gameplay then begins
+ * 
+ * @author Marcus
  */
 public class NewGameGUI extends JFrame {
     private List<Pet> availablePets;
