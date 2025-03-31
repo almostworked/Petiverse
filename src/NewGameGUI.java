@@ -104,6 +104,7 @@ public class NewGameGUI extends JFrame {
 
         startButton = new JButton("Start Game");
         startButton.setFont(font);
+
         startButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         backButton.setAlignmentX(Component.LEFT_ALIGNMENT);
         backButton.setAlignmentY(Component.TOP_ALIGNMENT);
@@ -159,7 +160,7 @@ public class NewGameGUI extends JFrame {
         font = font.deriveFont(Font.PLAIN, 70);
         titleText.setFont(font);
         titleText.setForeground(Color.WHITE);
-
+        
         JPanel startButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         startButtonPanel.setOpaque(false); 
         startButtonPanel.add(startButton);
@@ -183,7 +184,7 @@ public class NewGameGUI extends JFrame {
 
         inputPanel.add(Box.createVerticalStrut(30)); 
         inputPanel.add(titleText);
-        inputPanel.add(Box.createVerticalStrut(40)); 
+        inputPanel.add(Box.createVerticalStrut(20)); 
         inputPanel.add(createInputPanel(nameLabel, playerNameBox));
         inputPanel.add(Box.createVerticalStrut(10)); 
         inputPanel.add(createInputPanel(petLabel, petSelection));

@@ -340,9 +340,16 @@ public class MainMenu extends JFrame {
 
     public void parentalControls() {
         JFrame parentalFrame = new JFrame("Parental Controls");
-        parentalFrame.setSize(400, 300);
+        parentalFrame.setSize(700, 600);
         parentalFrame.setLocationRelativeTo(null);
         parentalFrame.setLayout(new BorderLayout());
+        Font font = null;
+            try {
+                font = Font.createFont(Font.TRUETYPE_FONT, new File("fonts/Jersey25-Regular.ttf"));
+                font = font.deriveFont(Font.PLAIN, 35);
+            } catch (FontFormatException | IOException e) {
+                e.printStackTrace();
+            }
     
         JLabel header = new JLabel("Parental Controls", SwingConstants.CENTER);
         header.setFont(new Font("Arial", Font.BOLD, 24));
@@ -351,8 +358,8 @@ public class MainMenu extends JFrame {
         JButton createAccountBtn = new JButton("Make a Parent Account");
         JButton loginBtn = new JButton("Log In");
     
-        createAccountBtn.addActionListener(_ -> createParentAccount());
-        loginBtn.addActionListener(_ -> loginToParentalControls());
+        createAccountBtn.addActionListener(e -> createParentAccount());
+        loginBtn.addActionListener(e -> loginToParentalControls());
     
         JPanel buttonPanel = new JPanel(new GridLayout(1, 2));
         buttonPanel.add(createAccountBtn);
@@ -361,7 +368,7 @@ public class MainMenu extends JFrame {
         parentalFrame.add(buttonPanel, BorderLayout.CENTER);
     
         JButton closeBtn = new JButton("Close");
-        closeBtn.addActionListener(_ -> parentalFrame.dispose());
+        closeBtn.addActionListener(e -> parentalFrame.dispose());
         parentalFrame.add(closeBtn, BorderLayout.SOUTH);
     
         parentalFrame.setVisible(true);
@@ -410,7 +417,7 @@ public class MainMenu extends JFrame {
         JButton setTimeLimitBtn = new JButton("Set Play Time Limit");
         JButton changePasswordBtn = new JButton("Change Password");
     
-        setTimeLimitBtn.addActionListener(_ -> {
+        setTimeLimitBtn.addActionListener(e -> {
             String input = JOptionPane.showInputDialog("Enter max allowed minutes:");
             if (input != null) {
                 try {
@@ -424,7 +431,7 @@ public class MainMenu extends JFrame {
             }
         });
     
-        changePasswordBtn.addActionListener(_ -> {
+        changePasswordBtn.addActionListener(e -> {
             String newPassword = JOptionPane.showInputDialog("Enter New Password:");
             if (newPassword != null && !newPassword.isEmpty()) {
                 parent.setPassword(newPassword);
@@ -718,7 +725,7 @@ public class MainMenu extends JFrame {
             loadBtn.setBackground(Color.decode("#6C5297"));
             loadBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-            loadBtn.addActionListener(_ -> {
+            loadBtn.addActionListener(e -> {
             System.out.println("Loading: " + petInfo);
             int slotNumber = Integer.parseInt(gameData[0].replace("Slot", "").trim());
             System.out.println(slotNumber);

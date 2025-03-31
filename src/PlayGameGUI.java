@@ -293,7 +293,7 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
 
         setLocationRelativeTo(null);
         setVisible(true);
-            feedButton.addActionListener(_ -> {
+            feedButton.addActionListener(e -> {
                 if (pet.getState() != "DEAD") {
                     List<Item> foodItems = player.getInventory().getFoodItems();
 

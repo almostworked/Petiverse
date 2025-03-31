@@ -61,7 +61,6 @@ public class GameLoop {
             isRunning = true;
             System.out.println("Game Loop started");
 
-            // If the player is a parent, increment session count
             if (player.isParent()) {
                 ((Parent) player).incrementSessionCount();
             }
