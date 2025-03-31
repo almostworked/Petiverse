@@ -1,6 +1,7 @@
 /**
  * 
  * @author Fin Faniyi
+ * @version 1.0
  * @author Marcus Cameron
  *
  * Represents a pet in the game, with attributes such as health, sleep, happiness, fullness, and state.
