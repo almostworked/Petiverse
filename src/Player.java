@@ -1,8 +1,10 @@
 /**
  * Represents a player in the game, holding references to their inventory, score, and active pet.
  * Also implements the PlayGame interface for displaying pet/game information to the user.
- *
  * Pet states include: DEAD, SLEEPING, HUNGRY, ANGRY, NORMAL.
+ * 
+ * @author Adrian
+ * @version 1.0
  */
 public class Player implements PlayGame {
 

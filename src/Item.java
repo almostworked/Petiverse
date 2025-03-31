@@ -1,6 +1,9 @@
 /**
  * Represents an item that can be stored and managed within an inventory system.
  * Each item has a name, type, and effectValue (e.g. how much fullness or happiness it provides).
+ * 
+ * @author Adrian
+ * @version 1.0
  */
 public class Item {
     
