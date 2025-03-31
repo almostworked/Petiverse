@@ -85,23 +85,27 @@ public class StateManager {
      */
     private void decayStats() {
         tickCounter++;
-        
+    
         // Every 5 seconds: drop sleep, fullness, and happiness
         if (tickCounter % 5 == 0) {
             pet.setSleep(Math.max(pet.getSleep() - 1, 0));
             pet.setFullness(Math.max(pet.getFullness() - 1, 0));
             pet.setHappiness(Math.max(pet.getHappiness() - 1, 0));
         }
-        
+    
         // Every 10 seconds: decrease health by 1
         if (tickCounter % 10 == 0) {
             pet.setHealth(Math.max(pet.getHealth() - 1, 0));
         }
         
+        // NEW: If Sleep OR Fullness OR Happiness is 0, degrade Health by 15 every second
+        if (pet.getSleep() == 0 || pet.getFullness() == 0 || pet.getHappiness() == 0) {
+            pet.setHealth(Math.max(pet.getHealth() - 10, 0));
+        }
+    
         checkWarnings();
         enforceStateRules();
     }
-    
 
     /**
      * Checks if any stats are below the warning threshold and notifies listeners.
