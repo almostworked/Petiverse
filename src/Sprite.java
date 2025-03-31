@@ -106,8 +106,7 @@ public class Sprite extends Pet{
                 System.out.println("setCurrentState called with " + state);
                 
                 updateSprite();  // Call updateSprite to refresh sprite state
-            
-                this.resetAnimation();
+                //this.resetAnimation();
             }
             
         public void addPropertyChangeListener(PropertyChangeListener listener) {
@@ -120,12 +119,13 @@ public class Sprite extends Pet{
 
         public void updateSprite() {
                 spriteImages.clear(); // Reset images
-            
                 switch (currentState) {
                     case "NORMAL":
                         spriteImages.add("temp_assets/" + petName + ".png");
                         spriteImages.add("temp_assets/" + petName + "-Sprite1.png");
                         spriteImages.add("temp_assets/" + petName + "-Sprite2.png");
+                        System.out.println("sprite images added with size " + spriteImages.size());
+
                         break;
                     case "HUNGRY":
                         spriteImages.add("temp_assets/" + petName + "-Hungry.png");
@@ -140,10 +140,12 @@ public class Sprite extends Pet{
                        // spriteImages.add("temp_assets/" + petName + "-Angry3.png");
                         break;
                     case "SLEEPING":
+                    System.out.println("SLEEPING case entered in updateSprite");
                         spriteImages.add("temp_assets/" + petName + "-Sleep.png");
                         spriteImages.add("temp_assets/" + petName + "-Sleep1.png");
                         spriteImages.add("temp_assets/" + petName + "-Sleep2.png");
                         spriteImages.add("temp_assets/" + petName + "-Sleep3.png");
+                        System.out.println("sprite images added with size " + spriteImages.size());
                         break;
                 case "DEAD":
                         spriteImages.add("temp_assets/" + petName + "-Dead.png");
@@ -155,6 +157,7 @@ public class Sprite extends Pet{
                         break;
                 }
                 this.resetAnimation();
+                System.out.println("animation reset");
         }
             
 
@@ -183,6 +186,7 @@ public class Sprite extends Pet{
                         frameIndex++;
                         if (frameIndex == spriteImages.size() - 1) {
                                 forward = false;
+                                System.out.println("forward = false");
                         }
                 } else {
                         frameIndex--;

@@ -302,7 +302,8 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
         setLocationRelativeTo(null);
         setVisible(true);
             feedButton.addActionListener(e -> {
-                List<Item> foodItems = player.getInventory().getFoodItems();
+                if (pet.getState() != "DEAD") {
+                    List<Item> foodItems = player.getInventory().getFoodItems();
 
                 if (foodItems.isEmpty()) {
                     JOptionPane.showMessageDialog(null, "You have no food items!");
@@ -320,16 +321,16 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
 
                 if (selectedFood != null) {
                     player.getActivePet().feed(selectedFood);
-                    petSprite.setCurrentState(pet.getState());
 
                     updateVitalBars(); 
                 }
+
+                }
+                
             });
 
-    
             playButton.addActionListener(e -> {
                 pet.play();
-                petSprite.setCurrentState(pet.getState());
                 updateVitalBars();
 
             });
@@ -337,7 +338,6 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
             bedButton.addActionListener(e -> {
                 if (pet.getState() != "DEAD") {
                     pet.sleep();
-                    petSprite.setCurrentState(pet.getState());
                     stateManager.setPetState("SLEEPING");
                     updateVitalBars();
 
@@ -346,7 +346,8 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
             });
     
             giftButton.addActionListener(e -> {
-                List<Item> giftItems = player.getInventory().getGiftItems();
+                if (pet.getState() != "DEAD") {
+                    List<Item> giftItems = player.getInventory().getGiftItems();
 
                 if (giftItems.isEmpty()) {
                     JOptionPane.showMessageDialog(null, "You have no gift items!");
@@ -364,23 +365,23 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
 
                 if (selectedGift != null) {
                     player.getActivePet().giveGift(selectedGift);
-                    petSprite.setCurrentState(pet.getState());
 
                     updateVitalBars(); 
                 }
 
+                }
+                
+
             });
     
             exerciseButton.addActionListener(e -> {
-                petSprite.setCurrentState(pet.getState());
-
                 player.getActivePet().exercise();
                 updateVitalBars();
 
             });
     
             vetButton.addActionListener(e -> {
-                petSprite.setCurrentState(pet.getState());
+                //petSprite.setCurrentState(pet.getState());
 
                 player.getActivePet().takeToVet();
                 updateVitalBars();
@@ -582,6 +583,8 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
     @Override
     public void onStateChange(String newState) {
         stateLabel.setText("Current State: " + newState);
+        petSprite.setCurrentState(pet.getState());
+        System.out.println(pet.getState());
         updateVitalBars();
     }
 

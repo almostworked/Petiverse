@@ -115,6 +115,8 @@ public class Pet {
         state = "SLEEPING";
         health = Math.min(health + 5, 100);
         activePlayer.getScore().increaseScore(10);
+        updateState();
+
         
     }
     
@@ -147,7 +149,7 @@ public class Pet {
     /**
      * Updates the pet's state based on its attributes.
      */
-    private void updateState() {
+    public void updateState() {
         if (health <= 0) {
             state = "DEAD";
         } else if (sleep <= 20) {
@@ -156,6 +158,8 @@ public class Pet {
             state = "ANGRY";
         } else if (fullness <= 30) {
             state = "HUNGRY";
+        } else if (state == "SLEEPING") {
+            state = "SLEEPING";
         } else {
             state = "NORMAL";
         }
@@ -211,6 +215,7 @@ public class Pet {
         if (this.health == 0) {
             this.setState("DEAD");
         }
+        updateState();
     }
  
     /**
@@ -220,6 +225,7 @@ public class Pet {
      */
     public int getSleep() { 
         return sleep; 
+
     }
 
     /**
@@ -229,6 +235,7 @@ public class Pet {
      */
     public void setSleep(int sleep) {
         this.sleep = sleep;
+        //updateState();
     }
 
      /**
@@ -247,6 +254,7 @@ public class Pet {
      */
     public void setHappiness(int happiness) {
         this.happiness = happiness;
+        updateState();
     }
 
     /**
@@ -265,6 +273,7 @@ public class Pet {
      */
     public void setFullness(int fullness) {
         this.fullness = fullness;
+        updateState();
     }
 
     /**
