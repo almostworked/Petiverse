@@ -5,6 +5,9 @@ import javax.sound.sampled.*;
 
 /**
  * The purpose of this class is to play audio during gameplay
+ *
+ * @author Marcus
+ * @version 1.5
  */
 public class Sound {
     /** attributes */
