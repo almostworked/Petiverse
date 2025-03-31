@@ -14,26 +14,29 @@ import static org.junit.jupiter.api.Assertions.*;
 public class Inventory_ItemUsageDecrementTest {
 
     @Test
-    public void testItemUsageReducesInventoryCount() {
-        // Create an Inventory with Apple=3, Ball=2
-        Inventory inv = new Inventory();
-        inv.updateInventory(Item.getItem("Apple", ItemType.FOOD), 3);
-        inv.updateInventory(Item.getItem("Ball", ItemType.GIFT), 2);
+public void testItemUsageReducesInventoryCount() {
+    // Create an Inventory and add extra Apples.
+    Inventory inv = new Inventory();
+    inv.updateInventory(Item.getItem("Apple"), 3);
+    
+    // Create a Pet and a Player.
+    Pet pet = new Pet("TestPet", 100, 80, 50, 50, true, "NORMAL");
+    Player player = new Player("TestPlayer", inv, false, pet);
+    
+    // Set the active player so Pet.feed() can access the inventory.
+    Pet.setActivePlayer(player);
+    
+    // Record the initial apple count.
+    int applesBefore = inv.getQuantity(Item.getItem("Apple"));
+    
+    // Feed the pet with an apple.
+    pet.feed(Item.getItem("Apple"));
+    
+    // Record the apple count after feeding.
+    int applesAfter = inv.getQuantity(Item.getItem("Apple"));
+    
+    // Expect the apple count to decrease by 1.
+    assertEquals(applesBefore - 1, applesAfter, "Apple count should decrease after feeding");
+}
 
-        // Create a Pet & Player so we can feed the pet.
-        Pet pet = new Pet("TestPet", 100, 80, 50, 50, true, "NORMAL");
-        Player player = new Player("TestPlayer", inv, false, pet);
-
-        // Use one apple to feed the pet
-        // Typically you'd do something like: pet.feed(...) or player.feedPet(...), 
-        // but for demonstration let's just remove it from inventory:
-        int applesBefore = inv.getQuantity(Item.getItem("Apple", ItemType.FOOD));
-        pet.feed(Item.getItem("Apple", ItemType.FOOD)); 
-        // Or possibly you'd do: inv.removeItem(Item.getItem("Apple", ItemType.FOOD), 1);
-
-        int applesAfter = inv.getQuantity(Item.getItem("Apple", ItemType.FOOD));
-
-        // We expect the count to drop by 1
-        assertEquals(applesBefore - 1, applesAfter, "Apple count should decrease after feeding");
-    }
 }
