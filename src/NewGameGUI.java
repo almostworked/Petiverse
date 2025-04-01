@@ -328,7 +328,7 @@ public class NewGameGUI extends JFrame {
      * @param petName is the String name of the pet
      */
     private void saveGame(String playerName, int saveSlot, String petType, String petName) {
-        try (FileWriter writer = new FileWriter("game_save.csv", true)) {
+        try (FileWriter writer = new FileWriter("data/game_save.csv", true)) {
             Pet selectedPet = null;
             for (Pet pet : availablePets) {
                 if (pet.getName().equals(petType)) {
@@ -354,7 +354,7 @@ public class NewGameGUI extends JFrame {
      * @see Inventory
      */
     private void saveInventory(Inventory inventory, int saveSlot) {
-        String filename = "inventory.csv";
+        String filename = "data/inventory.csv";
         try (PrintWriter writer = new PrintWriter(new FileWriter(filename, true))) {
             StringBuilder inventoryData = new StringBuilder();
             for (Map.Entry<Item, Integer> entry : inventory.itemMap.entrySet()) {
