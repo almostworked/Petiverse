@@ -58,7 +58,7 @@ java \--module-path /path/to/javafx/lib \--add-modules javafx.controls,javafx.fx
 
 1. **Launching the Game:**
 
-   * Run the application to enter the **Main Menu**.
+   * Run the MainMenu.java file to enter the **Main Menu**.
 
    * Choose from **Start New Game, Load Game, Instructions, Parental Controls, or Exit**.
 
