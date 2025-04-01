@@ -35,6 +35,14 @@ To build the Petiverse from source, follow these steps:
    ```bash
    cd src
    ```
+   Note: If this doesn't work, do:
+   ```bash
+   cd Petiverse
+   ```
+   again before
+   ```bash
+   cd src
+   ```
 
 4. **Compile the Java Files:**
 
