@@ -26,20 +26,12 @@ To build the Petiverse from source, follow these steps:
    Run the following command to clone the repository:
    ```bash
    git clone ssh://git@gitlab.sci.uwo.ca:7999/courses/2025/01/COMPSCI2212/group30.git
-   cd Petiverse
+   cd group30
    ```
 
 3. **Navigate to the `src` Folder:**
 
    Change into the `src` directory where the Java files are located:
-   ```bash
-   cd src
-   ```
-   Note: If this doesn't work, do:
-   ```bash
-   cd Petiverse
-   ```
-   again before
    ```bash
    cd src
    ```
