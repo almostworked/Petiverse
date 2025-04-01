@@ -63,8 +63,6 @@ public class MainMenu extends JFrame {
                     dispose();
 
                 }
-
-                
             }
         });   
         loadButton.addActionListener(new ActionListener() {
