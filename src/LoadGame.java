@@ -17,17 +17,17 @@ import java.util.List;
      * @return savedGames, a list of saved games
      */
 public class LoadGame {
-    private static final String SAVE_FILE = "game_save.csv";
-    private static final String INVENTORY_FILE = "inventory.csv";
+    private static final String SAVE_FILE = "data/game_save.csv";
+    private static final String INVENTORY_FILE = "data/inventory.csv";
     private Inventory loadedInventory;
 
     public List<String> loadSavedGames() {
         List<String> savedGames = new ArrayList<String>();
-        try (BufferedReader reader = new BufferedReader(new FileReader("game_save.csv"))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("data/game_save.csv"))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] data = line.split(",");
-                if (data.length >= 3) {
+                if (data.length >= 10) {
                     savedGames.add("Slot " + data[0] + ": " + data[1] + "'s pet " + data[3]  + ": " + data[10] + ": " + data[9] + ": " + data[2]);
                 }
             }
@@ -54,7 +54,8 @@ public class LoadGame {
             int slotCounter = 1;
             while ((line = reader.readLine()) != null) {
                 String[] data = line.split(",");
-                if (data.length >= 12 && slotCounter == slotNumber) {
+                if (data.length < 10) { continue; }
+                if (slotCounter == slotNumber) {
                     System.out.println("passed check + found game slot number");
                     String playerName = data[1];
                     String petType = data[2];
@@ -65,7 +66,10 @@ public class LoadGame {
                     int happiness = Integer.parseInt(data[7]);
                     boolean alive = Boolean.parseBoolean(data[8]);
                     String state = data[9];
-                    int score = Integer.parseInt(data[11]);
+                    int score = 0;
+                    if (data.length > 11) {
+                        score = Integer.parseInt(data[11]);
+                    }
     
                     loadedPet = new Sprite(petType, health, sleep, happiness, hunger, alive, state);
                     loadedPet.setCustomName(petName);
