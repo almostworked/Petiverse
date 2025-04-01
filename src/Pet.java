@@ -17,6 +17,7 @@ public class Pet {
     private boolean alive;
     private static Player activePlayer;
     private String customName;
+    private String musicpath = "temp_assets/game-button-click.wav";
 
 
     /**
@@ -78,8 +79,8 @@ public class Pet {
      */
     public void play() {
         if (!canExecuteAction("play")) return;
-        //Sound sound = new Sound();
-        //sound.playEffect(musicpath);
+        Sound sound = new Sound();
+        sound.playEffect(musicpath);
         happiness = Math.min(happiness + 15, 100);
         health = Math.min(health + 2, 100);
         sleep = Math.min(sleep - 10, 100);
@@ -111,8 +112,8 @@ public class Pet {
      */
     public void sleep() {
         if (!canExecuteAction("sleep")) return;
-        //Sound sound = new Sound();
-        //sound.playEffect(musicpath);
+        Sound sound = new Sound();
+        sound.playEffect(musicpath);
         state = "SLEEPING";
         health = Math.min(health + 5, 100);
         activePlayer.getScore().increaseScore(10);
@@ -125,8 +126,8 @@ public class Pet {
      */
     public void exercise() {
         if (!canExecuteAction("exercise")) return;
-        //Sound sound = new Sound();
-        //sound.playEffect(musicpath);
+        Sound sound = new Sound();
+        sound.playEffect(musicpath);
         health = Math.min(health + 10, 100);
         sleep = Math.max(sleep - 30, 0);
         fullness = Math.max(fullness - 20, 0);
