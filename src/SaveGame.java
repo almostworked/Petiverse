@@ -48,7 +48,7 @@ public class SaveGame {
      * @param pet is the current pet (pet state) in this session
      */
     public static void savePet(Pet pet) {
-    String filename = "game_save.csv";
+    String filename = "data/game_save.csv";
     try {
         List<String> lines = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
@@ -78,7 +78,7 @@ public class SaveGame {
 }
 
 private void updateInventory(Inventory inventory) {
-    String filename = "inventory.csv";
+    String filename = "data/inventory.csv";
     try {
         List<String> lines = new ArrayList<>();
         boolean found = false;
