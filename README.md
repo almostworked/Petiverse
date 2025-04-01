@@ -40,7 +40,7 @@ To build the Petiverse from source, follow these steps:
 
    To compile all Java files, run the following command (ensure you are in the src directory)
    ```bash
-   javac *.java*
+   javac *.java
    ```
 
    This will compile all `.java` files in the `src` folder and generate the corresponding `.class` files.
