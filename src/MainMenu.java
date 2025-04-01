@@ -1,8 +1,9 @@
 /**
  * MainMenu.java: The main entry point to the Petiverse game. Allows the user to start a new game, load a saved game, view instructions for the
- * game, access parental controls or exit the game.
+ * game, access parental controls, turn sound on/off and exit the game.
  * 
  * @author Daniella
+ * @version 1.0
  */
 
 import javax.swing.*;
@@ -19,6 +20,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
+import java.util.ArrayList;
 
 
 public class MainMenu extends JFrame {
@@ -203,24 +205,23 @@ public class MainMenu extends JFrame {
      * inventory, pet health and pet state.
      */
 
-    public void displayInstructions() { // Show instructions/tutorial window
+    public void displayInstructions() {
         JPanel instructions = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                ImageIcon background = new ImageIcon("temp_assets/Background2.jpg");
+                ImageIcon background = new ImageIcon("temp_assets/Background1.jpg");
                 g.drawImage(background.getImage(), 0, 0, getWidth(), getHeight(), this);
             }
         };
         instructions.setLayout(new BoxLayout(instructions, BoxLayout.Y_AXIS));
-        instructions.setOpaque(false);
         JLabel title = new JLabel("Instructions/Tutorial");
 
         try {
             Font font = Font.createFont(Font.TRUETYPE_FONT, new File("fonts/Jersey25-Regular.ttf"));
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge.registerFont(font);
-            font = font.deriveFont(Font.PLAIN, 70); // Title text size
+            font = font.deriveFont(Font.PLAIN, 70); 
 
             title.setFont(font);
             title.setForeground(Color.decode("#FFFFFF"));
@@ -228,7 +229,6 @@ public class MainMenu extends JFrame {
 
             font = font.deriveFont(Font.PLAIN, 25);
 
-            // Create a back button so the user can navigate back to the main menu
             JButton back = new JButton("< Main Menu");
             back.setFont(font);
             back.setContentAreaFilled(false);
@@ -240,7 +240,6 @@ public class MainMenu extends JFrame {
             back.setAlignmentX(LEFT_ALIGNMENT);
             back.setAlignmentY(TOP_ALIGNMENT);
 
-            // Move the Main Menu button to a fixed upper left space
             JPanel topPanel = new JPanel(new BorderLayout());
             topPanel.setOpaque(false);
             topPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 0)); // Padding
@@ -248,11 +247,9 @@ public class MainMenu extends JFrame {
             instructions.add(topPanel, BorderLayout.NORTH);
 
             instructions.add(title);
-            // Add an action listener for the back button
             back.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     System.out.println("Back to main menu button clicked");
-                  //  menu.setContentPane(mainMenuPanel); // Go back to main menu panel
                     MainMenu newMenu = new MainMenu();
                     dispose();
                     newMenu.setVisible(true);
@@ -344,37 +341,62 @@ public class MainMenu extends JFrame {
 
     public void parentalControls() {
         JFrame parentalFrame = new JFrame("Parental Controls");
-        parentalFrame.setSize(700, 600);
+        parentalFrame.setSize(500, 400);
         parentalFrame.setLocationRelativeTo(null);
         parentalFrame.setLayout(new BorderLayout());
         Font font = null;
             try {
                 font = Font.createFont(Font.TRUETYPE_FONT, new File("fonts/Jersey25-Regular.ttf"));
-                font = font.deriveFont(Font.PLAIN, 35);
+                font = font.deriveFont(Font.PLAIN, 70);
             } catch (FontFormatException | IOException e) {
                 e.printStackTrace();
             }
     
         JLabel header = new JLabel("Parental Controls", SwingConstants.CENTER);
-        header.setFont(new Font("Arial", Font.BOLD, 24));
+        header.setFont(font);
+        header.setForeground(Color.decode("#492D77"));
+        font = font.deriveFont(Font.PLAIN, 25);
+
         parentalFrame.add(header, BorderLayout.NORTH);
+        Border border = BorderFactory.createLineBorder(Color.decode("#8B73B2"), 2);
+
     
         JButton createAccountBtn = new JButton("Make a Parent Account");
+        createAccountBtn.setFont(font);
+        createAccountBtn.setBackground(Color.decode("#9F90B7"));
+        createAccountBtn.setForeground(Color.WHITE);
+        createAccountBtn.setAlignmentX(CENTER_ALIGNMENT);
+        createAccountBtn.setBorder(border);
+        createAccountBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
         JButton loginBtn = new JButton("Log In");
+        loginBtn.setFont(font);
+        loginBtn.setBackground(Color.decode("#9F90B7"));
+        loginBtn.setForeground(Color.WHITE);
+        loginBtn.setAlignmentX(CENTER_ALIGNMENT);
+        loginBtn.setBorder(border);
+        loginBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
     
         createAccountBtn.addActionListener(e -> createParentAccount());
         loginBtn.addActionListener(e -> loginToParentalControls());
+
+        JPanel buttonPanel = new JPanel();
     
-        JPanel buttonPanel = new JPanel(new GridLayout(1, 2));
+        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
+        buttonPanel.setAlignmentX(CENTER_ALIGNMENT);
+        buttonPanel.add(Box.createVerticalStrut(30));
         buttonPanel.add(createAccountBtn);
+        buttonPanel.add(Box.createVerticalStrut(30));
+
         buttonPanel.add(loginBtn);
     
         parentalFrame.add(buttonPanel, BorderLayout.CENTER);
     
         JButton closeBtn = new JButton("Close");
+        closeBtn.setFont(font);
         closeBtn.addActionListener(e -> parentalFrame.dispose());
         parentalFrame.add(closeBtn, BorderLayout.SOUTH);
-    
+        
         parentalFrame.setVisible(true);
     }
     /**
@@ -432,15 +454,48 @@ public class MainMenu extends JFrame {
     
     private void showParentalControlOptions(Parent parent) {
         JFrame controlFrame = new JFrame("Parental Control Options");
-        controlFrame.setSize(400, 300);
+        Font font = null;
+        try {
+            font = Font.createFont(Font.TRUETYPE_FONT, new File("fonts/Jersey25-Regular.ttf"));
+            font = font.deriveFont(Font.PLAIN, 70);
+        } catch (FontFormatException | IOException e) {
+            e.printStackTrace();
+        }
+        controlFrame.setSize(500, 400);
         controlFrame.setLocationRelativeTo(null);
     
         JLabel infoLabel = new JLabel("Parental Controls");
-        infoLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        infoLabel.setFont(font);
+        infoLabel.setAlignmentX(CENTER_ALIGNMENT);
+        infoLabel.setForeground(Color.decode("#492D77"));
         JLabel totalTime = new JLabel("Total play time: " + parent.getTotalPlayTime());
+        font = font.deriveFont(Font.PLAIN, 25);
+        totalTime.setFont(font);
+        totalTime.setAlignmentX(CENTER_ALIGNMENT);
+
         JLabel avTime = new JLabel("Average play time: " + parent.getAveragePlayTime());
+        avTime.setFont(font);
+        avTime.setAlignmentX(CENTER_ALIGNMENT);
+
         JButton setTimeLimitBtn = new JButton("Set Play Time Limit");
+        setTimeLimitBtn.setFont(font);
+        setTimeLimitBtn.setAlignmentX(CENTER_ALIGNMENT);
+        setTimeLimitBtn.setBackground(Color.decode("#9F90B7"));
+
+        JButton revivePetBtn = new JButton("Revive Pet");
+        revivePetBtn.setFont(font);
+        revivePetBtn.setAlignmentX(CENTER_ALIGNMENT);
+        revivePetBtn.setBackground(Color.decode("#9F90B7"));
+            
+        revivePetBtn.addActionListener(e -> {
+            showDeadPets(parent);
+        });
+
         JButton changePasswordBtn = new JButton("Change Password");
+        changePasswordBtn.setFont(font);
+        changePasswordBtn.setAlignmentX(CENTER_ALIGNMENT);
+        changePasswordBtn.setBackground(Color.decode("#9F90B7"));
+
     
         setTimeLimitBtn.addActionListener(e -> {
             String input = JOptionPane.showInputDialog("Enter max allowed minutes:");
@@ -469,16 +524,109 @@ public class MainMenu extends JFrame {
     
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.add(Box.createVerticalStrut(20));
         panel.add(infoLabel);
         panel.add(totalTime);
         panel.add(avTime);
+        panel.add(Box.createVerticalStrut(20));
         panel.add(setTimeLimitBtn);
+        panel.add(Box.createVerticalStrut(20));
         panel.add(changePasswordBtn);
+        panel.add(Box.createVerticalStrut(20));
+        panel.add(revivePetBtn);
     
         controlFrame.add(panel);
         controlFrame.setVisible(true);
         
     }
+    private void showDeadPets(Parent parent) {
+        JFrame deadPetsFrame = new JFrame("Revive Dead Pets");
+        Font font = null;
+        try {
+            font = Font.createFont(Font.TRUETYPE_FONT, new File("fonts/Jersey25-Regular.ttf"));
+            font = font.deriveFont(Font.PLAIN, 70);
+        } catch (FontFormatException | IOException e) {
+            e.printStackTrace();
+        }
+    
+        deadPetsFrame.setSize(500, 400);
+        deadPetsFrame.setLocationRelativeTo(null);
+    
+        JPanel deadPetsPanel = new JPanel();
+        deadPetsPanel.setLayout(new BoxLayout(deadPetsPanel, BoxLayout.Y_AXIS));
+        deadPetsPanel.setOpaque(false);
+    
+        LoadGame loadGame = new LoadGame();
+        List<String> savedGamesList = loadGame.loadSavedGames();  // Get all saved games
+        System.out.println(savedGamesList);
+    
+        // Filter only dead pets
+        List<String> deadPetsList = new ArrayList<>();
+        for (String game : savedGamesList) {
+            String[] gameData = game.split(": ");
+            String state = gameData[3];  // The state (dead/alive)
+            if (state.equalsIgnoreCase("dead")) {
+                deadPetsList.add(game);
+            }
+        }
+    
+        if (deadPetsList.isEmpty()) {
+            JLabel noDeadPets = new JLabel("No dead pets available to revive.");
+            noDeadPets.setFont(font.deriveFont(Font.PLAIN, 25));
+            noDeadPets.setForeground(Color.BLACK);
+            deadPetsPanel.add(noDeadPets);
+        } else {
+            // Show the list of dead pets
+            for (String game : deadPetsList) {
+                String[] gameData = game.split(": ");
+                String petInfo = gameData[1];
+                String petName = petInfo.split("'s pet ")[1].trim();
+    
+                JPanel petCard = new JPanel();
+                petCard.setLayout(new BoxLayout(petCard, BoxLayout.Y_AXIS));
+                petCard.setBackground(new Color(255, 255, 255, 50));
+                petCard.setOpaque(true);
+                petCard.setBorder(BorderFactory.createLineBorder(Color.decode("#6C5297"), 5));
+    
+                JLabel petNameLabel = new JLabel("Pet Name: " + petName);
+                petNameLabel.setForeground(Color.BLACK);
+                petNameLabel.setFont(font.deriveFont(Font.PLAIN, 25));
+    
+                JButton reviveBtn = new JButton("Revive Pet");
+                reviveBtn.setFont(font.deriveFont(Font.PLAIN, 25));
+                reviveBtn.setBackground(Color.decode("#6C5297"));
+                reviveBtn.setForeground(Color.WHITE);
+                reviveBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+    
+                reviveBtn.addActionListener(e -> {
+                    System.out.println("Reviving: " + petName);
+                    int slotNumber = Integer.parseInt(gameData[0].replace("Slot", "").trim());
+                    LoadGame loadSavedGame = new LoadGame();
+                    loadSavedGame.loadGame(slotNumber);  // Revive the pet
+                    deadPetsFrame.dispose();  // Close the window after reviving
+                });
+    
+                petCard.add(petNameLabel);
+                petCard.add(reviveBtn);
+                deadPetsPanel.add(petCard);
+            }
+        }
+    
+        JScrollPane scrollPane = new JScrollPane(deadPetsPanel);
+        scrollPane.setAlignmentX(Component.CENTER_ALIGNMENT);
+        scrollPane.setPreferredSize(new Dimension(300, 400));
+        scrollPane.setBorder(new EmptyBorder(0, 25, 0, 25));
+        scrollPane.getVerticalScrollBar().setUnitIncrement(20);
+        scrollPane.getVerticalScrollBar().setBlockIncrement(50);
+        Color transparentColor = new Color(0, 0, 0, 50); 
+        scrollPane.setBackground(transparentColor);
+        scrollPane.setOpaque(false);
+    
+        deadPetsFrame.add(scrollPane);
+        deadPetsFrame.setVisible(true);
+    }
+    
+    
     /**
      * Method to load a saved game, invoked when "Load saved game" is clicked from main menu. Displays
      * a list of saved pets along with player name, pet name, creation date and current pet state.
@@ -493,7 +641,7 @@ public class MainMenu extends JFrame {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                ImageIcon background = new ImageIcon("temp_assets/Background2.jpg");
+                ImageIcon background = new ImageIcon("temp_assets/Background1.jpg");
                 g.drawImage(background.getImage(), 0, 0, getWidth(), getHeight(), this);
             }
         };

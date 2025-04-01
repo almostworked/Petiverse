@@ -42,6 +42,7 @@ import javax.swing.SwingUtilities;
 public class PlayGameGUI extends JFrame implements StateManager.StateChangeListener {
     private static PlayGameGUI instance;
     private Player player;
+    private Parent parent;
     private Pet pet;
     private JLabel healthLabel, sleepLabel, fullnessLabel, happinessLabel;
     private JLabel petImageLabel = new JLabel();
@@ -55,6 +56,7 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
     private Timer animationTimer;
     private boolean warningShown = false;
     private Score score;
+    private long startTime;
     
     /**
      * Constructor that takes the player, save slot and player name as arguments. Initializes all
@@ -84,7 +86,8 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
         Pet.setActivePlayer(player);
         this.player.getInventory().displayInventory();
         this.saveGame.save(this.pet, this.player.getInventory());
-
+        startTime = System.currentTimeMillis();
+        this.parent = ParentAccountManager.loadParentAccount();
 
         GameLoop gameLoop = new GameLoop(pet, player, stateManager, saveGame);
         gameLoop.start();
@@ -398,6 +401,7 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
                 System.out.println("Back to main menu button clicked");
                 SaveGame saveFile = new SaveGame(saveSlot, player.isParent());
                 saveFile.savePet(player.getActivePet());
+                stopTimerAndRecordPlayTime();
 
                 dispose();
                 new MainMenu().setVisible(true);
@@ -407,9 +411,27 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
                 displayInventory(player.getInventory());
 
             });
+            if (parent.getTotalPlayTime() > parent.getControls().getMaxAllowedMinutes()) {
+                JOptionPane.showMessageDialog(null, "Play time limit exceeded!");
+                dispose();
+                MainMenu menu = new MainMenu();
+                menu.setVisible(true);
+            }
+            if (!parent.getControls().canPlayNow()) {
+                JOptionPane.showMessageDialog(null, "Gameplay not allowed at this time.");
+                dispose();
+            }            
     
             updateVitalBars();
         }
+        private void stopTimerAndRecordPlayTime() {
+            long endTime = System.currentTimeMillis();
+            float minutesPlayed = (endTime - startTime) / (1000 * 60.0f);
+            parent.addPlayTime(minutesPlayed);
+            parent.incrementSessionCount();
+            ParentAccountManager.saveParentAccount(parent);
+        }
+        
         public static void updatePetState(String petState) {
             if (instance != null ) {
                 instance.stateLabel.setText("Current State: " + petState);

@@ -29,6 +29,13 @@ public class NewGameGUI extends JFrame {
     private JLabel backButton;
     private JLabel imageLabel;
     private Inventory inventory = new Inventory();
+    /**
+     * Constructor for NewGameGUI which initializes the screen for starting a new game and choosing
+     * player name, pet type, pet name and save slot.
+     * @param pet1
+     * @param pet2
+     * @param pet3
+     */
 
     public NewGameGUI(Pet pet1, Pet pet2, Pet pet3) {
         availablePets = new ArrayList<>();
@@ -40,29 +47,34 @@ public class NewGameGUI extends JFrame {
         setSize(700, 600);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         
-        // Create the JPanel with a custom paintComponent method for the background
         JPanel newGamePanel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                ImageIcon background = new ImageIcon("temp_assets/Background2.jpg"); // Ensure the correct path
+                ImageIcon background = new ImageIcon("temp_assets/Background1.jpg"); // Ensure the correct path
                 g.drawImage(background.getImage(), 0, 0, getWidth(), getHeight(), this);
             }
         };
         Font font = null;
         try {
             font = Font.createFont(Font.TRUETYPE_FONT, new File("fonts/Jersey25-Regular.ttf"));
-            font = font.deriveFont(Font.PLAIN, 30);
+            font = font.deriveFont(Font.PLAIN, 25);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        // Set layout to null so we can position components manually
         newGamePanel.setLayout(new BorderLayout());
 
-        // Allow player to return to the Main Menu
-        backButton = new JLabel("  < Main Menu  ");
+        JButton backButton = new JButton("< Main Menu");
         backButton.setForeground(Color.WHITE);
+        backButton.setContentAreaFilled(false);
+        backButton.setBorderPainted(false);
+        backButton.setFocusPainted(false);
+        backButton.setOpaque(false);
+        backButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        backButton.setForeground(Color.decode("#FFFFFF"));
+        backButton.setAlignmentX(LEFT_ALIGNMENT);
+        backButton.setAlignmentY(TOP_ALIGNMENT);
         backButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         backButton.setFont(font);
         backButton.addMouseListener(new MouseAdapter() {
@@ -74,6 +86,7 @@ public class NewGameGUI extends JFrame {
                 newMenu.setVisible(true);
             }
         });
+        
 
         JLabel nameLabel = new JLabel("  Player Name:     ");
         nameLabel.setFont(font);
@@ -105,8 +118,6 @@ public class NewGameGUI extends JFrame {
         startButton.setFont(font);
 
         startButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        backButton.setAlignmentX(Component.LEFT_ALIGNMENT);
-        backButton.setAlignmentY(Component.TOP_ALIGNMENT);
 
         nameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         playerNameBox.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -159,6 +170,11 @@ public class NewGameGUI extends JFrame {
         font = font.deriveFont(Font.PLAIN, 70);
         titleText.setFont(font);
         titleText.setForeground(Color.WHITE);
+
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.setOpaque(false);
+        topPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 0)); // Padding
+        topPanel.add(backButton, BorderLayout.WEST);
         
         JPanel startButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         startButtonPanel.setOpaque(false); 
@@ -201,7 +217,7 @@ public class NewGameGUI extends JFrame {
         inputAndImagePanel.add(inputPanel, BorderLayout.WEST);
         inputAndImagePanel.add(imageLabel, BorderLayout.EAST);
 
-        newGamePanel.add(backButton, BorderLayout.NORTH);
+        newGamePanel.add(topPanel, BorderLayout.NORTH);
         newGamePanel.add(inputAndImagePanel, BorderLayout.CENTER);
 
         startButton.addActionListener(new ActionListener() {
@@ -237,6 +253,12 @@ public class NewGameGUI extends JFrame {
         setContentPane(newGamePanel);
         setVisible(true); 
     }
+    /**
+     * Creates an organized panel for each form of input when creating a new game.
+     * @param label
+     * @param input
+     * @return
+     */
     private JPanel createInputPanel(JComponent label, JComponent input) {
         JPanel panel = new JPanel();
         panel.setLayout(new FlowLayout(FlowLayout.LEFT)); 
@@ -251,6 +273,12 @@ public class NewGameGUI extends JFrame {
         panel.add(input);
         return panel;
     }
+    /**
+     * Retrieves a pet image based on default pet type, to be changed dynamically as a user selects
+     * a pet from the pet dropdown menu.
+     * @param petName
+     * @return
+     */
     public ImageIcon getPetImage(String petName) {
         ImageIcon petIcon;
         switch (petName) {
@@ -317,7 +345,12 @@ public class NewGameGUI extends JFrame {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
     }
-    
+    /**
+     * Creates an initial inventory file for the newly saved pet.
+     * @param inventory
+     * @param saveSlot
+     * @see Inventory
+     */
     private void saveInventory(Inventory inventory, int saveSlot) {
         String filename = "inventory.csv";
         try (PrintWriter writer = new PrintWriter(new FileWriter(filename, true))) {
@@ -330,6 +363,11 @@ public class NewGameGUI extends JFrame {
             System.out.println("Error saving inventory data: " + e.getMessage());
         }
     }
+    /**
+     * Main method for quick usage and SwingUtilities.invokeLater() to ensure code runs on the event
+     * dispatch thread.
+     * @param args
+     */
 
     public static void main(String[] args) {
         Pet foxy = new Foxy("Foxy");
