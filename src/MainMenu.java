@@ -11,11 +11,13 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import javax.swing.plaf.FontUIResource;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
@@ -26,6 +28,29 @@ import java.util.ArrayList;
 public class MainMenu extends JFrame {
     public static MainMenu menu;
     private JPanel mainMenuPanel;
+    private static Font customFont;
+    static {
+        try {
+            // Load the font from the 'fonts' folder only once when the class is loaded
+            InputStream is = MainMenu.class.getResourceAsStream("/fonts/Jersey25-Regular.ttf");
+
+            if (is == null) {
+                throw new IOException("Font file not found!");
+            } else {
+                System.out.println("font file loaded");
+            }
+
+            // Create the font from the InputStream
+            customFont = Font.createFont(Font.TRUETYPE_FONT, is);
+
+            // Register the font globally for the application
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            ge.registerFont(customFont);
+
+        } catch (IOException | FontFormatException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Constructs a MainMenu object. Contains start new game, load saved games, tutorial, parental controls,
@@ -33,6 +58,11 @@ public class MainMenu extends JFrame {
      */
 
     public MainMenu() { 
+        if (customFont != null) {
+            System.out.println("Using loaded font.");
+        } else {
+            System.out.println("Custom font not loaded, using default font.");
+        }
 
         setTitle("Petiverse");
         setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS)); // Sets an organized layout for the components on screen
@@ -107,37 +137,35 @@ public class MainMenu extends JFrame {
         exitButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
 
-        try {
-            Font font = Font.createFont(Font.TRUETYPE_FONT, new File("fonts/Jersey25-Regular.ttf"));
-            font = font.deriveFont(Font.PLAIN, 100);
+            customFont = customFont.deriveFont(Font.PLAIN, 100);
 
-            title.setFont(font);
+            title.setFont(customFont);
             title.setForeground(Color.decode("#FFFFFF"));
             title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-            font = font.deriveFont(Font.PLAIN, 25);
+            customFont = customFont.deriveFont(Font.PLAIN, 25);
 
-            startButton.setFont(font);
+            startButton.setFont(customFont);
             startButton.setForeground(Color.decode("#6C5297"));
             startButton.setBackground(Color.decode("#D9D9D9"));
 
-            loadButton.setFont(font);
+            loadButton.setFont(customFont);
             loadButton.setForeground(Color.decode("#6C5297"));
             loadButton.setBackground(Color.decode("#D9D9D9"));
 
-            instructionsButton.setFont(font);
+            instructionsButton.setFont(customFont);
             instructionsButton.setForeground(Color.decode("#6C5297"));
             instructionsButton.setBackground(Color.decode("#D9D9D9"));
 
-            parentButton.setFont(font);
+            parentButton.setFont(customFont);
             parentButton.setForeground(Color.decode("#6C5297"));
             parentButton.setBackground(Color.decode("#D9D9D9"));
 
-            soundButton.setFont(font);
+            soundButton.setFont(customFont);
             soundButton.setForeground(Color.decode("#6C5297"));
             soundButton.setBackground(Color.decode("#D9D9D9"));
 
-            exitButton.setFont(font);
+            exitButton.setFont(customFont);
             exitButton.setForeground(Color.decode("#D9D9D9"));
             exitButton.setBackground(Color.decode("#6C5297"));
             
@@ -161,11 +189,19 @@ public class MainMenu extends JFrame {
                 @Override
                 protected void paintComponent(Graphics g) {
                     super.paintComponent(g);
-                    ImageIcon backgroundPic = new ImageIcon("temp_assets/Background1.jpg");
-                    g.drawImage(backgroundPic.getImage(), 0, 0, getWidth(), getHeight(), this);
+                    
+                    // Load the image using getResource
+                    ImageIcon backgroundPic = new ImageIcon(getClass().getResource("/temp_assets/Background1.jpg"));
+                    
+                    if (backgroundPic.getImage() != null) {
+                        g.drawImage(backgroundPic.getImage(), 0, 0, getWidth(), getHeight(), this);
+                    } else {
+                        System.out.println("Background image not found!");
+                    }
                 }
             };
             background.setLayout(new BoxLayout(background, BoxLayout.Y_AXIS));
+            
 
             background.add(Box.createVerticalStrut(20)); 
             background.add(Box.createVerticalStrut(80)); 
@@ -186,9 +222,7 @@ public class MainMenu extends JFrame {
             mainMenuPanel = background;
             setContentPane(mainMenuPanel);
 
-        } catch (FontFormatException | IOException e) {
-            e.printStackTrace();
-        }
+       
 
         setSize(700, 600);
         setLocationRelativeTo(null);
@@ -222,20 +256,16 @@ public class MainMenu extends JFrame {
         instructions.setLayout(new BoxLayout(instructions, BoxLayout.Y_AXIS));
         JLabel title = new JLabel("Instructions/Tutorial");
 
-        try {
-            Font font = Font.createFont(Font.TRUETYPE_FONT, new File("fonts/Jersey25-Regular.ttf"));
-            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(font);
-            font = font.deriveFont(Font.PLAIN, 70); 
+        customFont = customFont.deriveFont(Font.PLAIN, 70); 
 
-            title.setFont(font);
+            title.setFont(customFont);
             title.setForeground(Color.decode("#FFFFFF"));
             title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-            font = font.deriveFont(Font.PLAIN, 25);
+            customFont = customFont.deriveFont(Font.PLAIN, 25);
 
             JButton back = new JButton("< Main Menu");
-            back.setFont(font);
+            back.setFont(customFont);
             back.setContentAreaFilled(false);
             back.setBorderPainted(false);
             back.setFocusPainted(false);
@@ -266,7 +296,7 @@ public class MainMenu extends JFrame {
             instructionsTextPane.setEditable(false);
             instructionsTextPane.setOpaque(false);
             instructionsTextPane.setContentType("text/html");
-            instructionsTextPane.setFont(font);
+            instructionsTextPane.setFont(customFont);
 
             StyledDocument doc = instructionsTextPane.getStyledDocument();
 
@@ -277,12 +307,12 @@ public class MainMenu extends JFrame {
             SimpleAttributeSet instructionTitle = new SimpleAttributeSet();
             StyleConstants.setBold(instructionTitle, true);
             StyleConstants.setForeground(instructionTitle, Color.decode("#8B73B2"));
-            StyleConstants.setFontFamily(instructionTitle, font.getFontName());
+            StyleConstants.setFontFamily(instructionTitle, customFont.getFontName());
 
             SimpleAttributeSet normalStyle = new SimpleAttributeSet();
             StyleConstants.setFontSize(normalStyle, 20);
             StyleConstants.setForeground(normalStyle, Color.BLACK);
-            StyleConstants.setFontFamily(normalStyle, font.getFontName());
+            StyleConstants.setFontFamily(normalStyle, customFont.getFontName());
 
             try {
                 doc.insertString(doc.getLength(), "- VITALS -\n", instructionTitle);
@@ -328,9 +358,7 @@ public class MainMenu extends JFrame {
             instructions.add(scrollContainer);
 
 
-        } catch (FontFormatException | IOException e) {
-            e.printStackTrace();
-        }
+       
         setContentPane(instructions);
         revalidate();
         repaint();
@@ -349,25 +377,20 @@ public class MainMenu extends JFrame {
         parentalFrame.setSize(500, 400);
         parentalFrame.setLocationRelativeTo(null);
         parentalFrame.setLayout(new BorderLayout());
-        Font font = null;
-            try {
-                font = Font.createFont(Font.TRUETYPE_FONT, new File("fonts/Jersey25-Regular.ttf"));
-                font = font.deriveFont(Font.PLAIN, 70);
-            } catch (FontFormatException | IOException e) {
-                e.printStackTrace();
-            }
+        customFont = customFont.deriveFont(Font.PLAIN, 70);
+           
     
         JLabel header = new JLabel("Parental Controls", SwingConstants.CENTER);
-        header.setFont(font);
+        header.setFont(customFont);
         header.setForeground(Color.decode("#492D77"));
-        font = font.deriveFont(Font.PLAIN, 25);
+        customFont = customFont.deriveFont(Font.PLAIN, 25);
 
         parentalFrame.add(header, BorderLayout.NORTH);
         Border border = BorderFactory.createLineBorder(Color.decode("#8B73B2"), 2);
 
     
         JButton createAccountBtn = new JButton("Make a Parent Account");
-        createAccountBtn.setFont(font);
+        createAccountBtn.setFont(customFont);
         createAccountBtn.setBackground(Color.decode("#9F90B7"));
         createAccountBtn.setForeground(Color.WHITE);
         createAccountBtn.setAlignmentX(CENTER_ALIGNMENT);
@@ -375,7 +398,7 @@ public class MainMenu extends JFrame {
         createAccountBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         JButton loginBtn = new JButton("Log In");
-        loginBtn.setFont(font);
+        loginBtn.setFont(customFont);
         loginBtn.setBackground(Color.decode("#9F90B7"));
         loginBtn.setForeground(Color.WHITE);
         loginBtn.setAlignmentX(CENTER_ALIGNMENT);
@@ -398,7 +421,7 @@ public class MainMenu extends JFrame {
         parentalFrame.add(buttonPanel, BorderLayout.CENTER);
     
         JButton closeBtn = new JButton("Close");
-        closeBtn.setFont(font);
+        closeBtn.setFont(customFont);
         closeBtn.addActionListener(e -> parentalFrame.dispose());
         parentalFrame.add(closeBtn, BorderLayout.SOUTH);
         
@@ -459,36 +482,31 @@ public class MainMenu extends JFrame {
     
     private void showParentalControlOptions(Parent parent) {
         JFrame controlFrame = new JFrame("Parental Control Options");
-        Font font = null;
-        try {
-            font = Font.createFont(Font.TRUETYPE_FONT, new File("fonts/Jersey25-Regular.ttf"));
-            font = font.deriveFont(Font.PLAIN, 70);
-        } catch (FontFormatException | IOException e) {
-            e.printStackTrace();
-        }
+        customFont = customFont.deriveFont(Font.PLAIN, 70);
+        
         controlFrame.setSize(500, 400);
         controlFrame.setLocationRelativeTo(null);
     
         JLabel infoLabel = new JLabel("Parental Controls");
-        infoLabel.setFont(font);
+        infoLabel.setFont(customFont);
         infoLabel.setAlignmentX(CENTER_ALIGNMENT);
         infoLabel.setForeground(Color.decode("#492D77"));
         JLabel totalTime = new JLabel("Total play time: " + parent.getTotalPlayTime());
-        font = font.deriveFont(Font.PLAIN, 25);
-        totalTime.setFont(font);
+        customFont = customFont.deriveFont(Font.PLAIN, 25);
+        totalTime.setFont(customFont);
         totalTime.setAlignmentX(CENTER_ALIGNMENT);
 
         JLabel avTime = new JLabel("Average play time: " + parent.getAveragePlayTime());
-        avTime.setFont(font);
+        avTime.setFont(customFont);
         avTime.setAlignmentX(CENTER_ALIGNMENT);
 
         JButton setTimeLimitBtn = new JButton("Set Play Time Limit");
-        setTimeLimitBtn.setFont(font);
+        setTimeLimitBtn.setFont(customFont);
         setTimeLimitBtn.setAlignmentX(CENTER_ALIGNMENT);
         setTimeLimitBtn.setBackground(Color.decode("#9F90B7"));
 
         JButton revivePetBtn = new JButton("Revive Pet");
-        revivePetBtn.setFont(font);
+        revivePetBtn.setFont(customFont);
         revivePetBtn.setAlignmentX(CENTER_ALIGNMENT);
         revivePetBtn.setBackground(Color.decode("#9F90B7"));
             
@@ -497,7 +515,7 @@ public class MainMenu extends JFrame {
         });
 
         JButton changePasswordBtn = new JButton("Change Password");
-        changePasswordBtn.setFont(font);
+        changePasswordBtn.setFont(customFont);
         changePasswordBtn.setAlignmentX(CENTER_ALIGNMENT);
         changePasswordBtn.setBackground(Color.decode("#9F90B7"));
 
@@ -546,13 +564,8 @@ public class MainMenu extends JFrame {
     }
     private void showDeadPets(Parent parent) {
         JFrame deadPetsFrame = new JFrame("Revive Dead Pets");
-        Font font = null;
-        try {
-            font = Font.createFont(Font.TRUETYPE_FONT, new File("fonts/Jersey25-Regular.ttf"));
-            font = font.deriveFont(Font.PLAIN, 70);
-        } catch (FontFormatException | IOException e) {
-            e.printStackTrace();
-        }
+        customFont = customFont.deriveFont(Font.PLAIN, 70);
+        
     
         deadPetsFrame.setSize(500, 400);
         deadPetsFrame.setLocationRelativeTo(null);
@@ -577,7 +590,7 @@ public class MainMenu extends JFrame {
     
         if (deadPetsList.isEmpty()) {
             JLabel noDeadPets = new JLabel("No dead pets available to revive.");
-            noDeadPets.setFont(font.deriveFont(Font.PLAIN, 25));
+            noDeadPets.setFont(customFont.deriveFont(Font.PLAIN, 25));
             noDeadPets.setForeground(Color.BLACK);
             deadPetsPanel.add(noDeadPets);
         } else {
@@ -595,10 +608,10 @@ public class MainMenu extends JFrame {
     
                 JLabel petNameLabel = new JLabel("Pet Name: " + petName);
                 petNameLabel.setForeground(Color.BLACK);
-                petNameLabel.setFont(font.deriveFont(Font.PLAIN, 25));
+                petNameLabel.setFont(customFont.deriveFont(Font.PLAIN, 25));
     
                 JButton reviveBtn = new JButton("Revive Pet");
-                reviveBtn.setFont(font.deriveFont(Font.PLAIN, 25));
+                reviveBtn.setFont(customFont.deriveFont(Font.PLAIN, 25));
                 reviveBtn.setBackground(Color.decode("#6C5297"));
                 reviveBtn.setForeground(Color.WHITE);
                 reviveBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -679,17 +692,12 @@ public class MainMenu extends JFrame {
         topPanel.setOpaque(false);
         topPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 0));
 
-        Font font = null;
-        try {
-            font = Font.createFont(Font.TRUETYPE_FONT, new File("fonts/Jersey25-Regular.ttf"));
-            font = font.deriveFont(Font.PLAIN, 70);
-            title.setFont(font);
+            customFont = customFont.deriveFont(Font.PLAIN, 70);
+            title.setFont(customFont);
             title.setForeground(Color.WHITE);
-            font = font.deriveFont(Font.PLAIN, 25);
-            back.setFont(font);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            customFont = customFont.deriveFont(Font.PLAIN, 25);
+            back.setFont(customFont);
+        
 
         topPanel.add(back, BorderLayout.WEST);
         loadGamePanel.add(topPanel, BorderLayout.NORTH);
@@ -710,8 +718,8 @@ public class MainMenu extends JFrame {
         if (savedGamesList.isEmpty()) {
             JPanel msg = new JPanel();
             JLabel noGames = new JLabel("You have no saved games yet.");
-            font = font.deriveFont(Font.PLAIN, 40);
-            noGames.setFont(font);
+            customFont = customFont.deriveFont(Font.PLAIN, 40);
+            noGames.setFont(customFont);
             noGames.setForeground(Color.decode("#6C5297"));
             noGames.setVisible(true);
             msg.add(noGames);
@@ -745,12 +753,12 @@ public class MainMenu extends JFrame {
             JLabel currentState = new JLabel("Current state: " + state);
 
             petNameLabel.setForeground(Color.BLACK);
-            font = font.deriveFont(Font.PLAIN, 25);
-            petNameLabel.setFont(font);
+            customFont = customFont.deriveFont(Font.PLAIN, 25);
+            petNameLabel.setFont(customFont);
             date.setForeground(Color.DARK_GRAY);
-            font = font.deriveFont(Font.PLAIN, 15);
-            date.setFont(font);
-            currentState.setFont(font);
+            customFont = customFont.deriveFont(Font.PLAIN, 15);
+            date.setFont(customFont);
+            currentState.setFont(customFont);
 
             JPanel imagePanel = new JPanel();
             imagePanel.setLayout(new BoxLayout(imagePanel, BoxLayout.X_AXIS));
@@ -764,9 +772,9 @@ public class MainMenu extends JFrame {
             card.add(currentState);
 
             JButton loadBtn = new JButton("Load");
-            font = font.deriveFont(Font.PLAIN, 25);
+            customFont = customFont.deriveFont(Font.PLAIN, 25);
 
-            loadBtn.setFont(font);
+            loadBtn.setFont(customFont);
             loadBtn.setForeground(Color.WHITE);
             loadBtn.setBackground(Color.decode("#6C5297"));
             loadBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));

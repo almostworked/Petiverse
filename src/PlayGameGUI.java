@@ -14,11 +14,13 @@ import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import javax.swing.Timer;
@@ -57,6 +59,29 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
     private boolean warningShown = false;
     private Score score;
     private long startTime;
+    private static Font customFont;
+    static {
+        try {
+            // Load the font from the 'fonts' folder only once when the class is loaded
+            InputStream is = MainMenu.class.getResourceAsStream("/fonts/Jersey25-Regular.ttf");
+
+            if (is == null) {
+                throw new IOException("Font file not found!");
+            } else {
+                System.out.println("font file loaded");
+            }
+
+            // Create the font from the InputStream
+            customFont = Font.createFont(Font.TRUETYPE_FONT, is);
+
+            // Register the font globally for the application
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            ge.registerFont(customFont);
+
+        } catch (IOException | FontFormatException e) {
+            e.printStackTrace();
+        }
+    }
     
     /**
      * Constructor that takes the player, save slot and player name as arguments. Initializes all
@@ -98,8 +123,14 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
 
         stateLabel = new JLabel("Current State: NORMAL");
         
-        petSprite = (Sprite) pet;
-        petSprite.setCurrentState(pet.getState());
+        if (pet instanceof Pet) {
+            petSprite = new Sprite(pet.getName(), pet.getHealth(), pet.getSleep(), pet.getHappiness(), 
+                                          pet.getFullness(), pet.isAlive(), pet.getState());
+            // Now you can use the new petSprite object
+        } else {
+            // Handle if pet is not a valid Pet type (this shouldn't happen if Pet is the superclass)
+            System.out.println("The pet is not valid.");
+        }
         
 
         startAnimation(petSprite, petImageLabel);
@@ -123,12 +154,18 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
         setLocationRelativeTo(null); // Centres the frame on screen
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Close window when X button pressed
 
-        JPanel background = new JPanel() { // Override the paintComponent method to add the custom background
+        JPanel background = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                ImageIcon backgroundPic = new ImageIcon("temp_assets/Background1.jpg");
-                g.drawImage(backgroundPic.getImage(), 0, 0, getWidth(), getHeight(), this);
+                
+                ImageIcon backgroundPic = new ImageIcon(getClass().getResource("/temp_assets/Background1.jpg"));
+                
+                if (backgroundPic.getImage() != null) {
+                    g.drawImage(backgroundPic.getImage(), 0, 0, getWidth(), getHeight(), this);
+                } else {
+                    System.out.println("Background image not found!");
+                }
             }
         };
         background.setLayout(new BoxLayout(background, BoxLayout.Y_AXIS));
@@ -137,16 +174,11 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
         createVitalBars();
         JPanel vitalPanel = createVitalPanel();
 
-        Font font = null;
 
-        try {
-            font = Font.createFont(Font.TRUETYPE_FONT, new File("fonts/Jersey25-Regular.ttf"));
-            font = font.deriveFont(Font.PLAIN, 25);
-        } catch (FontFormatException | IOException e) {
-            e.printStackTrace();
-        }
+            customFont = customFont.deriveFont(Font.PLAIN, 25);
+        
         JButton back = new JButton("< Main Menu");
-        back.setFont(font);
+        back.setFont(customFont);
         back.setContentAreaFilled(false);
         back.setBorderPainted(false);
         back.setFocusPainted(false);
@@ -157,7 +189,7 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
         back.setAlignmentY(TOP_ALIGNMENT);
 
         JButton inventory = new JButton("Inventory");
-        inventory.setFont(font);
+        inventory.setFont(customFont);
         inventory.setBorderPainted(false);
         inventory.setContentAreaFilled(false);
         inventory.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -169,7 +201,7 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
         JPanel scorePanel = new JPanel();
         JLabel playerScore = new JLabel("Score: " + score.getScore());
         playerScore.setForeground(Color.WHITE);
-        playerScore.setFont(font);
+        playerScore.setFont(customFont);
         scorePanel.setOpaque(false);
         scorePanel.add(playerScore);
 
@@ -224,22 +256,22 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
         JButton vetButton = new JButton("visit vet");
 
        
-        feedButton.setFont(font);
+        feedButton.setFont(customFont);
         feedButton.setForeground(Color.BLACK);
-        playButton.setFont(font);
+        playButton.setFont(customFont);
         playButton.setForeground(Color.BLACK);
-        bedButton.setFont(font);
+        bedButton.setFont(customFont);
         bedButton.setForeground(Color.BLACK);
-        giftButton.setFont(font);
+        giftButton.setFont(customFont);
         giftButton.setForeground(Color.BLACK);
-        exerciseButton.setFont(font);
+        exerciseButton.setFont(customFont);
         exerciseButton.setForeground(Color.BLACK);
-        vetButton.setFont(font);
+        vetButton.setFont(customFont);
         vetButton.setForeground(Color.BLACK);
     
-        font = font.deriveFont(Font.PLAIN, 35); 
+        customFont = customFont.deriveFont(Font.PLAIN, 35); 
 
-        commandLabel.setFont(font);
+        commandLabel.setFont(customFont);
         commandLabel.setForeground(Color.WHITE);
 
         commandPanel.add(commandLabel);
@@ -259,11 +291,11 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
         JPanel healthBarPanel = new JPanel();
         healthBarPanel.setLayout(new BorderLayout());
         healthLabel = new JLabel("HEALTH");
-        healthLabel.setFont(font);
+        healthLabel.setFont(customFont);
         healthLabel.setForeground(Color.WHITE);
-        font = font.deriveFont(Font.PLAIN, 25); 
+        customFont = customFont.deriveFont(Font.PLAIN, 25); 
         stateLabel = new JLabel("Current State: " + player.getActivePet().getState());
-        stateLabel.setFont(font);
+        stateLabel.setFont(customFont);
         stateLabel.setForeground(Color.WHITE);
 
         Dimension healthBarSize = new Dimension(600, 30);
@@ -297,8 +329,15 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                ImageIcon bg = new ImageIcon("temp_assets/Background2.jpg");
-                g.drawImage(bg.getImage(), 0, 0, getWidth(), getHeight(), this);
+                
+                // Load the image using getResource
+                ImageIcon backgroundPic = new ImageIcon(getClass().getResource("/temp_assets/Background1.jpg"));
+                
+                if (backgroundPic.getImage() != null) {
+                    g.drawImage(backgroundPic.getImage(), 0, 0, getWidth(), getHeight(), this);
+                } else {
+                    System.out.println("Background image not found!");
+                }
             }
         };
         backgroundPanel.setLayout(new BorderLayout());
@@ -472,26 +511,21 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
             JPanel vitalPanel = new JPanel();
             vitalPanel.setLayout(new BoxLayout(vitalPanel, BoxLayout.Y_AXIS)); // Vertical layout
             vitalPanel.setOpaque(false);
-            Font font = null;
-            try {
-                font = Font.createFont(Font.TRUETYPE_FONT, new File("fonts/Jersey25-Regular.ttf"));
-                font = font.deriveFont(Font.PLAIN, 35); 
-            } catch (FontFormatException | IOException e) {
-                e.printStackTrace();
-            }
+                customFont = customFont.deriveFont(Font.PLAIN, 35); 
+            
             JLabel vitalLabel = new JLabel("Vitals");
-            vitalLabel.setFont(font);
+            vitalLabel.setFont(customFont);
             vitalLabel.setForeground(Color.WHITE);
             vitalPanel.add(vitalLabel);
             vitalPanel.add(Box.createRigidArea(new Dimension(0, 20))); // Add some space between components
 
-            font = font.deriveFont(Font.PLAIN, 25);
+            customFont = customFont.deriveFont(Font.PLAIN, 25);
 
             JPanel sleepPanel = new JPanel();
             sleepPanel.setOpaque(false);
             sleepPanel.setLayout(new BoxLayout(sleepPanel, BoxLayout.Y_AXIS));
             sleepLabel = new JLabel("sleep",SwingConstants.CENTER);
-            sleepLabel.setFont(font);
+            sleepLabel.setFont(customFont);
             sleepLabel.setForeground(Color.WHITE);
             sleepPanel.add(sleepLabel);
             sleepPanel.add(sleepBar);
@@ -502,7 +536,7 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
             fullnessPanel.setOpaque(false);
             fullnessPanel.setLayout(new BoxLayout(fullnessPanel, BoxLayout.Y_AXIS));
             fullnessLabel = new JLabel("food", SwingConstants.CENTER);
-            fullnessLabel.setFont(font);
+            fullnessLabel.setFont(customFont);
             fullnessLabel.setForeground(Color.WHITE);
             fullnessPanel.add(fullnessLabel);
             fullnessPanel.add(hungerBar);
@@ -513,7 +547,7 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
             happinessPanel.setOpaque(false);
             happinessPanel.setLayout(new BoxLayout(happinessPanel, BoxLayout.Y_AXIS));
             happinessLabel = new JLabel("happiness",SwingConstants.CENTER);
-            happinessLabel.setFont(font);
+            happinessLabel.setFont(customFont);
             happinessLabel.setForeground(Color.WHITE);
             happinessPanel.add(happinessLabel);
             happinessPanel.add(happinessBar);
@@ -525,14 +559,9 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
         private JLabel createPetTitle() {
             petNameLabel = new JLabel(player.getActivePet().getCustomName(), SwingConstants.CENTER);
             petNameLabel.setForeground(Color.WHITE);
-        try {
-            Font font = Font.createFont(Font.TRUETYPE_FONT, new File("fonts/Jersey25-Regular.ttf"));
-            font = font.deriveFont(Font.PLAIN, 75); // Title text size
-            petNameLabel.setFont(font);
+            customFont = customFont.deriveFont(Font.PLAIN, 75); // Title text size
+            petNameLabel.setFont(customFont);
         
-        } catch (FontFormatException | IOException e) {
-            e.printStackTrace();
-        }
         petNameLabel.setBorder(BorderFactory.createEmptyBorder(10,20,10,20));
 
         return petNameLabel;
@@ -588,16 +617,12 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
             JLabel itemName = new JLabel(entry.getKey().getName());
             JLabel quantity = new JLabel("x" + entry.getValue());
 
-            Font font = null;
 
-            try {
-                font = Font.createFont(Font.TRUETYPE_FONT, new File("fonts/Jersey25-Regular.ttf"));
-                font = font.deriveFont(Font.PLAIN, 20);
-            } catch (FontFormatException | IOException e) {
-                e.printStackTrace();
-            }
-            itemName.setFont(font);
-            quantity.setFont(font);
+           
+                customFont = customFont.deriveFont(Font.PLAIN, 20);
+           
+            itemName.setFont(customFont);
+            quantity.setFont(customFont);
             quantity.setForeground(Color.decode("#4E337B"));
     
             itemName.setForeground(Color.BLACK);
@@ -654,16 +679,12 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
             int width = getWidth();
             int height = getHeight();
 
-            Font font= null;
 
-            try {
-                font = Font.createFont(Font.TRUETYPE_FONT, new File("fonts/Jersey25-Regular.ttf"));
-                font = font.deriveFont(Font.PLAIN, 20);
-            } catch (FontFormatException | IOException e) {
-                e.printStackTrace();
-            }
+            
+                customFont = customFont.deriveFont(Font.PLAIN, 20);
+            
             g.setColor(Color.BLACK);
-            g.setFont(font);
+            g.setFont(customFont);
 
             FontMetrics fm = g.getFontMetrics();
             int x = (width - fm.stringWidth(text)) / 2;
@@ -708,44 +729,44 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
      */
     private void animate(Sprite sprite, JLabel petImageLabel) {
         String imagePath = sprite.getFrame();
-        
-        File imageFile = new File(imagePath);
-        if (imageFile.exists()) {
-            ImageIcon petIcon = new ImageIcon(imagePath);
+        ImageIcon petIcon = null;
+    
+        // Use getResource to load the image from the resources folder or classpath
+        try {
+            petIcon = new ImageIcon(getClass().getResource("/" + imagePath));
             Image image = petIcon.getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH);
-            petImageLabel.setIcon(new ImageIcon(image));  
-        } else {
+            petImageLabel.setIcon(new ImageIcon(image));
+        } catch (Exception e) {
             petImageLabel.setText("Image not found");
             String defaultImagePath = sprite.getName() + ".png";
-            ImageIcon defaultIcon = new ImageIcon(defaultImagePath);
-            Image defaultImage = defaultIcon.getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH);
-            petImageLabel.setIcon(new ImageIcon(defaultImage));
+            try {
+                petIcon = new ImageIcon(getClass().getResource("/" + defaultImagePath));
+                Image defaultImage = petIcon.getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH);
+                petImageLabel.setIcon(new ImageIcon(defaultImage));
+            } catch (Exception ex) {
+                petImageLabel.setText("Default image not found");
+            }
             sprite.resetAnimation();
-
         }
     
         sprite.nextFrame();
     }
-    /**
-     * Starts the pet sprite's animation using a specified timer, sprite and pet image label.
-     * @param sprite
-     * @param petImageLabel
-     */
+    
     private void startAnimation(Sprite sprite, JLabel petImageLabel) {
         animationTimer = new Timer(150, e -> animate(sprite, petImageLabel)); 
         animationTimer.start();  
     }
-    /**
-     * Updates a pet sprite using the Sprite class. Used on a continuous loop in main menu.
-     */
+    
     private void updatePetSprite() {
         String imagePath = petSprite.getFrame();
-        File imageFile = new File(imagePath);
-        if (imageFile.exists()) {
-            ImageIcon petIcon = new ImageIcon(imagePath);
+        try {
+            ImageIcon petIcon = new ImageIcon(getClass().getResource("/" + imagePath));
             Image image = petIcon.getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH);
             petImageLabel.setIcon(new ImageIcon(image));
+        } catch (Exception e) {
+            petImageLabel.setText("Image not found");
         }
     }
+    
 }
 

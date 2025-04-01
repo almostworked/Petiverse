@@ -112,36 +112,40 @@ public class Sprite extends Pet{
 
         public void updateSprite() {
                 spriteImages.clear();
+                String basePath = "temp_assets/"; // Assuming images are in the 'temp_assets' folder within resources.
+            
                 switch (currentState) {
                     case "NORMAL":
-                        spriteImages.add("temp_assets/" + petName + ".png");
-                        spriteImages.add("temp_assets/" + petName + "-Sprite1.png");
-                        spriteImages.add("temp_assets/" + petName + "-Sprite2.png");
+                        spriteImages.add(basePath + petName + ".png");
+                        spriteImages.add(basePath + petName + "-Sprite1.png");
+                        spriteImages.add(basePath + petName + "-Sprite2.png");
                         break;
                     case "HUNGRY":
-                        spriteImages.add("temp_assets/" + petName + "-Hungry.png");
+                        spriteImages.add(basePath + petName + "-Hungry.png");
                         break;
                     case "ANGRY":
-                        spriteImages.add("temp_assets/" + petName + "-Angry.png");
+                        spriteImages.add(basePath + petName + "-Angry.png");
                         break;
                     case "SLEEPING":
-                    System.out.println("SLEEPING case entered in updateSprite");
-                        spriteImages.add("temp_assets/" + petName + "-Sleep.png");
-                        spriteImages.add("temp_assets/" + petName + "-Sleep1.png");
-                        spriteImages.add("temp_assets/" + petName + "-Sleep2.png");
-                        spriteImages.add("temp_assets/" + petName + "-Sleep3.png");
+                        System.out.println("SLEEPING case entered in updateSprite");
+                        spriteImages.add(basePath + petName + "-Sleep.png");
+                        spriteImages.add(basePath + petName + "-Sleep1.png");
+                        spriteImages.add(basePath + petName + "-Sleep2.png");
+                        spriteImages.add(basePath + petName + "-Sleep3.png");
                         break;
-                case "DEAD":
-                        spriteImages.add("temp_assets/" + petName + "-Dead.png");
+                    case "DEAD":
+                        spriteImages.add(basePath + petName + "-Dead.png");
                         break;
                     default:
-                        spriteImages.add("temp_assets/" + petName + ".png");
-                        spriteImages.add("temp_assets/" + petName + "-Sprite1.png");
-                        spriteImages.add("temp_assets/" + petName + "-Sprite2.png");
+                        spriteImages.add(basePath + petName + ".png");
+                        spriteImages.add(basePath + petName + "-Sprite1.png");
+                        spriteImages.add(basePath + petName + "-Sprite2.png");
                         break;
                 }
+            
                 this.resetAnimation();
-        }
+            }
+            
             
 
         public List<String> getSprites() {
