@@ -52,12 +52,19 @@ public class MainMenu extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Start button clicked");
                 Sound.playEffect(buttonClick); 
+                if (ParentAccountManager.loadParentAccount() == null) {
+                    JOptionPane.showMessageDialog(null, "You must set up a parent account before playing.");
+        
+                } else {
+                    Pet foxy = new Foxy("Foxy");
+                    Pet roscoe = new Roscoe("Roscoe");
+                    Pet sterling = new Sterling("Sterling");
+                    new NewGameGUI(foxy, roscoe, sterling);
+                    dispose();
 
-                Pet foxy = new Foxy("Foxy");
-                Pet roscoe = new Roscoe("Roscoe");
-                Pet sterling = new Sterling("Sterling");
-                new NewGameGUI(foxy, roscoe, sterling);
-                dispose();
+                }
+
+                
             }
         });   
         loadButton.addActionListener(new ActionListener() {

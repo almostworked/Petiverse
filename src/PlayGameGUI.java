@@ -51,7 +51,7 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
     private JLabel stateLabel;
     private SaveGame saveGame;
     private String playerName;
-    private int saveSlot;
+    private static int saveSlot;
     private Sprite petSprite;
     private Timer animationTimer;
     private boolean warningShown = false;
@@ -71,10 +71,6 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
      */
     
     public PlayGameGUI(Player player, int saveSlot, String playerName) {
-        int[] decay = {1,2,3};
-        StateManager stateManager = new StateManager(player.getActivePet(), decay);
-        stateManager.addStateChangeListener(this); 
-        
         instance = this;
         this.saveSlot = saveSlot;
         this.playerName = playerName;
@@ -87,8 +83,13 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
         this.player.getInventory().displayInventory();
         this.saveGame.save(this.pet, this.player.getInventory());
         startTime = System.currentTimeMillis();
-        this.parent = ParentAccountManager.loadParentAccount();
-
+        parent = ParentAccountManager.loadParentAccount();
+        
+        int[] decay = {1,2,3};
+        StateManager stateManager = new StateManager(player.getActivePet(), decay);
+        stateManager.addStateChangeListener(this); 
+        
+        
         GameLoop gameLoop = new GameLoop(pet, player, stateManager, saveGame);
         gameLoop.start();
 
@@ -625,11 +626,11 @@ public class PlayGameGUI extends JFrame implements StateManager.StateChangeListe
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Pet pet = new Sterling("Sterling");
+        Pet pet = new Pet(null, 0, 0, 0, 0, false, null);
         Inventory inventory = new Inventory();
         Player player = new Player(null, inventory, false, pet);
 
-        SwingUtilities.invokeLater(() -> new PlayGameGUI(player, 1, "name"));
+        SwingUtilities.invokeLater(() -> new PlayGameGUI(player, saveSlot, player.getName()));
     }
     /**
      * Method to set a pet's current state text, sprite, and update vital bars based on the pet's current

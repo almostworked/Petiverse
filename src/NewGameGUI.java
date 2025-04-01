@@ -221,6 +221,7 @@ public class NewGameGUI extends JFrame {
 
         newGamePanel.add(topPanel, BorderLayout.NORTH);
         newGamePanel.add(inputAndImagePanel, BorderLayout.CENTER);
+        
 
         startButton.addActionListener(new ActionListener() {
             @Override
@@ -315,9 +316,12 @@ public class NewGameGUI extends JFrame {
         selectedPet.setCustomName(petName);
         Player player = new Player(playerName, inventory, false, selectedPet); // Assuming false means not a parent
         Pet.setActivePlayer(player);
+            PlayGameGUI playGameGUI = new PlayGameGUI(player, saveSlot, playerName); // Added arguments for playgame gui - Daniella
+            playGameGUI.setVisible(true);
 
-        PlayGameGUI playGameGUI = new PlayGameGUI(player, saveSlot, playerName); // Added arguments for playgame gui - Daniella
-        playGameGUI.setVisible(true);
+        
+
+        
     }
     
      /**
